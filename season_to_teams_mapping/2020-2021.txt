@@ -1,0 +1,35 @@
+Division: Central
+Carolina Hurricanes
+Chicago Blackhawks
+Columbus Blue Jackets
+Dallas Stars
+Detroit Red Wings
+Florida Panthers
+Nashville Predators
+Tampa Bay Lightning
+Division: West
+Anaheim Ducks
+Arizona Coyotes
+Colorado Avalanche
+Los Angeles Kings
+Minnesota Wild
+San Jose Sharks
+St. Louis Blues
+Vegas Golden Knights
+Division: East
+Boston Bruins
+Buffalo Sabres
+New Jersey Devils
+New York Islanders
+New York Rangers
+Philadelphia Flyers
+Pittsburgh Penguins
+Washington Capitals
+Division: North
+Calgary Flames
+Edmonton Oilers
+Montreal Canadiens
+Ottawa Senators
+Toronto Maple Leafs
+Vancouver Canucks
+Winnipeg Jets

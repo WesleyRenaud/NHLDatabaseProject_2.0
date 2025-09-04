@@ -1,0 +1,11 @@
+Division: American
+Boston Bruins
+Chicago Blackhawks
+Detroit Red Wings
+New York Rangers
+Division: Canadien
+Montreal Canadiens
+Montreal Maroons
+New York Americans
+St. Louis Eagles
+Toronto Maple Leafs

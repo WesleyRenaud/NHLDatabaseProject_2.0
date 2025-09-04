@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NHL DB</title>
+    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../styles/styles.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="../scripts/scripts.js" defer></script>
+</head>
+<body>
+    <div id="top_container">
+        <h1 id="nhl_db_title">NHL DB</h1>
+        <div id="view_stats_button_container">
+            <a href="/view_stats.html">
+                <button id="view_stats_button">View Stats</button>
+            </a>
+        </div>
+    </div>
+
+    <div id="stat_adding_button_container">
+        <a href="/add_skater.html">
+            <button class="stat_adding_button" id="add_skater_button">Add Skater</button>
+        </a>
+        <a href="/add_goalie.html">
+            <button class="stat_adding_button" id="add_goalie_button">Add Goalie</button>
+        </a>        
+        <a href="/add_team_regular_season.html">
+            <button class="stat_adding_button" id="add_team_regular_season_button">Add Team Season</button>
+        </a>
+        <a href="/add_team_playoffs.html">
+            <button class="stat_adding_button" id="add_team_playoffs_button">Add Team Playoffs</button>
+        </a>
+    </div>
+
+    <div id="stat_adding_container">
+        <div id="stat_fields_container">
+            <div class="stat_field">
+                <label for="name">Name:</label>
+                <input type="text" id="name" name="name">
+            </div>
+            <div class="stat_field">
+                <label for="team">Team:</label>
+                <input type="text" id="team" name="team">
+            </div>
+            <div class="stat_field">
+                <label for="number">Number:</label>
+                <input type="text" id="number" name="number">
+            </div>
+            <div class="stat_field">
+                <label for="height">Height:</label>
+                <input type="text" id="height" name="height">
+            </div>
+            <div class="stat_field">
+                <label for="weight">Weight:</label>
+                <input type="text" id="weight" name="weight">
+            </div>
+            <div class="stat_field">
+                <label for="birthday">Birthday:</label>
+                <input type="text" id="birthday" name="birthday">
+            </div>
+            <div class="stat_field">
+                <label for="handedness">Handedness:</label>
+                <input type="text" id="handedness" name="handedness">
+            </div>
+            <div class="stat_field">
+                <label for="draft_position">Draft Position:</label>
+                <input type="text" id="draft_position" name="draft_position">
+            </div>
+        </div>
+        
+        <a href="/add_goalie_regular_season.html">
+            <button id="add_goalie_regular_season_button" class="add_season_button" onclick="addGoalieStats()">Add Regular Season</button>
+        </a>
+        <a href="/add_goalie_playoffs.html">
+            <button id="add_goalie_playoffs_button" class="add_season_button" onclick="addGoalieStats()">Add Playoffs</button>
+        </a>
+
+        <button class="edit_button" id="edit_player_button" onclick="editGoalie()">Edit Player</button>
+        <button class="confirm_button" onclick="finishGoalie()">Submit Player</button>
+    </div>    
+</body>
+</html>

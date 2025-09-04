@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NHL DB</title>
+    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../styles/styles.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="../scripts/scripts.js" defer></script>
+</head>
+<body>
+    <div id="top_container">
+        <h1 id="nhl_db_title">NHL DB</h1>
+        <div id="view_stats_button_container">
+            <a href="/view_stats.html">
+                <button id="view_stats_button">View Stats</button>
+            </a>
+        </div>
+    </div>
+
+    <div id="stat_adding_button_container">
+        <a href="/add_skater.html">
+            <button class="stat_adding_button" id="add_skater_button">Add Skater</button>
+        </a>
+        <a href="/add_goalie.html">
+            <button class="stat_adding_button" id="add_goalie_button">Add Goalie</button>
+        </a>        
+        <a href="/add_team_regular_season.html">
+            <button class="stat_adding_button" id="add_team_regular_season_button">Add Team Season</button>
+        </a>
+        <a href="/add_team_playoffs.html">
+            <button class="stat_adding_button" id="add_team_playoffs_button">Add Team Playoffs</button>
+        </a>
+    </div>
+
+    <div id="stat_adding_container">
+        <div id="stat_fields_container">
+            <div class="stat_field">
+                <label for="season">Season:</label>
+                <input type="text" id="season" name="season">
+            </div>
+            <div class="stat_field">
+                <label for="city">City:</label>
+                <input type="text" id="city" name="city">
+            </div>
+            <div class="stat_field">
+                <label for="name">Name:</label>
+                <input type="text" id="name" name="name">
+            </div>
+            <div class="stat_field">
+                <label for="games_played">Games Played:</label>
+                <input type="text" id="games_played" name="games_played">
+            </div>
+            <div class="stat_field">
+                <label for="wins">Wins:</label>
+                <input type="text" id="wins" name="wins">
+            </div>
+            <div class="stat_field">
+                <label for="losses">Losses:</label>
+                <input type="text" id="losses" name="losses">
+            </div>
+            <div class="stat_field">
+                <label for="ties">Ties:</label>
+                <input type="text" id="ties" name="ties">
+            </div>
+            <div class="stat_field">
+                <label for="overtime_losses">Overtime Losses:</label>
+                <input type="text" id="overtime_losses" name="overtime_losses">
+            </div>
+            <div class="stat_field">
+                <label for="points">Points:</label>
+                <input type="text" id="points" name="points">
+            </div>
+            <div class="stat_field">
+                <label for="points_percentage">Points Percentage:</label>
+                <input type="text" id="points_percentage" name="points_percentage">
+            </div>
+            <div class="stat_field">
+                <label for="regulation_wins">Regulation Wins:</label>
+                <input type="text" id="regulation_wins" name="regulation_wins">
+            </div>
+            <div class="stat_field">
+                <label for="regulation_and_overtime_wins">Regulation/Overtime Wins:</label>
+                <input type="text" id="regulation_and_overtime_wins" name="regulation_and_overtime_wins">
+            </div>
+            <div class="stat_field">
+                <label for="goals_for">Goals For:</label>
+                <input type="text" id="goals_for" name="goals_for">
+            </div>
+            <div class="stat_field">
+                <label for="goals_against">Goals Against:</label>
+                <input type="text" id="goals_against" name="goals_against">
+            </div>
+            <div class="stat_field">
+                <label for="goal_differential">Goal Differential:</label>
+                <input type="text" id="goal_differential" name="goal_differential">
+            </div>
+            <div class="stat_field">
+                <label for="home">Home:</label>
+                <input type="text" id="home" name="home">
+            </div>
+            <div class="stat_field">
+                <label for="away">Away:</label>
+                <input type="text" id="away" name="away">
+            </div>
+            <div class="stat_field">
+                <label for="shootout">Shootout:</label>
+                <input type="text" id="shootout" name="shootout">
+            </div>
+            <div class="stat_field">
+                <label for="last_10">Last 10:</label>
+                <input type="text" id="last_10" name="last_10">
+            </div>
+            <div class="stat_field">
+                <label for="streak">Streak:</label>
+                <input type="text" id="streak" name="streak">
+            </div>
+            <div class="stat_field">
+                <label for="shootout_wins">Shootout Wins:</label>
+                <input type="text" id="shootout_wins" name="shootout_wins">
+            </div>
+            <div class="stat_field">
+                <label for="goals_for_per_game">Goals For/Game:</label>
+                <input type="text" id="goals_for_per_game" name="goals_for_per_game">
+            </div>
+            <div class="stat_field">
+                <label for="goals_against_per_game">Goals Against/Game:</label>
+                <input type="text" id="goals_against_per_game" name="goals_against_per_game">
+            </div>
+            <div class="stat_field">
+                <label for="powerplay_percentage">Powerplay Percentage:</label>
+                <input type="text" id="powerplay_percentage" name="powerplay_percentage">
+            </div>
+            <div class="stat_field">
+                <label for="penalty_kill_percentage">Penalty Kill Percentage:</label>
+                <input type="text" id="penalty_kill_percentage" name="penalty_kill_percentage">
+            </div>
+            <div class="stat_field">
+                <label for="net_powerplay_percentage">Net Powerplay Percentage:</label>
+                <input type="text" id="net_powerplay_percentage" name="net_powerplay_percentage">
+            </div>
+            <div class="stat_field">
+                <label for="net_penalty_kill_percentage">Net Penalty Kill Percentage:</label>
+                <input type="text" id="net_penalty_kill_percentage" name="net_penalty_kill_percentage">
+            </div>
+            <div class="stat_field">
+                <label for="faceoff_win_percentage">Faceoff Win Percentage:</label>
+                <input type="text" id="faceoff_win_percentage" name="faceoff_win_percentage">
+            </div>
+        </div>
+
+        <button class="edit_button" id="edit_team_button" onclick="editTeam('Playoffs')">Edit Team</button>
+        <button class="confirm_button" onclick="finishTeam('Playoffs')">Confirm</button>
+    </div>
+</body>
+</html>

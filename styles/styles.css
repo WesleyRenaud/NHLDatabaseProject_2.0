@@ -1,0 +1,5353 @@
+html, body {
+    overflow: hidden;
+}
+
+body {
+    font-family: 'Lexend', sans-serif;
+}
+
+button {
+    border-radius: 0;
+}
+
+a {
+    text-decoration: none;
+}
+
+button:hover {
+    background-color: #c0c0c0;
+}
+
+#nhl_db_title {
+    text-align: center;
+    text-decoration: underline;
+    font-size: 48px;
+}
+
+#add_stats_button_container, #view_stats_button_container {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}
+
+#add_stats_button, #view_stats_button {
+    height: 30px;
+}
+
+.dropdown {
+    padding-top: 10px;
+    position: relative;
+}
+
+.dropdown_button {
+    padding: 10px;
+    border: 1px solid black;
+    cursor: pointer;
+    background-color: white;
+    width: 130px;
+    text-align: center;
+}
+
+.dropdown_content {
+    position: absolute;
+    z-index: 1;
+    max-height: 200px;
+    width: 100%;
+}
+
+#stat_viewing_button_container {
+    display: flex;
+    justify-content: space-between;
+}
+
+#stat_viewing_button_container a {
+    flex: 1;
+}
+
+.stat_viewing_button {
+    width: 100%;
+    height: 60px;
+}
+
+#player_season_stats_button,
+#player_playoff_stats_button,
+#skater_lookup_button,
+#goalie_lookup_button,
+#standings_button,
+#team_season_stats_button,
+#team_playoff_stats_button {
+    border-right: 0;
+}
+
+#stat_adding_button_container {
+    display: flex;
+    justify-content: center;
+}
+
+.stat_adding_button {
+    height: 50px;
+    font-size: 24px;
+    min-width: 250px;
+    text-decoration: none;
+}
+
+#add_skater_button,
+#add_goalie_button,
+#add_team_regular_season_button {
+    border-right: 0;
+}
+
+#stat_adding_button_container a:first-child .stat_adding_button {
+    border-radius: 32px 0 0 32px;
+}
+
+#stat_adding_button_container a:last-child .stat_adding_button {
+    border-radius: 0 32px 32px 0;
+}
+
+#stat_selecting_container, #stat_viewing_container {
+    border: 1px solid black;
+}
+
+#stats_container {
+    display: flex;
+}
+
+#stat_viewing_container {
+    max-height: 580px;
+    width: 85%;
+    overflow-y: scroll;
+}
+
+#stat_selecting_container {
+    background-color: #f5f5f5;
+    display: flex;
+    align-items: center;
+    padding-top: 10px;
+    height: 570px;
+    flex-direction: column;
+    width: 15%;
+}
+
+.season_dropdown_option, .team_dropdown_option, .position_dropdown_option {
+    display: none;
+    padding: 10px;
+    cursor: pointer;
+    background-color: white;
+}
+
+.season_dropdown_option:hover, .team_dropdown_option, .position_dropdown_option:hover {
+    background-color: #f0f0f0;
+}
+
+#season_selector {
+    overflow-y: auto;
+    display: block;
+}
+
+.text_field_container {
+    flex-direction: column;
+    margin-top: 15px;
+}
+
+.text_field_container input[type="text"] {
+    margin-left: 5px;
+    margin-right: 5px;
+    width: 88px;
+    padding: 5px;
+}
+
+.text_field_container span:first-child {
+    margin-left: 5px;
+}
+
+.text_field_row {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.text_field_row span {
+    width: 40px;
+    margin-right: 5px;
+}
+
+#position_dropdown_button {
+    margin-top: 20px;
+}
+
+#season_type_change_button {
+    position: relative;
+    top: 10px;
+    left: 1120px;
+    padding: 10px;
+    cursor: pointer;
+    visibility: hidden;
+    width: 120px;
+}
+
+#search_bar_container {
+    position: relative;
+    width: 50%;
+    margin: 25px auto 35px auto;
+}
+
+#search_bar {
+    width: 100%;
+    padding: 10px 10px 10px 40px;
+    border: 2px solid black;
+    border-radius: 32px;
+    box-sizing: border-box;
+    outline: none;
+}
+
+.search_icon {
+    position: absolute;
+    top: 50%;
+    left: 15px;
+    transform: translateY(-50%);
+}
+
+.add_season_button {
+    position: absolute;
+    right: 0;
+    min-width: 160px;
+    height: 40px;
+    border: 1px solid black; 
+    border-top: 0;
+    border-right: 0;
+}
+
+#add_skater_playoffs_button,
+#add_goalie_playoffs_button,
+#add_team_playoffs_button {
+    top: 40px;
+}
+
+#stat_adding_container {
+    border: 1px solid black;
+    height: 560px;
+    margin-top: 30px;
+    position: relative;
+    display: flex;
+}
+
+#stat_fields_container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* 3 columns */
+    grid-template-rows: repeat(10, 1fr); /* 10 rows */
+    gap: 10px;
+    width: 85%;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+.stat_field {
+    display: flex;
+    align-items: center;
+}
+
+.stat_field label {
+    margin-right: 10px;
+    white-space: nowrap;
+    width: 250px;
+    text-align: right;
+}
+
+.submit_button, .confirm_button, .edit_button {
+    position: absolute;
+    min-width: 130px;
+    height: 40px;
+    font-size: 20px;
+    border: 1px solid black;
+    right: 15px;
+}
+
+.submit_button {
+    bottom: 70px;
+}
+
+.confirm_button {
+    bottom: 15px;
+}
+
+#edit_team_button {
+    top: 15px;
+}
+
+#edit_player_button {
+    top: 115px;
+}
+
+#edit_season_button {
+    top: 170px;
+}
+
+
+#stat_view_button_container {
+    display: flex;
+    justify-content: center;
+    padding-top: 25px;
+}
+
+.stat_view_button {
+    height: 55px;
+    font-size: 24px;
+    min-width: 225px;
+    background-color: white;
+}
+
+#wildcard_button,
+#division_button,
+#conference_button {
+    border-right: 0;
+}
+
+#wildcard_button {
+    border-radius: 32px 0 0 32px;
+}
+
+#league_button {
+    border-radius: 0 32px 32px 0;
+}
+
+.header {
+    font-weight: normal;
+    padding-left: 15px;
+}
+
+th {
+    font-weight: normal;  
+}
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+    border: 2px solid black;
+    border-left: 0;
+    table-layout: fixed;
+}
+
+
+/* Standings overtime loses season table */
+.standings_table_overtime_losses_season th:nth-child(1),
+.standings_table_overtime_losses_season td:nth-child(1) {
+    width: 23%;
+}
+
+.standings_table_overtime_losses_season th:nth-child(2),
+.standings_table_overtime_losses_season td:nth-child(2),
+.standings_table_overtime_losses_season th:nth-child(3),
+.standings_table_overtime_losses_season td:nth-child(3),
+.standings_table_overtime_losses_season th:nth-child(4),
+.standings_table_overtime_losses_season td:nth-child(4),
+.standings_table_overtime_losses_season th:nth-child(5),
+.standings_table_overtime_losses_season td:nth-child(5),
+.standings_table_overtime_losses_season th:nth-child(6),
+.standings_table_overtime_losses_season td:nth-child(6),
+.standings_table_overtime_losses_season th:nth-child(8),
+.standings_table_overtime_losses_season td:nth-child(8) {
+    width: 3.33%;
+}
+
+.standings_table_overtime_losses_season th:nth-child(7),
+.standings_table_overtime_losses_season td:nth-child(7) {
+    width: 5.29%;
+}
+
+.standings_table_overtime_losses_season th:nth-child(9),
+.standings_table_overtime_losses_season td:nth-child(9) {
+    width: 5%;
+}
+
+.standings_table_overtime_losses_season th:nth-child(10),
+.standings_table_overtime_losses_season td:nth-child(10),
+.standings_table_overtime_losses_season th:nth-child(11),
+.standings_table_overtime_losses_season td:nth-child(11),
+.standings_table_overtime_losses_season th:nth-child(12),
+.standings_table_overtime_losses_season td:nth-child(12) {
+    width: 5%;
+}
+
+.standings_table_overtime_losses_season th:nth-child(13),
+.standings_table_overtime_losses_season td:nth-child(13),
+.standings_table_overtime_losses_season th:nth-child(14),
+.standings_table_overtime_losses_season td:nth-child(14) {
+    width: 7.14%;
+}
+
+.standings_table_overtime_losses_season th:nth-child(15),
+.standings_table_overtime_losses_season td:nth-child(15) {
+    width: 5.73%;
+}
+
+.standings_table_overtime_losses_season th:nth-child(16),
+.standings_table_overtime_losses_season td:nth-child(16) {
+    width: 6.61%;
+}
+
+.standings_table_overtime_losses_season th:nth-child(17),
+.standings_table_overtime_losses_season td:nth-child(17) {
+    width: 5%;
+}
+
+
+/* Standings overtime loses and ties season table */
+.standings_table_ties_and_overtime_losses_season th:nth-child(1),
+.standings_table_ties_and_overtime_losses_season td:nth-child(1) {
+    width: 23%;
+}
+
+.standings_table_ties_and_overtime_losses_season th:nth-child(2),
+.standings_table_ties_and_overtime_losses_season td:nth-child(2),
+.standings_table_ties_and_overtime_losses_season th:nth-child(3),
+.standings_table_ties_and_overtime_losses_season td:nth-child(3),
+.standings_table_ties_and_overtime_losses_season th:nth-child(4),
+.standings_table_ties_and_overtime_losses_season td:nth-child(4),
+.standings_table_ties_and_overtime_losses_season th:nth-child(5),
+.standings_table_ties_and_overtime_losses_season td:nth-child(5) {
+    width: 4%;
+}
+
+.standings_table_ties_and_overtime_losses_season th:nth-child(6),
+.standings_table_ties_and_overtime_losses_season td:nth-child(6),
+.standings_table_ties_and_overtime_losses_season th:nth-child(7),
+.standings_table_ties_and_overtime_losses_season td:nth-child(7) {
+    width: 4.5%;
+}
+
+.standings_table_ties_and_overtime_losses_season th:nth-child(8),
+.standings_table_ties_and_overtime_losses_season td:nth-child(8) {
+    width: 5.5%;
+}
+
+.standings_table_ties_and_overtime_losses_season th:nth-child(9),
+.standings_table_ties_and_overtime_losses_season td:nth-child(9),
+.standings_table_ties_and_overtime_losses_season th:nth-child(10),
+.standings_table_ties_and_overtime_losses_season td:nth-child(10),
+.standings_table_ties_and_overtime_losses_season th:nth-child(11),
+.standings_table_ties_and_overtime_losses_season td:nth-child(11) {
+    width: 5.5%;
+}
+
+.standings_table_ties_and_overtime_losses_season th:nth-child(12),
+.standings_table_ties_and_overtime_losses_season td:nth-child(12),
+.standings_table_ties_and_overtime_losses_season th:nth-child(13),
+.standings_table_ties_and_overtime_losses_season td:nth-child(13),
+.standings_table_ties_and_overtime_losses_season th:nth-child(14),
+.standings_table_ties_and_overtime_losses_season td:nth-child(14) {
+    width: 8%;
+}
+
+.standings_table_ties_and_overtime_losses_season th:nth-child(15),
+.standings_table_ties_and_overtime_losses_season td:nth-child(15) {
+    width: 6.5%;
+}
+
+
+/* Standings ties season table */
+.standings_table_ties_season th:nth-child(1),
+.standings_table_ties_season td:nth-child(1) {
+    width: 23%;
+}
+
+.standings_table_ties_season th:nth-child(2),
+.standings_table_ties_season td:nth-child(2),
+.standings_table_ties_season th:nth-child(3),
+.standings_table_ties_season td:nth-child(3),
+.standings_table_ties_season th:nth-child(4),
+.standings_table_ties_season td:nth-child(4),
+.standings_table_ties_season th:nth-child(5),
+.standings_table_ties_season td:nth-child(5) {
+    width: 5.25%;
+}
+
+.standings_table_ties_season th:nth-child(6),
+.standings_table_ties_season td:nth-child(6),
+.standings_table_ties_season th:nth-child(7),
+.standings_table_ties_season td:nth-child(7) {
+    width: 5.5%;
+}
+
+.standings_table_ties_season th:nth-child(8),
+.standings_table_ties_season td:nth-child(8) {
+    width: 6%;
+}
+
+.standings_table_ties_season th:nth-child(9),
+.standings_table_ties_season td:nth-child(9),
+.standings_table_ties_season th:nth-child(10),
+.standings_table_ties_season td:nth-child(10) {
+    width: 6%;
+}
+
+.standings_table_ties_season th:nth-child(11),
+.standings_table_ties_season td:nth-child(11),
+.standings_table_ties_season th:nth-child(12),
+.standings_table_ties_season td:nth-child(12) {
+    width: 8%;
+}
+
+.standings_table_ties_season th:nth-child(13),
+.standings_table_ties_season td:nth-child(13) {
+    width: 6%;
+}
+
+.standings_table_ties_season th:nth-child(14),
+.standings_table_ties_season td:nth-child(14) {
+    width: 6%;
+}
+
+
+/* Team stats overtime loses season table */
+.team_stats_table_overtime_losses_season {
+    font-size: 11px;
+}
+
+.team_stats_table_overtime_losses_season th:nth-child(1),
+.team_stats_table_overtime_losses_season td:nth-child(1) {
+    width: 16%;
+}
+
+.team_stats_table_overtime_losses_season th:nth-child(2),
+.team_stats_table_overtime_losses_season td:nth-child(2),
+.team_stats_table_overtime_losses_season th:nth-child(3),
+.team_stats_table_overtime_losses_season td:nth-child(3),
+.team_stats_table_overtime_losses_season th:nth-child(4),
+.team_stats_table_overtime_losses_season td:nth-child(4) {
+    width: 2.33%;
+}
+
+.team_stats_table_overtime_losses_season th:nth-child(5),
+.team_stats_table_overtime_losses_season td:nth-child(5) {
+    width: 2.77%;
+}
+
+.team_stats_table_overtime_losses_season th:nth-child(6),
+.team_stats_table_overtime_losses_season td:nth-child(6) {
+    width: 2.85%;
+}
+
+.team_stats_table_overtime_losses_season th:nth-child(7),
+.team_stats_table_overtime_losses_season td:nth-child(7) {
+    width: 4.04%;
+}
+
+.team_stats_table_overtime_losses_season th:nth-child(8),
+.team_stats_table_overtime_losses_season td:nth-child(8) {
+    width: 2.77%;
+}
+
+.team_stats_table_overtime_losses_season th:nth-child(9),
+.team_stats_table_overtime_losses_season td:nth-child(9) {
+    width: 3.23%;
+}
+
+.team_stats_table_overtime_losses_season th:nth-child(10),
+.team_stats_table_overtime_losses_season td:nth-child(10),
+.team_stats_table_overtime_losses_season th:nth-child(11),
+.team_stats_table_overtime_losses_season td:nth-child(11) {
+    width: 3.03%;
+}
+
+.team_stats_table_overtime_losses_season th:nth-child(12),
+.team_stats_table_overtime_losses_season td:nth-child(12) {
+    width: 3.23%;
+}
+
+.team_stats_table_overtime_losses_season th:nth-child(13),
+.team_stats_table_overtime_losses_season td:nth-child(13),
+.team_stats_table_overtime_losses_season th:nth-child(14),
+.team_stats_table_overtime_losses_season td:nth-child(14) {
+    width: 5.07%;
+}
+
+.team_stats_table_overtime_losses_season th:nth-child(15),
+.team_stats_table_overtime_losses_season td:nth-child(15) {
+    width: 3.63%;
+}
+
+.team_stats_table_overtime_losses_season th:nth-child(16),
+.team_stats_table_overtime_losses_season td:nth-child(16) {
+    width: 4.40%;
+}
+
+.team_stats_table_overtime_losses_season th:nth-child(17),
+.team_stats_table_overtime_losses_season td:nth-child(17) {
+    width: 3.63%;
+}
+
+.team_stats_table_overtime_losses_season th:nth-child(18),
+.team_stats_table_overtime_losses_season td:nth-child(18) {
+    width: 3.37%;
+}
+
+.team_stats_table_overtime_losses_season th:nth-child(19),
+.team_stats_table_overtime_losses_season td:nth-child(19),
+.team_stats_table_overtime_losses_season th:nth-child(20),
+.team_stats_table_overtime_losses_season td:nth-child(20) {
+    width: 4.04%;
+}
+
+.team_stats_table_overtime_losses_season th:nth-child(21),
+.team_stats_table_overtime_losses_season td:nth-child(21),
+.team_stats_table_overtime_losses_season th:nth-child(22),
+.team_stats_table_overtime_losses_season td:nth-child(22),
+.team_stats_table_overtime_losses_season th:nth-child(23),
+.team_stats_table_overtime_losses_season td:nth-child(23),
+.team_stats_table_overtime_losses_season th:nth-child(24),
+.team_stats_table_overtime_losses_season td:nth-child(24) {
+    width: 3.69%;
+}
+
+.team_stats_table_overtime_losses_season th:nth-child(25),
+.team_stats_table_overtime_losses_season td:nth-child(25) {
+    width: 4.04%;
+}
+
+
+/* Team stats ties and overtime loses season table */
+.team_stats_table_ties_and_overtime_losses_season {
+    font-size: 11px;
+}
+
+.team_stats_table_ties_and_overtime_losses_season th:nth-child(1),
+.team_stats_table_ties_and_overtime_losses_season td:nth-child(1) {
+    width: 16%;
+}
+
+.team_stats_table_ties_and_overtime_losses_season th:nth-child(2),
+.team_stats_table_ties_and_overtime_losses_season td:nth-child(2),
+.team_stats_table_ties_and_overtime_losses_season th:nth-child(3),
+.team_stats_table_ties_and_overtime_losses_season td:nth-child(3),
+.team_stats_table_ties_and_overtime_losses_season th:nth-child(4),
+.team_stats_table_ties_and_overtime_losses_season td:nth-child(4) {
+    width: 2.784%;
+}
+
+.team_stats_table_ties_and_overtime_losses_season th:nth-child(5),
+.team_stats_table_ties_and_overtime_losses_season td:nth-child(5) {
+    width: 2.834%;
+}
+
+.team_stats_table_ties_and_overtime_losses_season th:nth-child(6),
+.team_stats_table_ties_and_overtime_losses_season td:nth-child(6) {
+    width: 2.668%;
+}
+
+.team_stats_table_ties_and_overtime_losses_season th:nth-child(7),
+.team_stats_table_ties_and_overtime_losses_season td:nth-child(7),
+.team_stats_table_ties_and_overtime_losses_season th:nth-child(8),
+.team_stats_table_ties_and_overtime_losses_season td:nth-child(8) {
+    width: 3.628%;
+}
+
+.team_stats_table_ties_and_overtime_losses_season th:nth-child(9),
+.team_stats_table_ties_and_overtime_losses_season td:nth-child(9) {
+    width: 2.711%;
+}
+
+.team_stats_table_ties_and_overtime_losses_season th:nth-child(10),
+.team_stats_table_ties_and_overtime_losses_season td:nth-child(10) {
+    width: 3.162%;
+}
+
+.team_stats_table_ties_and_overtime_losses_season th:nth-child(11),
+.team_stats_table_ties_and_overtime_losses_season td:nth-child(11),
+.team_stats_table_ties_and_overtime_losses_season th:nth-child(12),
+.team_stats_table_ties_and_overtime_losses_season td:nth-child(12) {
+    width: 2.711%;
+}
+
+.team_stats_table_ties_and_overtime_losses_season th:nth-child(13),
+.team_stats_table_ties_and_overtime_losses_season td:nth-child(13) {
+    width: 3.196%;
+}
+
+.team_stats_table_ties_and_overtime_losses_season th:nth-child(14),
+.team_stats_table_ties_and_overtime_losses_season td:nth-child(14),
+.team_stats_table_ties_and_overtime_losses_season th:nth-child(15),
+.team_stats_table_ties_and_overtime_losses_season td:nth-child(15) {
+    width: 6.048%;
+}
+
+.team_stats_table_ties_and_overtime_losses_season th:nth-child(16),
+.team_stats_table_ties_and_overtime_losses_season td:nth-child(16) {
+    width: 5.276%;
+}
+
+.team_stats_table_ties_and_overtime_losses_season th:nth-child(17),
+.team_stats_table_ties_and_overtime_losses_season td:nth-child(17) {
+    width: 3.628%;
+}
+
+.team_stats_table_ties_and_overtime_losses_season th:nth-child(18),
+.team_stats_table_ties_and_overtime_losses_season td:nth-child(18),
+.team_stats_table_ties_and_overtime_losses_season th:nth-child(19),
+.team_stats_table_ties_and_overtime_losses_season td:nth-child(19) {
+    width: 4.037%;
+}
+
+.team_stats_table_ties_and_overtime_losses_season th:nth-child(20),
+.team_stats_table_ties_and_overtime_losses_season td:nth-child(20),
+.team_stats_table_ties_and_overtime_losses_season th:nth-child(21),
+.team_stats_table_ties_and_overtime_losses_season td:nth-child(21) {
+    width: 3.834%;
+}
+
+.team_stats_table_ties_and_overtime_losses_season th:nth-child(22),
+.team_stats_table_ties_and_overtime_losses_season td:nth-child(22),
+.team_stats_table_ties_and_overtime_losses_season th:nth-child(23),
+.team_stats_table_ties_and_overtime_losses_season td:nth-child(23),
+.team_stats_table_ties_and_overtime_losses_season th:nth-child(24),
+.team_stats_table_ties_and_overtime_losses_season td:nth-child(24) {
+    width: 3.866%;
+}
+
+
+/* Team stats ties and faceoff win percentage season table */
+.team_stats_table_ties_and_faceoff_win_percentage_season {
+    font-size: 11px;
+}
+
+.team_stats_table_ties_and_faceoff_win_percentage_season th:nth-child(1),
+.team_stats_table_ties_and_faceoff_win_percentage_season td:nth-child(1) {
+    width: 16%;
+}
+
+.team_stats_table_ties_and_faceoff_win_percentage_season th:nth-child(2),
+.team_stats_table_ties_and_faceoff_win_percentage_season td:nth-child(2),
+.team_stats_table_ties_and_faceoff_win_percentage_season th:nth-child(3),
+.team_stats_table_ties_and_faceoff_win_percentage_season td:nth-child(3),
+.team_stats_table_ties_and_faceoff_win_percentage_season th:nth-child(4),
+.team_stats_table_ties_and_faceoff_win_percentage_season td:nth-child(4) {
+    width: 2.593%;
+}
+
+.team_stats_table_ties_and_faceoff_win_percentage_season th:nth-child(5),
+.team_stats_table_ties_and_faceoff_win_percentage_season td:nth-child(5) {
+    width: 3.082%;
+}
+
+.team_stats_table_ties_and_faceoff_win_percentage_season th:nth-child(6),
+.team_stats_table_ties_and_faceoff_win_percentage_season td:nth-child(6) {
+    width: 2.961%;
+}
+
+.team_stats_table_ties_and_faceoff_win_percentage_season th:nth-child(7),
+.team_stats_table_ties_and_faceoff_win_percentage_season td:nth-child(7) {
+    width: 4.053%;
+}
+
+.team_stats_table_ties_and_faceoff_win_percentage_season th:nth-child(8),
+.team_stats_table_ties_and_faceoff_win_percentage_season td:nth-child(8) {
+    width: 3.475%;
+}
+
+.team_stats_table_ties_and_faceoff_win_percentage_season th:nth-child(9),
+.team_stats_table_ties_and_faceoff_win_percentage_season td:nth-child(9) {
+    width: 3.475%;
+}
+
+.team_stats_table_ties_and_faceoff_win_percentage_season th:nth-child(10),
+.team_stats_table_ties_and_faceoff_win_percentage_season td:nth-child(10),
+.team_stats_table_ties_and_faceoff_win_percentage_season th:nth-child(11),
+.team_stats_table_ties_and_faceoff_win_percentage_season td:nth-child(11) {
+    width: 3.185%;
+}
+
+.team_stats_table_ties_and_faceoff_win_percentage_season th:nth-child(12),
+.team_stats_table_ties_and_faceoff_win_percentage_season td:nth-child(12) {
+    width: 3.475%;
+}
+
+.team_stats_table_ties_and_faceoff_win_percentage_season th:nth-child(13),
+.team_stats_table_ties_and_faceoff_win_percentage_season td:nth-child(13),
+.team_stats_table_ties_and_faceoff_win_percentage_season th:nth-child(14),
+.team_stats_table_ties_and_faceoff_win_percentage_season td:nth-child(14) {
+    width: 5.791%;
+}
+
+.team_stats_table_ties_and_faceoff_win_percentage_season th:nth-child(15),
+.team_stats_table_ties_and_faceoff_win_percentage_season td:nth-child(15) {
+    width: 4.634%;
+}
+
+.team_stats_table_ties_and_faceoff_win_percentage_season th:nth-child(16),
+.team_stats_table_ties_and_faceoff_win_percentage_season td:nth-child(16) {
+    width: 4.053%;
+}
+
+.team_stats_table_ties_and_faceoff_win_percentage_season th:nth-child(17),
+.team_stats_table_ties_and_faceoff_win_percentage_season td:nth-child(17),
+.team_stats_table_ties_and_faceoff_win_percentage_season th:nth-child(18),
+.team_stats_table_ties_and_faceoff_win_percentage_season td:nth-child(18) {
+    width: 4.329%;
+}
+
+.team_stats_table_ties_and_faceoff_win_percentage_season th:nth-child(19),
+.team_stats_table_ties_and_faceoff_win_percentage_season td:nth-child(19),
+.team_stats_table_ties_and_faceoff_win_percentage_season th:nth-child(20),
+.team_stats_table_ties_and_faceoff_win_percentage_season td:nth-child(20) {
+    width: 4.037%;
+}
+
+.team_stats_table_ties_and_faceoff_win_percentage_season th:nth-child(21),
+.team_stats_table_ties_and_faceoff_win_percentage_season td:nth-child(21),
+.team_stats_table_ties_and_faceoff_win_percentage_season th:nth-child(22),
+.team_stats_table_ties_and_faceoff_win_percentage_season td:nth-child(22),
+.team_stats_table_ties_and_faceoff_win_percentage_season th:nth-child(23),
+.team_stats_table_ties_and_faceoff_win_percentage_season td:nth-child(23) {
+    width: 4.109%;
+}
+
+
+/* Team stats ties and special teams season table */
+.team_stats_table_ties_and_special_teams_stats_season_with_seasons {
+    font-size: 11px;
+}
+
+.team_stats_table_ties_and_special_teams_stats_season_with_seasons th:nth-child(1),
+.team_stats_table_ties_and_special_teams_stats_season_with_seasons td:nth-child(1) {
+    width: 16%;
+}
+
+.team_stats_table_ties_and_special_teams_stats_season_with_seasons th:nth-child(2),
+.team_stats_table_ties_and_special_teams_stats_season_with_seasons td:nth-child(2),
+.team_stats_table_ties_and_special_teams_stats_season_with_seasons th:nth-child(3),
+.team_stats_table_ties_and_special_teams_stats_season_with_seasons td:nth-child(3),
+.team_stats_table_ties_and_special_teams_stats_season_with_seasons th:nth-child(4),
+.team_stats_table_ties_and_special_teams_stats_season_with_seasons td:nth-child(4) {
+    width: 2.593%;
+}
+
+.team_stats_table_ties_and_special_teams_stats_season_with_seasons th:nth-child(5),
+.team_stats_table_ties_and_special_teams_stats_season_with_seasons td:nth-child(5) {
+    width: 3.082%;
+}
+
+.team_stats_table_ties_and_special_teams_stats_season_with_seasons th:nth-child(6),
+.team_stats_table_ties_and_special_teams_stats_season_with_seasons td:nth-child(6) {
+    width: 2.961%;
+}
+
+.team_stats_table_ties_and_special_teams_stats_season_with_seasons th:nth-child(7),
+.team_stats_table_ties_and_special_teams_stats_season_with_seasons td:nth-child(7) {
+    width: 4.053%;
+}
+
+.team_stats_table_ties_and_special_teams_stats_season_with_seasons th:nth-child(8),
+.team_stats_table_ties_and_special_teams_stats_season_with_seasons td:nth-child(8) {
+    width: 3.475%;
+}
+
+.team_stats_table_ties_and_special_teams_stats_season_with_seasons th:nth-child(9),
+.team_stats_table_ties_and_special_teams_stats_season_with_seasons td:nth-child(9) {
+    width: 3.475%;
+}
+
+.team_stats_table_ties_and_special_teams_stats_season_with_seasons th:nth-child(10),
+.team_stats_table_ties_and_special_teams_stats_season_with_seasons td:nth-child(10),
+.team_stats_table_ties_and_special_teams_stats_season_with_seasons th:nth-child(11),
+.team_stats_table_ties_and_special_teams_stats_season_with_seasons td:nth-child(11) {
+    width: 3.185%;
+}
+
+.team_stats_table_ties_and_special_teams_stats_season_with_seasons th:nth-child(12),
+.team_stats_table_ties_and_special_teams_stats_season_with_seasons td:nth-child(12) {
+    width: 3.475%;
+}
+
+.team_stats_table_ties_and_special_teams_stats_season_with_seasons th:nth-child(13),
+.team_stats_table_ties_and_special_teams_stats_season_with_seasons td:nth-child(13),
+.team_stats_table_ties_and_special_teams_stats_season_with_seasons th:nth-child(14),
+.team_stats_table_ties_and_special_teams_stats_season_with_seasons td:nth-child(14) {
+    width: 5.791%;
+}
+
+.team_stats_table_ties_and_special_teams_stats_season_with_seasons th:nth-child(15),
+.team_stats_table_ties_and_special_teams_stats_season_with_seasons td:nth-child(15) {
+    width: 4.634%;
+}
+
+.team_stats_table_ties_and_special_teams_stats_season_with_seasons th:nth-child(16),
+.team_stats_table_ties_and_special_teams_stats_season_with_seasons td:nth-child(16) {
+    width: 4.053%;
+}
+
+.team_stats_table_ties_and_special_teams_stats_season_with_seasons th:nth-child(17),
+.team_stats_table_ties_and_special_teams_stats_season_with_seasons td:nth-child(17),
+.team_stats_table_ties_and_special_teams_stats_season_with_seasons th:nth-child(18),
+.team_stats_table_ties_and_special_teams_stats_season_with_seasons td:nth-child(18) {
+    width: 4.329%;
+}
+
+.team_stats_table_ties_and_special_teams_stats_season_with_seasons th:nth-child(19),
+.team_stats_table_ties_and_special_teams_stats_season_with_seasons td:nth-child(19),
+.team_stats_table_ties_and_special_teams_stats_season_with_seasons th:nth-child(20),
+.team_stats_table_ties_and_special_teams_stats_season_with_seasons td:nth-child(20) {
+    width: 4.037%;
+}
+
+.team_stats_table_ties_and_special_teams_stats_season_with_seasons th:nth-child(21),
+.team_stats_table_ties_and_special_teams_stats_season_with_seasons td:nth-child(21),
+.team_stats_table_ties_and_special_teams_stats_season_with_seasons th:nth-child(22),
+.team_stats_table_ties_and_special_teams_stats_season_with_seasons td:nth-child(22),
+.team_stats_table_ties_and_special_teams_stats_season_with_seasons th:nth-child(23),
+.team_stats_table_ties_and_special_teams_stats_season_with_seasons td:nth-child(23) {
+    width: 4.109%;
+}
+
+
+/* Team stats ties season table */
+.team_stats_table_ties_season {
+    font-size: 12px;
+}
+
+.team_stats_table_ties_season th:nth-child(1),
+.team_stats_table_ties_season td:nth-child(1) {
+    width: 19.075%;
+}
+
+.team_stats_table_ties_season th:nth-child(2),
+.team_stats_table_ties_season td:nth-child(2),
+.team_stats_table_ties_season th:nth-child(3),
+.team_stats_table_ties_season td:nth-child(3),
+.team_stats_table_ties_season th:nth-child(4),
+.team_stats_table_ties_season td:nth-child(4) {
+    width: 3.576%;
+}
+
+.team_stats_table_ties_season th:nth-child(5),
+.team_stats_table_ties_season td:nth-child(5) {
+    width: 3.866%;
+}
+
+.team_stats_table_ties_season th:nth-child(6),
+.team_stats_table_ties_season td:nth-child(6) {
+    width: 3.711%;
+}
+
+.team_stats_table_ties_season th:nth-child(7),
+.team_stats_table_ties_season td:nth-child(7) {
+    width: 5.074%;
+}
+
+.team_stats_table_ties_season th:nth-child(8),
+.team_stats_table_ties_season td:nth-child(8),
+.team_stats_table_ties_season th:nth-child(9),
+.team_stats_table_ties_season td:nth-child(9) {
+    width: 4.36%;
+}
+
+.team_stats_table_ties_season th:nth-child(10),
+.team_stats_table_ties_season td:nth-child(10),
+.team_stats_table_ties_season th:nth-child(11),
+.team_stats_table_ties_season td:nth-child(11) {
+    width: 4.471%;
+}
+
+.team_stats_table_ties_season th:nth-child(12),
+.team_stats_table_ties_season td:nth-child(12) {
+    width: 4.36%;
+}
+
+.team_stats_table_ties_season th:nth-child(13),
+.team_stats_table_ties_season td:nth-child(13),
+.team_stats_table_ties_season th:nth-child(14),
+.team_stats_table_ties_season td:nth-child(14) {
+    width: 7.261%;
+}
+
+.team_stats_table_ties_season th:nth-child(15),
+.team_stats_table_ties_season td:nth-child(15),
+.team_stats_table_ties_season th:nth-child(16),
+.team_stats_table_ties_season td:nth-child(16) {
+    width: 5.074%;
+}
+
+.team_stats_table_ties_season th:nth-child(17),
+.team_stats_table_ties_season td:nth-child(17),
+.team_stats_table_ties_season th:nth-child(18),
+.team_stats_table_ties_season td:nth-child(18) {
+    width: 5.426%;
+}
+
+
+/* Team stats ties and shootout season table with seasons */
+.team_stats_table_ties_and_shootout_season_with_seasons {
+    font-size: 9.5px;
+}
+
+.team_stats_table_ties_and_shootout_season_with_seasons th:nth-child(1),
+.team_stats_table_ties_and_shootout_season_with_seasons td:nth-child(1) {
+    width: 14.75%;
+}
+
+.team_stats_table_ties_and_shootout_season_with_seasons th:nth-child(2),
+.team_stats_table_ties_and_shootout_season_with_seasons td:nth-child(2) {
+    width: 5.5%;
+}
+
+.team_stats_table_ties_and_shootout_season_with_seasons th:nth-child(3),
+.team_stats_table_ties_and_shootout_season_with_seasons td:nth-child(3) {
+    width: 2.25%;
+}
+
+.team_stats_table_ties_and_shootout_season_with_seasons th:nth-child(4),
+.team_stats_table_ties_and_shootout_season_with_seasons td:nth-child(4) {
+    width: 2.25%;
+}
+
+.team_stats_table_ties_and_shootout_season_with_seasons th:nth-child(5),
+.team_stats_table_ties_and_shootout_season_with_seasons td:nth-child(5) {
+    width: 2.25%;
+}
+
+.team_stats_table_ties_and_shootout_season_with_seasons th:nth-child(6),
+.team_stats_table_ties_and_shootout_season_with_seasons td:nth-child(6) {
+    width: 2.25%;
+}
+
+.team_stats_table_ties_and_shootout_season_with_seasons th:nth-child(7),
+.team_stats_table_ties_and_shootout_season_with_seasons td:nth-child(7) {
+    width: 2.625%;
+}
+
+.team_stats_table_ties_and_shootout_season_with_seasons th:nth-child(8),
+.team_stats_table_ties_and_shootout_season_with_seasons td:nth-child(8){
+    width: 3%;
+}
+
+.team_stats_table_ties_and_shootout_season_with_seasons th:nth-child(9),
+.team_stats_table_ties_and_shootout_season_with_seasons td:nth-child(9) {
+    width: 3.25%;
+}
+
+.team_stats_table_ties_and_shootout_season_with_seasons th:nth-child(10),
+.team_stats_table_ties_and_shootout_season_with_seasons td:nth-child(10) {
+    width: 2.625%;
+}
+
+.team_stats_table_ties_and_shootout_season_with_seasons th:nth-child(11),
+.team_stats_table_ties_and_shootout_season_with_seasons td:nth-child(11) {
+    width: 3.125%;
+}
+
+.team_stats_table_ties_and_shootout_season_with_seasons th:nth-child(12),
+.team_stats_table_ties_and_shootout_season_with_seasons td:nth-child(12),
+.team_stats_table_ties_and_shootout_season_with_seasons th:nth-child(13),
+.team_stats_table_ties_and_shootout_season_with_seasons td:nth-child(13) {
+    width: 2.875%;
+}
+
+.team_stats_table_ties_and_shootout_season_with_seasons th:nth-child(14),
+.team_stats_table_ties_and_shootout_season_with_seasons td:nth-child(14) {
+    width: 3.125%;
+}
+
+.team_stats_table_ties_and_shootout_season_with_seasons th:nth-child(15),
+.team_stats_table_ties_and_shootout_season_with_seasons td:nth-child(15),
+.team_stats_table_ties_and_shootout_season_with_seasons th:nth-child(16),
+.team_stats_table_ties_and_shootout_season_with_seasons td:nth-child(16) {
+    width: 5.125%;
+}
+
+.team_stats_table_ties_and_shootout_season_with_seasons th:nth-child(17),
+.team_stats_table_ties_and_shootout_season_with_seasons td:nth-child(17) {
+    width: 3.25%;
+}
+
+.team_stats_table_ties_and_shootout_season_with_seasons th:nth-child(18),
+.team_stats_table_ties_and_shootout_season_with_seasons td:nth-child(18) {
+    width: 4.25%;
+}
+
+.team_stats_table_ties_and_shootout_season_with_seasons th:nth-child(19),
+.team_stats_table_ties_and_shootout_season_with_seasons td:nth-child(19) {
+    width: 3.25%;
+}
+
+.team_stats_table_ties_and_shootout_season_with_seasons th:nth-child(20),
+.team_stats_table_ties_and_shootout_season_with_seasons td:nth-child(20) {
+    width: 3%;
+}
+
+.team_stats_table_ties_and_shootout_season_with_seasons th:nth-child(21),
+.team_stats_table_ties_and_shootout_season_with_seasons td:nth-child(21),
+.team_stats_table_ties_and_shootout_season_with_seasons th:nth-child(22),
+.team_stats_table_ties_and_shootout_season_with_seasons td:nth-child(22) {
+    width: 3.625%;
+}
+
+.team_stats_table_ties_and_shootout_season_with_seasons th:nth-child(23),
+.team_stats_table_ties_and_shootout_season_with_seasons td:nth-child(23),
+.team_stats_table_ties_and_shootout_season_with_seasons th:nth-child(24),
+.team_stats_table_ties_and_shootout_season_with_seasons td:nth-child(24) {
+    width: 3%;
+}
+
+.team_stats_table_ties_and_shootout_season_with_seasons th:nth-child(25),
+.team_stats_table_ties_and_shootout_season_with_seasons td:nth-child(25),
+.team_stats_table_ties_and_shootout_season_with_seasons th:nth-child(26),
+.team_stats_table_ties_and_shootout_season_with_seasons td:nth-child(26) {
+    width: 3.25%;
+}
+
+.team_stats_table_ties_and_shootout_season_with_seasons th:nth-child(27),
+.team_stats_table_ties_and_shootout_season_with_seasons td:nth-child(27) {
+    width: 3.5%;
+}
+
+
+/* Team stats ties and overtime losses season table with seasons */
+.team_stats_table_ties_and_overtime_losses_season_with_seasons {
+    font-size: 10.5px;
+}
+
+.team_stats_table_ties_and_overtime_losses_season_with_seasons th:nth-child(1),
+.team_stats_table_ties_and_overtime_losses_season_with_seasons td:nth-child(1) {
+    width: 15.5%;
+}
+
+.team_stats_table_ties_and_overtime_losses_season_with_seasons th:nth-child(2),
+.team_stats_table_ties_and_overtime_losses_season_with_seasons td:nth-child(2) {
+    width: 5.75%;
+}
+
+.team_stats_table_ties_and_overtime_losses_season_with_seasons th:nth-child(3),
+.team_stats_table_ties_and_overtime_losses_season_with_seasons td:nth-child(3),
+.team_stats_table_ties_and_overtime_losses_season_with_seasons th:nth-child(4),
+.team_stats_table_ties_and_overtime_losses_season_with_seasons td:nth-child(4),
+.team_stats_table_ties_and_overtime_losses_season_with_seasons th:nth-child(5),
+.team_stats_table_ties_and_overtime_losses_season_with_seasons td:nth-child(5),
+.team_stats_table_ties_and_overtime_losses_season_with_seasons th:nth-child(6),
+.team_stats_table_ties_and_overtime_losses_season_with_seasons td:nth-child(6) {
+    width: 2.25%;
+}
+
+.team_stats_table_ties_and_overtime_losses_season_with_seasons th:nth-child(7),
+.team_stats_table_ties_and_overtime_losses_season_with_seasons td:nth-child(7) {
+    width: 2.75%;
+}
+
+.team_stats_table_ties_and_overtime_losses_season_with_seasons th:nth-child(8),
+.team_stats_table_ties_and_overtime_losses_season_with_seasons td:nth-child(8) {
+    width: 3%;
+}
+
+.team_stats_table_ties_and_overtime_losses_season_with_seasons th:nth-child(9),
+.team_stats_table_ties_and_overtime_losses_season_with_seasons td:nth-child(9) {
+    width: 3.75%;
+}
+
+.team_stats_table_ties_and_overtime_losses_season_with_seasons th:nth-child(10),
+.team_stats_table_ties_and_overtime_losses_season_with_seasons td:nth-child(10) {
+    width: 2.75%;
+}
+
+.team_stats_table_ties_and_overtime_losses_season_with_seasons th:nth-child(11),
+.team_stats_table_ties_and_overtime_losses_season_with_seasons td:nth-child(11) {
+    width: 3.25%;
+}
+
+.team_stats_table_ties_and_overtime_losses_season_with_seasons th:nth-child(12),
+.team_stats_table_ties_and_overtime_losses_season_with_seasons td:nth-child(12),
+.team_stats_table_ties_and_overtime_losses_season_with_seasons th:nth-child(13),
+.team_stats_table_ties_and_overtime_losses_season_with_seasons td:nth-child(13) {
+    width: 2.75%;
+}
+
+.team_stats_table_ties_and_overtime_losses_season_with_seasons th:nth-child(14),
+.team_stats_table_ties_and_overtime_losses_season_with_seasons td:nth-child(14) {
+    width: 3.25%;
+}
+
+.team_stats_table_ties_and_overtime_losses_season_with_seasons th:nth-child(15),
+.team_stats_table_ties_and_overtime_losses_season_with_seasons td:nth-child(15),
+.team_stats_table_ties_and_overtime_losses_season_with_seasons th:nth-child(16),
+.team_stats_table_ties_and_overtime_losses_season_with_seasons td:nth-child(16) {
+    width: 5.375%;
+}
+
+.team_stats_table_ties_and_overtime_losses_season_with_seasons th:nth-child(17),
+.team_stats_table_ties_and_overtime_losses_season_with_seasons td:nth-child(17) {
+    width: 4.5%;
+}
+
+.team_stats_table_ties_and_overtime_losses_season_with_seasons th:nth-child(18),
+.team_stats_table_ties_and_overtime_losses_season_with_seasons td:nth-child(18) {
+    width: 3.5%;
+}
+
+.team_stats_table_ties_and_overtime_losses_season_with_seasons th:nth-child(19),
+.team_stats_table_ties_and_overtime_losses_season_with_seasons td:nth-child(19),
+.team_stats_table_ties_and_overtime_losses_season_with_seasons th:nth-child(20),
+.team_stats_table_ties_and_overtime_losses_season_with_seasons td:nth-child(20) {
+    width: 4%;
+}
+
+.team_stats_table_ties_and_overtime_losses_season_with_seasons th:nth-child(21),
+.team_stats_table_ties_and_overtime_losses_season_with_seasons td:nth-child(21),
+.team_stats_table_ties_and_overtime_losses_season_with_seasons th:nth-child(22),
+.team_stats_table_ties_and_overtime_losses_season_with_seasons td:nth-child(22) {
+    width: 3.625%;
+}
+
+.team_stats_table_ties_and_overtime_losses_season_with_seasons th:nth-child(23),
+.team_stats_table_ties_and_overtime_losses_season_with_seasons td:nth-child(23),
+.team_stats_table_ties_and_overtime_losses_season_with_seasons th:nth-child(24),
+.team_stats_table_ties_and_overtime_losses_season_with_seasons td:nth-child(24),
+.team_stats_table_ties_and_overtime_losses_season_with_seasons th:nth-child(25),
+.team_stats_table_ties_and_overtime_losses_season_with_seasons td:nth-child(25) {
+    width: 4%;
+}
+
+
+/* Team stats ties and faceoff win percentage season table with seasons */
+.team_stats_table_ties_and_faceoff_win_percentage_season_with_seasons {
+    font-size: 10.5px;
+}
+
+.team_stats_table_ties_and_faceoff_win_percentage_season_with_seasons th:nth-child(1),
+.team_stats_table_ties_and_faceoff_win_percentage_season_with_seasons td:nth-child(1) {
+    width: 15.5%;
+}
+
+.team_stats_table_ties_and_faceoff_win_percentage_season_with_seasons th:nth-child(2),
+.team_stats_table_ties_and_faceoff_win_percentage_season_with_seasons td:nth-child(2) {
+    width: 5.75%;
+}
+
+.team_stats_table_ties_and_faceoff_win_percentage_season_with_seasons th:nth-child(3),
+.team_stats_table_ties_and_faceoff_win_percentage_season_with_seasons td:nth-child(3),
+.team_stats_table_ties_and_faceoff_win_percentage_season_with_seasons th:nth-child(4),
+.team_stats_table_ties_and_faceoff_win_percentage_season_with_seasons td:nth-child(4),
+.team_stats_table_ties_and_faceoff_win_percentage_season_with_seasons th:nth-child(5),
+.team_stats_table_ties_and_faceoff_win_percentage_season_with_seasons td:nth-child(5),
+.team_stats_table_ties_and_faceoff_win_percentage_season_with_seasons th:nth-child(6),
+.team_stats_table_ties_and_faceoff_win_percentage_season_with_seasons td:nth-child(6) {
+    width: 2.5%
+}
+
+.team_stats_table_ties_and_faceoff_win_percentage_season_with_seasons th:nth-child(7),
+.team_stats_table_ties_and_faceoff_win_percentage_season_with_seasons td:nth-child(7) {
+    width: 3%;
+}
+
+.team_stats_table_ties_and_faceoff_win_percentage_season_with_seasons th:nth-child(8),
+.team_stats_table_ties_and_faceoff_win_percentage_season_with_seasons td:nth-child(8) {
+    width: 3.75%;
+}
+
+.team_stats_table_ties_and_faceoff_win_percentage_season_with_seasons th:nth-child(9),
+.team_stats_table_ties_and_faceoff_win_percentage_season_with_seasons td:nth-child(9) {
+    width: 3%;
+}
+
+.team_stats_table_ties_and_faceoff_win_percentage_season_with_seasons th:nth-child(10),
+.team_stats_table_ties_and_faceoff_win_percentage_season_with_seasons td:nth-child(10) {
+    width: 3.5%;
+}
+
+.team_stats_table_ties_and_faceoff_win_percentage_season_with_seasons th:nth-child(11),
+.team_stats_table_ties_and_faceoff_win_percentage_season_with_seasons td:nth-child(11),
+.team_stats_table_ties_and_faceoff_win_percentage_season_with_seasons th:nth-child(12),
+.team_stats_table_ties_and_faceoff_win_percentage_season_with_seasons td:nth-child(12) {
+    width: 3%;
+}
+
+.team_stats_table_ties_and_faceoff_win_percentage_season_with_seasons th:nth-child(13),
+.team_stats_table_ties_and_faceoff_win_percentage_season_with_seasons td:nth-child(13) {
+    width: 3.5%;
+}
+
+.team_stats_table_ties_and_faceoff_win_percentage_season_with_seasons th:nth-child(14),
+.team_stats_table_ties_and_faceoff_win_percentage_season_with_seasons td:nth-child(14),
+.team_stats_table_ties_and_faceoff_win_percentage_season_with_seasons th:nth-child(15),
+.team_stats_table_ties_and_faceoff_win_percentage_season_with_seasons td:nth-child(15) {
+    width: 5.25%;
+}
+
+.team_stats_table_ties_and_faceoff_win_percentage_season_with_seasons th:nth-child(16),
+.team_stats_table_ties_and_faceoff_win_percentage_season_with_seasons td:nth-child(16) {
+    width: 4.25%;
+}
+
+.team_stats_table_ties_and_faceoff_win_percentage_season_with_seasons th:nth-child(17),
+.team_stats_table_ties_and_faceoff_win_percentage_season_with_seasons td:nth-child(17) {
+    width: 3.75%;
+}
+
+.team_stats_table_ties_and_faceoff_win_percentage_season_with_seasons th:nth-child(18),
+.team_stats_table_ties_and_faceoff_win_percentage_season_with_seasons td:nth-child(18),
+.team_stats_table_ties_and_faceoff_win_percentage_season_with_seasons th:nth-child(19),
+.team_stats_table_ties_and_faceoff_win_percentage_season_with_seasons td:nth-child(19) {
+    width: 4.25%;
+}
+
+.team_stats_table_ties_and_faceoff_win_percentage_season_with_seasons th:nth-child(20),
+.team_stats_table_ties_and_faceoff_win_percentage_season_with_seasons td:nth-child(20),
+.team_stats_table_ties_and_faceoff_win_percentage_season_with_seasons th:nth-child(21),
+.team_stats_table_ties_and_faceoff_win_percentage_season_with_seasons td:nth-child(21),
+.team_stats_table_ties_and_faceoff_win_percentage_season_with_seasons th:nth-child(22),
+.team_stats_table_ties_and_faceoff_win_percentage_season_with_seasons td:nth-child(22),
+.team_stats_table_ties_and_faceoff_win_percentage_season_with_seasons th:nth-child(23),
+.team_stats_table_ties_and_faceoff_win_percentage_season_with_seasons td:nth-child(23),
+.team_stats_table_ties_and_faceoff_win_percentage_season_with_seasons th:nth-child(24),
+.team_stats_table_ties_and_faceoff_win_percentage_season_with_seasons td:nth-child(24) {
+    width: 4%;
+}
+
+
+/* Team stats ties and special teams season table with seasons */
+.team_stats_table_ties_and_special_teams_stats_season_with_seasons_with_seasons {
+    font-size: 11px;
+}
+
+.team_stats_table_ties_and_special_teams_stats_season_with_seasons_with_seasons th:nth-child(1),
+.team_stats_table_ties_and_special_teams_stats_season_with_seasons_with_seasons td:nth-child(1) {
+    width: 15.5%;
+}
+
+.team_stats_table_ties_and_special_teams_stats_season_with_seasons_with_seasons th:nth-child(2),
+.team_stats_table_ties_and_special_teams_stats_season_with_seasons_with_seasons td:nth-child(2) {
+    width: 6%;
+}
+
+.team_stats_table_ties_and_special_teams_stats_season_with_seasons_with_seasons th:nth-child(3),
+.team_stats_table_ties_and_special_teams_stats_season_with_seasons_with_seasons td:nth-child(3),
+.team_stats_table_ties_and_special_teams_stats_season_with_seasons_with_seasons th:nth-child(4),
+.team_stats_table_ties_and_special_teams_stats_season_with_seasons_with_seasons td:nth-child(4),
+.team_stats_table_ties_and_special_teams_stats_season_with_seasons_with_seasons th:nth-child(5),
+.team_stats_table_ties_and_special_teams_stats_season_with_seasons_with_seasons td:nth-child(5),
+.team_stats_table_ties_and_special_teams_stats_season_with_seasons_with_seasons th:nth-child(6),
+.team_stats_table_ties_and_special_teams_stats_season_with_seasons_with_seasons td:nth-child(6) {
+    width: 2.625%;
+}
+
+.team_stats_table_ties_and_special_teams_stats_season_with_seasons_with_seasons th:nth-child(7),
+.team_stats_table_ties_and_special_teams_stats_season_with_seasons_with_seasons td:nth-child(7) {
+    width: 3%;
+}
+
+.team_stats_table_ties_and_special_teams_stats_season_with_seasons_with_seasons th:nth-child(8),
+.team_stats_table_ties_and_special_teams_stats_season_with_seasons_with_seasons td:nth-child(8) {
+    width: 4%;
+}
+
+.team_stats_table_ties_and_special_teams_stats_season_with_seasons_with_seasons th:nth-child(9),
+.team_stats_table_ties_and_special_teams_stats_season_with_seasons_with_seasons td:nth-child(9) {
+    width: 3%;
+}
+
+.team_stats_table_ties_and_special_teams_stats_season_with_seasons_with_seasons th:nth-child(10),
+.team_stats_table_ties_and_special_teams_stats_season_with_seasons_with_seasons td:nth-child(10) {
+    width: 3.5%;
+}
+
+.team_stats_table_ties_and_special_teams_stats_season_with_seasons_with_seasons th:nth-child(11),
+.team_stats_table_ties_and_special_teams_stats_season_with_seasons_with_seasons td:nth-child(11) {
+    width: 4%;
+}
+
+.team_stats_table_ties_and_special_teams_stats_season_with_seasons_with_seasons th:nth-child(12),
+.team_stats_table_ties_and_special_teams_stats_season_with_seasons_with_seasons td:nth-child(12),
+.team_stats_table_ties_and_special_teams_stats_season_with_seasons_with_seasons th:nth-child(13),
+.team_stats_table_ties_and_special_teams_stats_season_with_seasons_with_seasons td:nth-child(13) {
+    width: 3.75%;
+}
+
+.team_stats_table_ties_and_special_teams_stats_season_with_seasons_with_seasons th:nth-child(14),
+.team_stats_table_ties_and_special_teams_stats_season_with_seasons_with_seasons td:nth-child(14),
+.team_stats_table_ties_and_special_teams_stats_season_with_seasons_with_seasons th:nth-child(15),
+.team_stats_table_ties_and_special_teams_stats_season_with_seasons_with_seasons td:nth-child(15) {
+    width: 5.25%;
+}
+
+.team_stats_table_ties_and_special_teams_stats_season_with_seasons_with_seasons th:nth-child(16),
+.team_stats_table_ties_and_special_teams_stats_season_with_seasons_with_seasons td:nth-child(16) {
+    width: 4.25%
+}
+
+.team_stats_table_ties_and_special_teams_stats_season_with_seasons_with_seasons th:nth-child(17),
+.team_stats_table_ties_and_special_teams_stats_season_with_seasons_with_seasons td:nth-child(17) {
+    width: 3.75%;
+}
+
+.team_stats_table_ties_and_special_teams_stats_season_with_seasons_with_seasons th:nth-child(18),
+.team_stats_table_ties_and_special_teams_stats_season_with_seasons_with_seasons td:nth-child(18),
+.team_stats_table_ties_and_special_teams_stats_season_with_seasons_with_seasons th:nth-child(19),
+.team_stats_table_ties_and_special_teams_stats_season_with_seasons_with_seasons td:nth-child(19) {
+    width: 4.25%;
+}
+
+.team_stats_table_ties_and_special_teams_stats_season_with_seasons_with_seasons th:nth-child(20),
+.team_stats_table_ties_and_special_teams_stats_season_with_seasons_with_seasons td:nth-child(20),
+.team_stats_table_ties_and_special_teams_stats_season_with_seasons_with_seasons th:nth-child(21),
+.team_stats_table_ties_and_special_teams_stats_season_with_seasons_with_seasons td:nth-child(21),
+.team_stats_table_ties_and_special_teams_stats_season_with_seasons_with_seasons th:nth-child(22),
+.team_stats_table_ties_and_special_teams_stats_season_with_seasons_with_seasons td:nth-child(22),
+.team_stats_table_ties_and_special_teams_stats_season_with_seasons_with_seasons th:nth-child(23),
+.team_stats_table_ties_and_special_teams_stats_season_with_seasons_with_seasons td:nth-child(23) {
+    width: 4%;
+}
+
+
+/* Team stats ties season table with seasons */
+.team_stats_table_ties_season_with_seasons {
+    font-size: 12px;
+}
+
+.team_stats_table_ties_season_with_seasons th:nth-child(1),
+.team_stats_table_ties_season_with_seasons td:nth-child(1) {
+    width: 17.5%;
+}
+
+.team_stats_table_ties_season_with_seasons th:nth-child(2),
+.team_stats_table_ties_season_with_seasons td:nth-child(2) {
+    width: 6.9%;
+}
+
+.team_stats_table_ties_season_with_seasons th:nth-child(3),
+.team_stats_table_ties_season_with_seasons td:nth-child(3),
+.team_stats_table_ties_season_with_seasons th:nth-child(4),
+.team_stats_table_ties_season_with_seasons td:nth-child(4),
+.team_stats_table_ties_season_with_seasons th:nth-child(5),
+.team_stats_table_ties_season_with_seasons td:nth-child(5) {
+    width: 3.1%;
+}
+
+.team_stats_table_ties_season_with_seasons th:nth-child(6),
+.team_stats_table_ties_season_with_seasons td:nth-child(6) {
+    width: 3.2%;
+}
+
+.team_stats_table_ties_season_with_seasons th:nth-child(7),
+.team_stats_table_ties_season_with_seasons td:nth-child(7) {
+    width: 4%;
+}
+
+.team_stats_table_ties_season_with_seasons th:nth-child(8),
+.team_stats_table_ties_season_with_seasons td:nth-child(8) {
+    width: 4.8%;
+}
+
+.team_stats_table_ties_season_with_seasons th:nth-child(9),
+.team_stats_table_ties_season_with_seasons td:nth-child(9) {
+    width: 3.8%;
+}
+
+
+.team_stats_table_ties_season_with_seasons th:nth-child(10),
+.team_stats_table_ties_season_with_seasons td:nth-child(10),
+.team_stats_table_ties_season_with_seasons th:nth-child(11),
+.team_stats_table_ties_season_with_seasons td:nth-child(11),
+.team_stats_table_ties_season_with_seasons th:nth-child(12),
+.team_stats_table_ties_season_with_seasons td:nth-child(12) {
+    width: 4.1%;
+}
+
+.team_stats_table_ties_season_with_seasons th:nth-child(13),
+.team_stats_table_ties_season_with_seasons td:nth-child(13) {
+    width: 4.2%;
+}
+
+.team_stats_table_ties_season_with_seasons th:nth-child(14),
+.team_stats_table_ties_season_with_seasons td:nth-child(14),
+.team_stats_table_ties_season_with_seasons th:nth-child(15),
+.team_stats_table_ties_season_with_seasons td:nth-child(15) {
+    width: 6.2%;
+}
+
+.team_stats_table_ties_season_with_seasons th:nth-child(16),
+.team_stats_table_ties_season_with_seasons td:nth-child(16) {
+    width: 4.9%;
+}
+
+.team_stats_table_ties_season_with_seasons th:nth-child(17),
+.team_stats_table_ties_season_with_seasons td:nth-child(17) {
+    width: 4.8%;
+}
+
+.team_stats_table_ties_season_with_seasons th:nth-child(18),
+.team_stats_table_ties_season_with_seasons td:nth-child(18),
+.team_stats_table_ties_season_with_seasons th:nth-child(19),
+.team_stats_table_ties_season_with_seasons td:nth-child(19) {
+    width: 5.2%;
+}
+
+
+/* Team stats ties and overtime losses season table with seasons */
+.team_stats_table_ties_and_overtime_losses_season_with_seasons {
+    font-size: 10.5px;
+}
+
+.team_stats_table_ties_and_overtime_losses_season_with_seasons th:nth-child(1),
+.team_stats_table_ties_and_overtime_losses_season_with_seasons td:nth-child(1) {
+    width: 15.5%;
+}
+
+.team_stats_table_ties_and_overtime_losses_season_with_seasons th:nth-child(2),
+.team_stats_table_ties_and_overtime_losses_season_with_seasons td:nth-child(2) {
+    width: 6%;
+}
+
+.team_stats_table_ties_and_overtime_losses_season_with_seasons th:nth-child(3),
+.team_stats_table_ties_and_overtime_losses_season_with_seasons td:nth-child(3) {
+    width: 2.5%;
+}
+
+.team_stats_table_ties_and_overtime_losses_season_with_seasons th:nth-child(4),
+.team_stats_table_ties_and_overtime_losses_season_with_seasons td:nth-child(4),
+.team_stats_table_ties_and_overtime_losses_season_with_seasons th:nth-child(5),
+.team_stats_table_ties_and_overtime_losses_season_with_seasons td:nth-child(5),
+.team_stats_table_ties_and_overtime_losses_season_with_seasons th:nth-child(6),
+.team_stats_table_ties_and_overtime_losses_season_with_seasons td:nth-child(6) {
+    width: 2.25%;
+}
+
+.team_stats_table_ties_and_overtime_losses_season_with_seasons th:nth-child(7),
+.team_stats_table_ties_and_overtime_losses_season_with_seasons td:nth-child(7) {
+    width: 2.75%;
+}
+
+.team_stats_table_ties_and_overtime_losses_season_with_seasons th:nth-child(8),
+.team_stats_table_ties_and_overtime_losses_season_with_seasons td:nth-child(8) {
+    width: 2.75%;
+}
+
+.team_stats_table_ties_and_overtime_losses_season_with_seasons th:nth-child(9),
+.team_stats_table_ties_and_overtime_losses_season_with_seasons td:nth-child(9) {
+    width: 3.25%;
+}
+
+.team_stats_table_ties_and_overtime_losses_season_with_seasons th:nth-child(10),
+.team_stats_table_ties_and_overtime_losses_season_with_seasons td:nth-child(10) {
+    width: 2.75%
+}
+
+.team_stats_table_ties_and_overtime_losses_season_with_seasons th:nth-child(11),
+.team_stats_table_ties_and_overtime_losses_season_with_seasons td:nth-child(11) {
+    width: 3.25%;
+}
+
+.team_stats_table_ties_and_overtime_losses_season_with_seasons th:nth-child(12),
+.team_stats_table_ties_and_overtime_losses_season_with_seasons td:nth-child(12),
+.team_stats_table_ties_and_overtime_losses_season_with_seasons th:nth-child(13),
+.team_stats_table_ties_and_overtime_losses_season_with_seasons td:nth-child(13) {
+    width: 2.625%;
+}
+
+.team_stats_table_ties_and_overtime_losses_season_with_seasons th:nth-child(14),
+.team_stats_table_ties_and_overtime_losses_season_with_seasons td:nth-child(14) {
+    width: 3.25%;
+}
+
+.team_stats_table_ties_and_overtime_losses_season_with_seasons th:nth-child(15),
+.team_stats_table_ties_and_overtime_losses_season_with_seasons td:nth-child(15),
+.team_stats_table_ties_and_overtime_losses_season_with_seasons th:nth-child(16),
+.team_stats_table_ties_and_overtime_losses_season_with_seasons td:nth-child(16) {
+    width: 5.625%;
+}
+
+.team_stats_table_ties_and_overtime_losses_season_with_seasons th:nth-child(17),
+.team_stats_table_ties_and_overtime_losses_season_with_seasons td:nth-child(17) {
+    width: 4.5%;
+}
+
+.team_stats_table_ties_and_overtime_losses_season_with_seasons th:nth-child(18),
+.team_stats_table_ties_and_overtime_losses_season_with_seasons td:nth-child(18) {
+    width: 3.25%;
+}
+
+.team_stats_table_ties_and_overtime_losses_season_with_seasons th:nth-child(19),
+.team_stats_table_ties_and_overtime_losses_season_with_seasons td:nth-child(19),
+.team_stats_table_ties_and_overtime_losses_season_with_seasons th:nth-child(20),
+.team_stats_table_ties_and_overtime_losses_season_with_seasons td:nth-child(20) {
+    width: 3.875%;
+}
+
+.team_stats_table_ties_and_overtime_losses_season_with_seasons th:nth-child(21),
+.team_stats_table_ties_and_overtime_losses_season_with_seasons td:nth-child(21),
+.team_stats_table_ties_and_overtime_losses_season_with_seasons th:nth-child(22),
+.team_stats_table_ties_and_overtime_losses_season_with_seasons td:nth-child(22) {
+    width: 3.25%;
+}
+
+.team_stats_table_ties_and_overtime_losses_season_with_seasons th:nth-child(23),
+.team_stats_table_ties_and_overtime_losses_season_with_seasons td:nth-child(23),
+.team_stats_table_ties_and_overtime_losses_season_with_seasons th:nth-child(24),
+.team_stats_table_ties_and_overtime_losses_season_with_seasons td:nth-child(24) {
+    width: 3.75%;
+}
+
+.team_stats_table_ties_and_overtime_losses_season_with_seasons th:nth-child(25),
+.team_stats_table_ties_and_overtime_losses_season_with_seasons td:nth-child(25) {
+    width: 4%;
+}
+
+/* Team stats overtime losses season table with seasons */
+.team_stats_table_overtime_losses_season_with_seasons {
+    font-size: 10px;
+}
+
+.team_stats_table_overtime_losses_season_with_seasons th:nth-child(1),
+.team_stats_table_overtime_losses_season_with_seasons td:nth-child(1) {
+    width: 15.5%;
+}
+
+.team_stats_table_overtime_losses_season_with_seasons th:nth-child(2),
+.team_stats_table_overtime_losses_season_with_seasons td:nth-child(2) {
+    width: 5.5%;
+}
+
+.team_stats_table_overtime_losses_season_with_seasons th:nth-child(3),
+.team_stats_table_overtime_losses_season_with_seasons td:nth-child(3) {
+    width: 2.25%;
+}
+
+.team_stats_table_overtime_losses_season_with_seasons th:nth-child(4),
+.team_stats_table_overtime_losses_season_with_seasons td:nth-child(4),
+.team_stats_table_overtime_losses_season_with_seasons th:nth-child(5),
+.team_stats_table_overtime_losses_season_with_seasons td:nth-child(5) {
+    width: 2.375%;
+}
+
+.team_stats_table_overtime_losses_season_with_seasons th:nth-child(6),
+.team_stats_table_overtime_losses_season_with_seasons td:nth-child(6),
+.team_stats_table_overtime_losses_season_with_seasons th:nth-child(7),
+.team_stats_table_overtime_losses_season_with_seasons td:nth-child(7) {
+    width: 2.75%;
+}
+
+.team_stats_table_overtime_losses_season_with_seasons th:nth-child(8),
+.team_stats_table_overtime_losses_season_with_seasons td:nth-child(8) {
+    width: 3.5%;
+}
+
+.team_stats_table_overtime_losses_season_with_seasons th:nth-child(9),
+.team_stats_table_overtime_losses_season_with_seasons td:nth-child(9) {
+    width: 2.5%;
+}
+
+.team_stats_table_overtime_losses_season_with_seasons th:nth-child(10),
+.team_stats_table_overtime_losses_season_with_seasons td:nth-child(10) {
+    width: 3.25%;
+}
+
+.team_stats_table_overtime_losses_season_with_seasons th:nth-child(11),
+.team_stats_table_overtime_losses_season_with_seasons td:nth-child(11),
+.team_stats_table_overtime_losses_season_with_seasons th:nth-child(12),
+.team_stats_table_overtime_losses_season_with_seasons td:nth-child(12) {
+    width: 2.75%;
+}
+
+.team_stats_table_overtime_losses_season_with_seasons th:nth-child(13),
+.team_stats_table_overtime_losses_season_with_seasons td:nth-child(13) {
+    width: 3.5%;
+}
+
+.team_stats_table_overtime_losses_season_with_seasons th:nth-child(14),
+.team_stats_table_overtime_losses_season_with_seasons td:nth-child(14),
+.team_stats_table_overtime_losses_season_with_seasons th:nth-child(15),
+.team_stats_table_overtime_losses_season_with_seasons td:nth-child(15) {
+    width: 4.75%;
+}
+
+.team_stats_table_overtime_losses_season_with_seasons th:nth-child(16),
+.team_stats_table_overtime_losses_season_with_seasons td:nth-child(16) {
+    width: 3.5%;
+}
+
+.team_stats_table_overtime_losses_season_with_seasons th:nth-child(17),
+.team_stats_table_overtime_losses_season_with_seasons td:nth-child(17) {
+    width: 4.5%;
+}
+
+.team_stats_table_overtime_losses_season_with_seasons th:nth-child(18),
+.team_stats_table_overtime_losses_season_with_seasons td:nth-child(18) {
+    width: 3.75%;
+}
+
+.team_stats_table_overtime_losses_season_with_seasons th:nth-child(19),
+.team_stats_table_overtime_losses_season_with_seasons td:nth-child(19) {
+    width: 3.25%;
+}
+
+.team_stats_table_overtime_losses_season_with_seasons th:nth-child(20),
+.team_stats_table_overtime_losses_season_with_seasons td:nth-child(20),
+.team_stats_table_overtime_losses_season_with_seasons th:nth-child(21),
+.team_stats_table_overtime_losses_season_with_seasons td:nth-child(21),
+.team_stats_table_overtime_losses_season_with_seasons th:nth-child(22),
+.team_stats_table_overtime_losses_season_with_seasons td:nth-child(22),
+.team_stats_table_overtime_losses_season_with_seasons th:nth-child(23),
+.team_stats_table_overtime_losses_season_with_seasons td:nth-child(23),
+.team_stats_table_overtime_losses_season_with_seasons th:nth-child(24),
+.team_stats_table_overtime_losses_season_with_seasons td:nth-child(24),
+.team_stats_table_overtime_losses_season_with_seasons th:nth-child(25),
+.team_stats_table_overtime_losses_season_with_seasons td:nth-child(25) {
+    width: 4%;
+}
+
+
+/* Team playoff stats special teams and overtime losses season */
+.team_playoff_stats_table_special_teams_and_overtime_losses_season {
+    font-size: 14px;
+}
+
+.team_playoff_stats_table_special_teams_and_overtime_losses_season th:nth-child(1),
+.team_playoff_stats_table_special_teams_and_overtime_losses_season td:nth-child(1) {
+    width: 20%;
+}
+
+.team_playoff_stats_table_special_teams_and_overtime_losses_season th:nth-child(2),
+.team_playoff_stats_table_special_teams_and_overtime_losses_season td:nth-child(2),
+.team_playoff_stats_table_special_teams_and_overtime_losses_season th:nth-child(3),
+.team_playoff_stats_table_special_teams_and_overtime_losses_season td:nth-child(3),
+.team_playoff_stats_table_special_teams_and_overtime_losses_season th:nth-child(4),
+.team_playoff_stats_table_special_teams_and_overtime_losses_season td:nth-child(4),
+.team_playoff_stats_table_special_teams_and_overtime_losses_season th:nth-child(5),
+.team_playoff_stats_table_special_teams_and_overtime_losses_season td:nth-child(5) {
+    width: 3.5%;
+}
+
+.team_playoff_stats_table_special_teams_and_overtime_losses_season th:nth-child(6),
+.team_playoff_stats_table_special_teams_and_overtime_losses_season td:nth-child(6) {
+    width: 4.25%;
+}
+
+.team_playoff_stats_table_special_teams_and_overtime_losses_season th:nth-child(7),
+.team_playoff_stats_table_special_teams_and_overtime_losses_season td:nth-child(7) {
+    width: 5.25%;
+}
+
+.team_playoff_stats_table_special_teams_and_overtime_losses_season th:nth-child(8),
+.team_playoff_stats_table_special_teams_and_overtime_losses_season td:nth-child(8),
+.team_playoff_stats_table_special_teams_and_overtime_losses_season th:nth-child(9),
+.team_playoff_stats_table_special_teams_and_overtime_losses_season td:nth-child(9) {
+    width: 4.125%;
+}
+
+.team_playoff_stats_table_special_teams_and_overtime_losses_season th:nth-child(10),
+.team_playoff_stats_table_special_teams_and_overtime_losses_season td:nth-child(10),
+.team_playoff_stats_table_special_teams_and_overtime_losses_season th:nth-child(11),
+.team_playoff_stats_table_special_teams_and_overtime_losses_season td:nth-child(11) {
+    width: 3.75%
+}
+
+.team_playoff_stats_table_special_teams_and_overtime_losses_season th:nth-child(12),
+.team_playoff_stats_table_special_teams_and_overtime_losses_season td:nth-child(12) {
+    width: 4.5%;
+}
+
+.team_playoff_stats_table_special_teams_and_overtime_losses_season th:nth-child(13),
+.team_playoff_stats_table_special_teams_and_overtime_losses_season td:nth-child(13),
+.team_playoff_stats_table_special_teams_and_overtime_losses_season th:nth-child(14),
+.team_playoff_stats_table_special_teams_and_overtime_losses_season td:nth-child(14){
+    width: 5.25%;
+}
+
+.team_playoff_stats_table_special_teams_and_overtime_losses_season th:nth-child(15),
+.team_playoff_stats_table_special_teams_and_overtime_losses_season td:nth-child(15),
+.team_playoff_stats_table_special_teams_and_overtime_losses_season th:nth-child(16),
+.team_playoff_stats_table_special_teams_and_overtime_losses_season td:nth-child(16),
+.team_playoff_stats_table_special_teams_and_overtime_losses_season th:nth-child(17),
+.team_playoff_stats_table_special_teams_and_overtime_losses_season td:nth-child(17),
+.team_playoff_stats_table_special_teams_and_overtime_losses_season th:nth-child(18),
+.team_playoff_stats_table_special_teams_and_overtime_losses_season td:nth-child(18) {
+    width: 5%;
+}
+
+.team_playoff_stats_table_special_teams_and_overtime_losses_season th:nth-child(19),
+.team_playoff_stats_table_special_teams_and_overtime_losses_season td:nth-child(19) {
+    width: 5.25%;
+}
+
+
+/* Team playoff stats faceoff win percentage season */
+.team_playoff_stats_table_faceoff_win_percentage_season {
+    font-size: 14px;
+}
+
+.team_playoff_stats_table_faceoff_win_percentage_season th:nth-child(1),
+.team_playoff_stats_table_faceoff_win_percentage_season td:nth-child(1) {
+    width: 20%;
+}
+
+.team_playoff_stats_table_faceoff_win_percentage_season th:nth-child(2),
+.team_playoff_stats_table_faceoff_win_percentage_season td:nth-child(2),
+.team_playoff_stats_table_faceoff_win_percentage_season th:nth-child(3),
+.team_playoff_stats_table_faceoff_win_percentage_season td:nth-child(3),
+.team_playoff_stats_table_faceoff_win_percentage_season th:nth-child(4),
+.team_playoff_stats_table_faceoff_win_percentage_season td:nth-child(4) {
+    width: 3.5%;
+}
+
+.team_playoff_stats_table_faceoff_win_percentage_season th:nth-child(5),
+.team_playoff_stats_table_faceoff_win_percentage_season td:nth-child(5) {
+    width: 4.75%;
+}
+
+.team_playoff_stats_table_faceoff_win_percentage_season th:nth-child(6),
+.team_playoff_stats_table_faceoff_win_percentage_season td:nth-child(6) {
+    width: 5.5%;
+}
+
+.team_playoff_stats_table_faceoff_win_percentage_season th:nth-child(7),
+.team_playoff_stats_table_faceoff_win_percentage_season td:nth-child(7) {
+    width: 4.5%;
+}
+
+.team_playoff_stats_table_faceoff_win_percentage_season th:nth-child(8),
+.team_playoff_stats_table_faceoff_win_percentage_season td:nth-child(8) {
+    width: 5%;
+}
+
+.team_playoff_stats_table_faceoff_win_percentage_season th:nth-child(9),
+.team_playoff_stats_table_faceoff_win_percentage_season td:nth-child(9),
+.team_playoff_stats_table_faceoff_win_percentage_season th:nth-child(10),
+.team_playoff_stats_table_faceoff_win_percentage_season td:nth-child(10) {
+    width: 4.5%;
+}
+
+.team_playoff_stats_table_faceoff_win_percentage_season th:nth-child(11),
+.team_playoff_stats_table_faceoff_win_percentage_season td:nth-child(11) {
+    width: 5%;
+}
+
+.team_playoff_stats_table_faceoff_win_percentage_season th:nth-child(12),
+.team_playoff_stats_table_faceoff_win_percentage_season td:nth-child(12),
+.team_playoff_stats_table_faceoff_win_percentage_season th:nth-child(13),
+.team_playoff_stats_table_faceoff_win_percentage_season td:nth-child(13) {
+    width: 5.5%;
+}
+
+.team_playoff_stats_table_faceoff_win_percentage_season th:nth-child(14),
+.team_playoff_stats_table_faceoff_win_percentage_season td:nth-child(14),
+.team_playoff_stats_table_faceoff_win_percentage_season th:nth-child(15),
+.team_playoff_stats_table_faceoff_win_percentage_season td:nth-child(15),
+.team_playoff_stats_table_faceoff_win_percentage_season th:nth-child(16),
+.team_playoff_stats_table_faceoff_win_percentage_season td:nth-child(16),
+.team_playoff_stats_table_faceoff_win_percentage_season th:nth-child(17),
+.team_playoff_stats_table_faceoff_win_percentage_season td:nth-child(17),
+.team_playoff_stats_table_faceoff_win_percentage_season th:nth-child(18),
+.team_playoff_stats_table_faceoff_win_percentage_season td:nth-child(18) {
+    width: 5%;
+}
+
+
+/* Team playoff stats special teams season */
+.team_playoff_stats_table_special_teams_season {
+    font-size: 15px;
+}
+
+.team_playoff_stats_table_special_teams_season th:nth-child(1),
+.team_playoff_stats_table_special_teams_season td:nth-child(1) {
+    width: 21%;
+}
+
+.team_playoff_stats_table_special_teams_season th:nth-child(2),
+.team_playoff_stats_table_special_teams_season td:nth-child(2),
+.team_playoff_stats_table_special_teams_season th:nth-child(3),
+.team_playoff_stats_table_special_teams_season td:nth-child(3),
+.team_playoff_stats_table_special_teams_season th:nth-child(4),
+.team_playoff_stats_table_special_teams_season td:nth-child(4) {
+    width: 4%;
+}
+
+.team_playoff_stats_table_special_teams_season th:nth-child(5),
+.team_playoff_stats_table_special_teams_season td:nth-child(5) {
+    width: 4.5%;
+}
+
+.team_playoff_stats_table_special_teams_season th:nth-child(6),
+.team_playoff_stats_table_special_teams_season td:nth-child(6) {
+    width: 5.5%;
+}
+
+.team_playoff_stats_table_special_teams_season th:nth-child(7),
+.team_playoff_stats_table_special_teams_season td:nth-child(7),
+.team_playoff_stats_table_special_teams_season th:nth-child(8),
+.team_playoff_stats_table_special_teams_season td:nth-child(8) {
+    width: 5%;
+}
+
+.team_playoff_stats_table_special_teams_season th:nth-child(9),
+.team_playoff_stats_table_special_teams_season td:nth-child(9),
+.team_playoff_stats_table_special_teams_season th:nth-child(10),
+.team_playoff_stats_table_special_teams_season td:nth-child(10) {
+    width: 4.5%;
+}
+
+.team_playoff_stats_table_special_teams_season th:nth-child(11),
+.team_playoff_stats_table_special_teams_season td:nth-child(11) {
+    width: 5%;
+}
+
+.team_playoff_stats_table_special_teams_season th:nth-child(12),
+.team_playoff_stats_table_special_teams_season td:nth-child(12),
+.team_playoff_stats_table_special_teams_season th:nth-child(13),
+.team_playoff_stats_table_special_teams_season td:nth-child(13) {
+    width: 5.75%;
+}
+
+.team_playoff_stats_table_special_teams_season th:nth-child(14),
+.team_playoff_stats_table_special_teams_season td:nth-child(14),
+.team_playoff_stats_table_special_teams_season th:nth-child(15),
+.team_playoff_stats_table_special_teams_season td:nth-child(15) {
+    width: 5.25%;
+}
+
+.team_playoff_stats_table_special_teams_season th:nth-child(16),
+.team_playoff_stats_table_special_teams_season td:nth-child(16),
+.team_playoff_stats_table_special_teams_season th:nth-child(17),
+.team_playoff_stats_table_special_teams_season td:nth-child(17) {
+    width: 5.75%;
+}
+
+
+/* Team playoff stats ties in playoffs season */
+.team_playoff_stats_ties_in_playoffs_season {
+    font-size: 19px;
+}
+
+.team_playoff_stats_ties_in_playoffs_season th:nth-child(1),
+.team_playoff_stats_ties_in_playoffs_season td:nth-child(1) {
+    width: 23.5%;
+}
+
+.team_playoff_stats_ties_in_playoffs_season th:nth-child(2),
+.team_playoff_stats_ties_in_playoffs_season td:nth-child(2),
+.team_playoff_stats_ties_in_playoffs_season th:nth-child(3),
+.team_playoff_stats_ties_in_playoffs_season td:nth-child(3),
+.team_playoff_stats_ties_in_playoffs_season th:nth-child(4),
+.team_playoff_stats_ties_in_playoffs_season td:nth-child(4),
+.team_playoff_stats_ties_in_playoffs_season th:nth-child(5),
+.team_playoff_stats_ties_in_playoffs_season td:nth-child(5) {
+    width: 5%;
+}
+
+.team_playoff_stats_ties_in_playoffs_season th:nth-child(6),
+.team_playoff_stats_ties_in_playoffs_season td:nth-child(6) {
+    width: 5.5%;
+}
+
+.team_playoff_stats_ties_in_playoffs_season th:nth-child(7),
+.team_playoff_stats_ties_in_playoffs_season td:nth-child(7) {
+    width: 6.5%;
+}
+
+.team_playoff_stats_ties_in_playoffs_season th:nth-child(8),
+.team_playoff_stats_ties_in_playoffs_season td:nth-child(8),
+.team_playoff_stats_ties_in_playoffs_season th:nth-child(9),
+.team_playoff_stats_ties_in_playoffs_season td:nth-child(9) {
+    width: 5.5%;
+}
+
+.team_playoff_stats_ties_in_playoffs_season th:nth-child(10),
+.team_playoff_stats_ties_in_playoffs_season td:nth-child(10),
+.team_playoff_stats_ties_in_playoffs_season th:nth-child(11),
+.team_playoff_stats_ties_in_playoffs_season td:nth-child(11) {
+    width: 5%;
+}
+
+.team_playoff_stats_ties_in_playoffs_season th:nth-child(12),
+.team_playoff_stats_ties_in_playoffs_season td:nth-child(12) {
+    width: 5.5%;
+}
+
+.team_playoff_stats_ties_in_playoffs_season th:nth-child(13),
+.team_playoff_stats_ties_in_playoffs_season td:nth-child(13),
+.team_playoff_stats_ties_in_playoffs_season th:nth-child(14),
+.team_playoff_stats_ties_in_playoffs_season td:nth-child(14) {
+    width: 6.5%;
+}
+
+
+/* Team playoff stats ties season */
+.team_playoff_stats_table_ties_season {
+    font-size: 19px;
+}
+
+.team_playoff_stats_table_ties_season th:nth-child(1),
+.team_playoff_stats_table_ties_season td:nth-child(1) {
+    width: 27%;
+}
+
+.team_playoff_stats_table_ties_season th:nth-child(2),
+.team_playoff_stats_table_ties_season td:nth-child(2),
+.team_playoff_stats_table_ties_season th:nth-child(3),
+.team_playoff_stats_table_ties_season td:nth-child(3),
+.team_playoff_stats_table_ties_season th:nth-child(4),
+.team_playoff_stats_table_ties_season td:nth-child(4) {
+    width: 5.5%;
+}
+
+.team_playoff_stats_table_ties_season th:nth-child(5),
+.team_playoff_stats_table_ties_season td:nth-child(5) {
+    width: 6%;
+}
+
+.team_playoff_stats_table_ties_season th:nth-child(6),
+.team_playoff_stats_table_ties_season td:nth-child(6) {
+    width: 7%;
+}
+
+.team_playoff_stats_table_ties_season th:nth-child(7),
+.team_playoff_stats_table_ties_season td:nth-child(7),
+.team_playoff_stats_table_ties_season th:nth-child(8),
+.team_playoff_stats_table_ties_season td:nth-child(8),
+.team_playoff_stats_table_ties_season th:nth-child(9),
+.team_playoff_stats_table_ties_season td:nth-child(9),
+.team_playoff_stats_table_ties_season th:nth-child(10),
+.team_playoff_stats_table_ties_season td:nth-child(10),
+.team_playoff_stats_table_ties_season th:nth-child(11),
+.team_playoff_stats_table_ties_season td:nth-child(11) {
+    width: 6%;
+}
+
+.team_playoff_stats_table_ties_season th:nth-child(12),
+.team_playoff_stats_table_ties_season td:nth-child(12),
+.team_playoff_stats_table_ties_season th:nth-child(13),
+.team_playoff_stats_table_ties_season td:nth-child(13) {
+    width: 6.75%;
+}
+
+
+/* Team playoff stats ties season */
+.team_playoff_stats_overtime_losses_season_with_seasons {
+    font-size: 19px;
+}
+
+.team_playoff_stats_overtime_losses_season_with_seasons th:nth-child(1),
+.team_playoff_stats_overtime_losses_season_with_seasons td:nth-child(1),
+.team_playoff_stats_overtime_losses_season_with_seasons th:nth-child(2),
+.team_playoff_stats_overtime_losses_season_with_seasons td:nth-child(2),
+.team_playoff_stats_overtime_losses_season_with_seasons th:nth-child(3),
+.team_playoff_stats_overtime_losses_season_with_seasons td:nth-child(3),
+.team_playoff_stats_overtime_losses_season_with_seasons th:nth-child(4),
+.team_playoff_stats_overtime_losses_season_with_seasons td:nth-child(4),
+.team_playoff_stats_overtime_losses_season_with_seasons th:nth-child(5),
+.team_playoff_stats_overtime_losses_season_with_seasons td:nth-child(5),
+.team_playoff_stats_overtime_losses_season_with_seasons th:nth-child(6),
+.team_playoff_stats_overtime_losses_season_with_seasons td:nth-child(6),
+.team_playoff_stats_overtime_losses_season_with_seasons th:nth-child(7),
+.team_playoff_stats_overtime_losses_season_with_seasons td:nth-child(7),
+.team_playoff_stats_overtime_losses_season_with_seasons th:nth-child(8),
+.team_playoff_stats_overtime_losses_season_with_seasons td:nth-child(8),
+.team_playoff_stats_overtime_losses_season_with_seasons th:nth-child(9),
+.team_playoff_stats_overtime_losses_season_with_seasons td:nth-child(9),
+.team_playoff_stats_overtime_losses_season_with_seasons th:nth-child(10),
+.team_playoff_stats_overtime_losses_season_with_seasons td:nth-child(10),
+.team_playoff_stats_overtime_losses_season_with_seasons th:nth-child(11),
+.team_playoff_stats_overtime_losses_season_with_seasons td:nth-child(11),
+.team_playoff_stats_overtime_losses_season_with_seasons th:nth-child(12),
+.team_playoff_stats_overtime_losses_season_with_seasons td:nth-child(12),
+.team_playoff_stats_overtime_losses_season_with_seasons th:nth-child(13),
+.team_playoff_stats_overtime_losses_season_with_seasons td:nth-child(13),
+.team_playoff_stats_overtime_losses_season_with_seasons th:nth-child(14),
+.team_playoff_stats_overtime_losses_season_with_seasons td:nth-child(14),
+.team_playoff_stats_overtime_losses_season_with_seasons th:nth-child(15),
+.team_playoff_stats_overtime_losses_season_with_seasons td:nth-child(15),
+.team_playoff_stats_overtime_losses_season_with_seasons th:nth-child(16),
+.team_playoff_stats_overtime_losses_season_with_seasons td:nth-child(16),
+.team_playoff_stats_overtime_losses_season_with_seasons th:nth-child(17),
+.team_playoff_stats_overtime_losses_season_with_seasons td:nth-child(17),
+.team_playoff_stats_overtime_losses_season_with_seasons th:nth-child(18),
+.team_playoff_stats_overtime_losses_season_with_seasons td:nth-child(18),
+.team_playoff_stats_overtime_losses_season_with_seasons th:nth-child(19),
+.team_playoff_stats_overtime_losses_season_with_seasons td:nth-child(19),
+.team_playoff_stats_overtime_losses_season_with_seasons th:nth-child(20),
+.team_playoff_stats_overtime_losses_season_with_seasons td:nth-child(20) {
+    width: 5%;
+}
+
+
+/* Team playoff stats overtime losses and ties season with seasons */
+.team_playoff_stats_table_overtime_losses_and_ties_season_with_seasons {
+    font-size: 13px;
+}
+
+.team_playoff_stats_table_overtime_losses_and_ties_season_with_seasons th:nth-child(1),
+.team_playoff_stats_table_overtime_losses_and_ties_season_with_seasons td:nth-child(1) {
+    width: 18.5%;
+}
+
+.team_playoff_stats_table_overtime_losses_and_ties_season_with_seasons th:nth-child(2),
+.team_playoff_stats_table_overtime_losses_and_ties_season_with_seasons td:nth-child(2) {
+    width: 7.25%;
+}
+
+.team_playoff_stats_table_overtime_losses_and_ties_season_with_seasons th:nth-child(3),
+.team_playoff_stats_table_overtime_losses_and_ties_season_with_seasons td:nth-child(3),
+.team_playoff_stats_table_overtime_losses_and_ties_season_with_seasons th:nth-child(4),
+.team_playoff_stats_table_overtime_losses_and_ties_season_with_seasons td:nth-child(4),
+.team_playoff_stats_table_overtime_losses_and_ties_season_with_seasons th:nth-child(5),
+.team_playoff_stats_table_overtime_losses_and_ties_season_with_seasons td:nth-child(5),
+.team_playoff_stats_table_overtime_losses_and_ties_season_with_seasons th:nth-child(6),
+.team_playoff_stats_table_overtime_losses_and_ties_season_with_seasons td:nth-child(6) {
+    width: 3.125%;
+}
+
+.team_playoff_stats_table_overtime_losses_and_ties_season_with_seasons th:nth-child(7),
+.team_playoff_stats_table_overtime_losses_and_ties_season_with_seasons td:nth-child(7) {
+    width: 3.625%;
+}
+
+.team_playoff_stats_table_overtime_losses_and_ties_season_with_seasons th:nth-child(8),
+.team_playoff_stats_table_overtime_losses_and_ties_season_with_seasons td:nth-child(8) {
+    width: 3.75%;
+}
+
+.team_playoff_stats_table_overtime_losses_and_ties_season_with_seasons th:nth-child(9),
+.team_playoff_stats_table_overtime_losses_and_ties_season_with_seasons td:nth-child(9) {
+    width: 4.5%;
+}
+
+.team_playoff_stats_table_overtime_losses_and_ties_season_with_seasons th:nth-child(10),
+.team_playoff_stats_table_overtime_losses_and_ties_season_with_seasons td:nth-child(10) {
+    width: 3.5%;
+}
+
+.team_playoff_stats_table_overtime_losses_and_ties_season_with_seasons th:nth-child(11),
+.team_playoff_stats_table_overtime_losses_and_ties_season_with_seasons td:nth-child(11) {
+    width: 4%;
+}
+
+.team_playoff_stats_table_overtime_losses_and_ties_season_with_seasons th:nth-child(12),
+.team_playoff_stats_table_overtime_losses_and_ties_season_with_seasons td:nth-child(12),
+.team_playoff_stats_table_overtime_losses_and_ties_season_with_seasons th:nth-child(13),
+.team_playoff_stats_table_overtime_losses_and_ties_season_with_seasons td:nth-child(13) {
+    width: 3.5%;
+}
+
+.team_playoff_stats_table_overtime_losses_and_ties_season_with_seasons th:nth-child(14),
+.team_playoff_stats_table_overtime_losses_and_ties_season_with_seasons td:nth-child(14) {
+    width: 4%;
+}
+
+.team_playoff_stats_table_overtime_losses_and_ties_season_with_seasons th:nth-child(15),
+.team_playoff_stats_table_overtime_losses_and_ties_season_with_seasons td:nth-child(15),
+.team_playoff_stats_table_overtime_losses_and_ties_season_with_seasons th:nth-child(16),
+.team_playoff_stats_table_overtime_losses_and_ties_season_with_seasons td:nth-child(16) {
+    width: 5%;
+}
+
+.team_playoff_stats_table_overtime_losses_and_ties_season_with_seasons th:nth-child(17),
+.team_playoff_stats_table_overtime_losses_and_ties_season_with_seasons td:nth-child(17),
+.team_playoff_stats_table_overtime_losses_and_ties_season_with_seasons th:nth-child(18),
+.team_playoff_stats_table_overtime_losses_and_ties_season_with_seasons td:nth-child(18) {
+    width: 4%;
+}
+
+.team_playoff_stats_table_overtime_losses_and_ties_season_with_seasons th:nth-child(19),
+.team_playoff_stats_table_overtime_losses_and_ties_season_with_seasons td:nth-child(19),
+.team_playoff_stats_table_overtime_losses_and_ties_season_with_seasons th:nth-child(20),
+.team_playoff_stats_table_overtime_losses_and_ties_season_with_seasons td:nth-child(20) {
+    width: 4.5%;
+}
+
+.team_playoff_stats_table_overtime_losses_and_ties_season_with_seasons th:nth-child(21),
+.team_playoff_stats_table_overtime_losses_and_ties_season_with_seasons td:nth-child(21) {
+    width: 4.75%;
+}
+
+
+/* Team playoff stats overtime losses season with seasons */
+.team_playoff_stats_overtime_losses_season_with_seasons {
+    font-size: 14px;
+}
+
+.team_playoff_stats_overtime_losses_season_with_seasons th:nth-child(1),
+.team_playoff_stats_overtime_losses_season_with_seasons td:nth-child(1) {
+    width: 20%;
+}
+
+.team_playoff_stats_overtime_losses_season_with_seasons th:nth-child(2),
+.team_playoff_stats_overtime_losses_season_with_seasons td:nth-child(2) {
+    width: 7.5%;
+}
+
+.team_playoff_stats_overtime_losses_season_with_seasons th:nth-child(3),
+.team_playoff_stats_overtime_losses_season_with_seasons td:nth-child(3),
+.team_playoff_stats_overtime_losses_season_with_seasons th:nth-child(4),
+.team_playoff_stats_overtime_losses_season_with_seasons td:nth-child(4),
+.team_playoff_stats_overtime_losses_season_with_seasons th:nth-child(5),
+.team_playoff_stats_overtime_losses_season_with_seasons td:nth-child(5) {
+    width: 3.125%;
+}
+
+.team_playoff_stats_overtime_losses_season_with_seasons th:nth-child(6),
+.team_playoff_stats_overtime_losses_season_with_seasons td:nth-child(6) {
+    width: 3.5%;
+}
+
+.team_playoff_stats_overtime_losses_season_with_seasons th:nth-child(7),
+.team_playoff_stats_overtime_losses_season_with_seasons td:nth-child(7) {
+    width: 3.375%;
+}
+
+.team_playoff_stats_overtime_losses_season_with_seasons th:nth-child(8),
+.team_playoff_stats_overtime_losses_season_with_seasons td:nth-child(8) {
+    width: 4.5%;
+}
+
+.team_playoff_stats_overtime_losses_season_with_seasons th:nth-child(9),
+.team_playoff_stats_overtime_losses_season_with_seasons td:nth-child(9) {
+    width: 3.25%;
+}
+
+.team_playoff_stats_overtime_losses_season_with_seasons th:nth-child(10),
+.team_playoff_stats_overtime_losses_season_with_seasons td:nth-child(10) {
+    width: 4%;
+}
+
+.team_playoff_stats_overtime_losses_season_with_seasons th:nth-child(11),
+.team_playoff_stats_overtime_losses_season_with_seasons td:nth-child(11),
+.team_playoff_stats_overtime_losses_season_with_seasons th:nth-child(12),
+.team_playoff_stats_overtime_losses_season_with_seasons td:nth-child(12) {
+    width: 3.25%;
+}
+
+.team_playoff_stats_overtime_losses_season_with_seasons th:nth-child(13),
+.team_playoff_stats_overtime_losses_season_with_seasons td:nth-child(13) {
+    width: 4%;
+}
+
+.team_playoff_stats_overtime_losses_season_with_seasons th:nth-child(14),
+.team_playoff_stats_overtime_losses_season_with_seasons td:nth-child(14),
+.team_playoff_stats_overtime_losses_season_with_seasons th:nth-child(15),
+.team_playoff_stats_overtime_losses_season_with_seasons td:nth-child(15) {
+    width: 5%;
+}
+
+.team_playoff_stats_overtime_losses_season_with_seasons th:nth-child(16),
+.team_playoff_stats_overtime_losses_season_with_seasons td:nth-child(16),
+.team_playoff_stats_overtime_losses_season_with_seasons th:nth-child(17),
+.team_playoff_stats_overtime_losses_season_with_seasons td:nth-child(17) {
+    width: 4.5%;
+}
+
+.team_playoff_stats_overtime_losses_season_with_seasons th:nth-child(18),
+.team_playoff_stats_overtime_losses_season_with_seasons td:nth-child(18),
+.team_playoff_stats_overtime_losses_season_with_seasons th:nth-child(19),
+.team_playoff_stats_overtime_losses_season_with_seasons td:nth-child(19),
+.team_playoff_stats_overtime_losses_season_with_seasons th:nth-child(20),
+.team_playoff_stats_overtime_losses_season_with_seasons td:nth-child(20) {
+    width: 5%;
+}
+
+
+/* Team playoff stats faceoff win percentage and ties season with seasons */
+.team_playoff_stats_table_faceoff_win_percentage_and_ties_season_with_seasons {
+    font-size: 14px;
+}
+
+.team_playoff_stats_table_faceoff_win_percentage_and_ties_season_with_seasons th:nth-child(1),
+.team_playoff_stats_table_faceoff_win_percentage_and_ties_season_with_seasons td:nth-child(1) {
+    width: 20%;
+}
+
+.team_playoff_stats_table_faceoff_win_percentage_and_ties_season_with_seasons th:nth-child(2),
+.team_playoff_stats_table_faceoff_win_percentage_and_ties_season_with_seasons td:nth-child(2) {
+    width: 7.5%;
+}
+
+.team_playoff_stats_table_faceoff_win_percentage_and_ties_season_with_seasons th:nth-child(3),
+.team_playoff_stats_table_faceoff_win_percentage_and_ties_season_with_seasons td:nth-child(3),
+.team_playoff_stats_table_faceoff_win_percentage_and_ties_season_with_seasons th:nth-child(4),
+.team_playoff_stats_table_faceoff_win_percentage_and_ties_season_with_seasons td:nth-child(4),
+.team_playoff_stats_table_faceoff_win_percentage_and_ties_season_with_seasons th:nth-child(5),
+.team_playoff_stats_table_faceoff_win_percentage_and_ties_season_with_seasons td:nth-child(5) {
+    width: 3%
+}
+
+.team_playoff_stats_table_faceoff_win_percentage_and_ties_season_with_seasons th:nth-child(6),
+.team_playoff_stats_table_faceoff_win_percentage_and_ties_season_with_seasons td:nth-child(6) {
+    width: 3.25%;
+}
+
+.team_playoff_stats_table_faceoff_win_percentage_and_ties_season_with_seasons th:nth-child(7),
+.team_playoff_stats_table_faceoff_win_percentage_and_ties_season_with_seasons td:nth-child(7) {
+    width: 3.5%;
+}
+
+.team_playoff_stats_table_faceoff_win_percentage_and_ties_season_with_seasons th:nth-child(8),
+.team_playoff_stats_table_faceoff_win_percentage_and_ties_season_with_seasons td:nth-child(8) {
+    widtH: 4.5%;
+}
+
+.team_playoff_stats_table_faceoff_win_percentage_and_ties_season_with_seasons th:nth-child(9),
+.team_playoff_stats_table_faceoff_win_percentage_and_ties_season_with_seasons td:nth-child(9) {
+    width: 3.25%;
+}
+
+.team_playoff_stats_table_faceoff_win_percentage_and_ties_season_with_seasons th:nth-child(10),
+.team_playoff_stats_table_faceoff_win_percentage_and_ties_season_with_seasons td:nth-child(10) {
+    width: 4%;
+}
+
+.team_playoff_stats_table_faceoff_win_percentage_and_ties_season_with_seasons th:nth-child(11),
+.team_playoff_stats_table_faceoff_win_percentage_and_ties_season_with_seasons td:nth-child(11),
+.team_playoff_stats_table_faceoff_win_percentage_and_ties_season_with_seasons th:nth-child(12),
+.team_playoff_stats_table_faceoff_win_percentage_and_ties_season_with_seasons td:nth-child(12) {
+    width: 3.25%;
+}
+
+.team_playoff_stats_table_faceoff_win_percentage_and_ties_season_with_seasons th:nth-child(13),
+.team_playoff_stats_table_faceoff_win_percentage_and_ties_season_with_seasons td:nth-child(13) {
+    width: 4.25%;
+}
+
+.team_playoff_stats_table_faceoff_win_percentage_and_ties_season_with_seasons th:nth-child(14),
+.team_playoff_stats_table_faceoff_win_percentage_and_ties_season_with_seasons td:nth-child(14),
+.team_playoff_stats_table_faceoff_win_percentage_and_ties_season_with_seasons th:nth-child(15),
+.team_playoff_stats_table_faceoff_win_percentage_and_ties_season_with_seasons td:nth-child(15) {
+    width: 5.125%;
+}
+
+.team_playoff_stats_table_faceoff_win_percentage_and_ties_season_with_seasons th:nth-child(16),
+.team_playoff_stats_table_faceoff_win_percentage_and_ties_season_with_seasons td:nth-child(16),
+.team_playoff_stats_table_faceoff_win_percentage_and_ties_season_with_seasons th:nth-child(17),
+.team_playoff_stats_table_faceoff_win_percentage_and_ties_season_with_seasons td:nth-child(17) {
+    width: 4.5%;
+}
+
+.team_playoff_stats_table_faceoff_win_percentage_and_ties_season_with_seasons th:nth-child(18),
+.team_playoff_stats_table_faceoff_win_percentage_and_ties_season_with_seasons td:nth-child(18),
+.team_playoff_stats_table_faceoff_win_percentage_and_ties_season_with_seasons th:nth-child(19),
+.team_playoff_stats_table_faceoff_win_percentage_and_ties_season_with_seasons td:nth-child(19),
+.team_playoff_stats_table_faceoff_win_percentage_and_ties_season_with_seasons th:nth-child(20),
+.team_playoff_stats_table_faceoff_win_percentage_and_ties_season_with_seasons td:nth-child(20) {
+    width: 5%;
+}
+
+
+/* Team playoff stats faceoff win percentage season with seasons */
+.team_playoff_stats_table_faceoff_win_percentage_season_with_seasons {
+    font-size: 14.5px;
+}
+
+.team_playoff_stats_table_faceoff_win_percentage_season_with_seasons th:nth-child(1),
+.team_playoff_stats_table_faceoff_win_percentage_season_with_seasons td:nth-child(1) {
+    width: 20%;
+}
+
+.team_playoff_stats_table_faceoff_win_percentage_season_with_seasons th:nth-child(2),
+.team_playoff_stats_table_faceoff_win_percentage_season_with_seasons td:nth-child(2) {
+    width: 7.75%;
+}
+
+.team_playoff_stats_table_faceoff_win_percentage_season_with_seasons th:nth-child(3),
+.team_playoff_stats_table_faceoff_win_percentage_season_with_seasons td:nth-child(3) {
+    width: 3.25%;
+}
+
+.team_playoff_stats_table_faceoff_win_percentage_season_with_seasons th:nth-child(4),
+.team_playoff_stats_table_faceoff_win_percentage_season_with_seasons td:nth-child(4) {
+    width: 3.25%;
+}
+
+.team_playoff_stats_table_faceoff_win_percentage_season_with_seasons th:nth-child(5),
+.team_playoff_stats_table_faceoff_win_percentage_season_with_seasons td:nth-child(5) {
+    width: 3.25%;
+}
+
+.team_playoff_stats_table_faceoff_win_percentage_season_with_seasons th:nth-child(6),
+.team_playoff_stats_table_faceoff_win_percentage_season_with_seasons td:nth-child(6) {
+    width: 3.5%;
+}
+
+.team_playoff_stats_table_faceoff_win_percentage_season_with_seasons th:nth-child(7),
+.team_playoff_stats_table_faceoff_win_percentage_season_with_seasons td:nth-child(7) {
+    width: 4.75%;
+}
+
+.team_playoff_stats_table_faceoff_win_percentage_season_with_seasons th:nth-child(8),
+.team_playoff_stats_table_faceoff_win_percentage_season_with_seasons td:nth-child(8) {
+    width: 3.5%;
+}
+
+.team_playoff_stats_table_faceoff_win_percentage_season_with_seasons th:nth-child(9),
+.team_playoff_stats_table_faceoff_win_percentage_season_with_seasons td:nth-child(9) {
+    width: 4.25%;
+}
+
+.team_playoff_stats_table_faceoff_win_percentage_season_with_seasons th:nth-child(10),
+.team_playoff_stats_table_faceoff_win_percentage_season_with_seasons td:nth-child(10) {
+    width: 3.5%;
+}
+
+.team_playoff_stats_table_faceoff_win_percentage_season_with_seasons th:nth-child(11),
+.team_playoff_stats_table_faceoff_win_percentage_season_with_seasons td:nth-child(11) {
+    width: 3.5%;
+}
+
+.team_playoff_stats_table_faceoff_win_percentage_season_with_seasons th:nth-child(12),
+.team_playoff_stats_table_faceoff_win_percentage_season_with_seasons td:nth-child(12) {
+    width: 4.5%;
+}
+
+.team_playoff_stats_table_faceoff_win_percentage_season_with_seasons th:nth-child(13),
+.team_playoff_stats_table_faceoff_win_percentage_season_with_seasons td:nth-child(13),
+.team_playoff_stats_table_faceoff_win_percentage_season_with_seasons th:nth-child(14),
+.team_playoff_stats_table_faceoff_win_percentage_season_with_seasons td:nth-child(14) {
+    width: 5.5%;
+}
+
+.team_playoff_stats_table_faceoff_win_percentage_season_with_seasons th:nth-child(15),
+.team_playoff_stats_table_faceoff_win_percentage_season_with_seasons td:nth-child(15),
+.team_playoff_stats_table_faceoff_win_percentage_season_with_seasons th:nth-child(16),
+.team_playoff_stats_table_faceoff_win_percentage_season_with_seasons td:nth-child(16) {
+    width: 4.5%;
+}
+
+.team_playoff_stats_table_faceoff_win_percentage_season_with_seasons th:nth-child(17),
+.team_playoff_stats_table_faceoff_win_percentage_season_with_seasons td:nth-child(17),
+.team_playoff_stats_table_faceoff_win_percentage_season_with_seasons th:nth-child(18),
+.team_playoff_stats_table_faceoff_win_percentage_season_with_seasons td:nth-child(18),
+.team_playoff_stats_table_faceoff_win_percentage_season_with_seasons th:nth-child(19),
+.team_playoff_stats_table_faceoff_win_percentage_season_with_seasons td:nth-child(19) {
+    width: 5%;
+}
+
+
+/* Team playoff stats special teams stats and ties season with seasons */
+.team_playoff_stats_table_special_teams_stats_and_ties_season_with_seasons {
+    font-size: 14.5px;
+}
+
+.team_playoff_stats_table_special_teams_stats_and_ties_season_with_seasons th:nth-child(1),
+.team_playoff_stats_table_special_teams_stats_and_ties_season_with_seasons td:nth-child(1) {
+    width: 20%;
+}
+
+.team_playoff_stats_table_special_teams_stats_and_ties_season_with_seasons th:nth-child(2),
+.team_playoff_stats_table_special_teams_stats_and_ties_season_with_seasons td:nth-child(2) {
+    width: 7.75%;
+}
+
+.team_playoff_stats_table_special_teams_stats_and_ties_season_with_seasons th:nth-child(3),
+.team_playoff_stats_table_special_teams_stats_and_ties_season_with_seasons td:nth-child(3),
+.team_playoff_stats_table_special_teams_stats_and_ties_season_with_seasons th:nth-child(4),
+.team_playoff_stats_table_special_teams_stats_and_ties_season_with_seasons td:nth-child(4),
+.team_playoff_stats_table_special_teams_stats_and_ties_season_with_seasons th:nth-child(5),
+.team_playoff_stats_table_special_teams_stats_and_ties_season_with_seasons td:nth-child(5),
+.team_playoff_stats_table_special_teams_stats_and_ties_season_with_seasons th:nth-child(6),
+.team_playoff_stats_table_special_teams_stats_and_ties_season_with_seasons td:nth-child(6) {
+    width: 3.25%;
+}
+
+.team_playoff_stats_table_special_teams_stats_and_ties_season_with_seasons th:nth-child(7),
+.team_playoff_stats_table_special_teams_stats_and_ties_season_with_seasons td:nth-child(7) {
+    width: 3.75%;
+}
+
+.team_playoff_stats_table_special_teams_stats_and_ties_season_with_seasons th:nth-child(8),
+.team_playoff_stats_table_special_teams_stats_and_ties_season_with_seasons td:nth-child(8) {
+    width: 5%;
+}
+
+.team_playoff_stats_table_special_teams_stats_and_ties_season_with_seasons th:nth-child(9),
+.team_playoff_stats_table_special_teams_stats_and_ties_season_with_seasons td:nth-child(9) {
+    width: 3.75%;
+}
+
+.team_playoff_stats_table_special_teams_stats_and_ties_season_with_seasons th:nth-child(10),
+.team_playoff_stats_table_special_teams_stats_and_ties_season_with_seasons td:nth-child(10) {
+    width: 4.5%;
+}
+
+.team_playoff_stats_table_special_teams_stats_and_ties_season_with_seasons th:nth-child(11),
+.team_playoff_stats_table_special_teams_stats_and_ties_season_with_seasons td:nth-child(11),
+.team_playoff_stats_table_special_teams_stats_and_ties_season_with_seasons th:nth-child(12),
+.team_playoff_stats_table_special_teams_stats_and_ties_season_with_seasons td:nth-child(12) {
+    width: 4%;
+}
+
+.team_playoff_stats_table_special_teams_stats_and_ties_season_with_seasons th:nth-child(13),
+.team_playoff_stats_table_special_teams_stats_and_ties_season_with_seasons td:nth-child(13) {
+    width: 4.75%;
+}
+
+.team_playoff_stats_table_special_teams_stats_and_ties_season_with_seasons th:nth-child(14),
+.team_playoff_stats_table_special_teams_stats_and_ties_season_with_seasons td:nth-child(14),
+.team_playoff_stats_table_special_teams_stats_and_ties_season_with_seasons th:nth-child(15),
+.team_playoff_stats_table_special_teams_stats_and_ties_season_with_seasons td:nth-child(15) {
+    width: 5.5%;
+}
+
+.team_playoff_stats_table_special_teams_stats_and_ties_season_with_seasons th:nth-child(16),
+.team_playoff_stats_table_special_teams_stats_and_ties_season_with_seasons td:nth-child(16),
+.team_playoff_stats_table_special_teams_stats_and_ties_season_with_seasons th:nth-child(17),
+.team_playoff_stats_table_special_teams_stats_and_ties_season_with_seasons td:nth-child(17) {
+    width: 4.5%;
+}
+
+.team_playoff_stats_table_special_teams_stats_and_ties_season_with_seasons th:nth-child(18),
+.team_playoff_stats_table_special_teams_stats_and_ties_season_with_seasons td:nth-child(18),
+.team_playoff_stats_table_special_teams_stats_and_ties_season_with_seasons th:nth-child(19),
+.team_playoff_stats_table_special_teams_stats_and_ties_season_with_seasons td:nth-child(19) {
+    width: 5%;
+}
+
+
+/* Team playoff stats special teams stats season with seasons */
+.team_playoff_stats_table_special_teams_stats_season_with_seasons {
+    font-size: 15px;
+}
+
+.team_playoff_stats_table_special_teams_stats_season_with_seasons th:nth-child(1),
+.team_playoff_stats_table_special_teams_stats_season_with_seasons td:nth-child(1) {
+    width: 20%;
+}
+
+.team_playoff_stats_table_special_teams_stats_season_with_seasons th:nth-child(2),
+.team_playoff_stats_table_special_teams_stats_season_with_seasons td:nth-child(2) {
+    width: 8.25%;
+}
+
+.team_playoff_stats_table_special_teams_stats_season_with_seasons th:nth-child(3),
+.team_playoff_stats_table_special_teams_stats_season_with_seasons td:nth-child(3),
+.team_playoff_stats_table_special_teams_stats_season_with_seasons th:nth-child(4),
+.team_playoff_stats_table_special_teams_stats_season_with_seasons td:nth-child(4),
+.team_playoff_stats_table_special_teams_stats_season_with_seasons th:nth-child(5),
+.team_playoff_stats_table_special_teams_stats_season_with_seasons td:nth-child(5) {
+    width: 3.5%;
+}
+
+.team_playoff_stats_table_special_teams_stats_season_with_seasons th:nth-child(6),
+.team_playoff_stats_table_special_teams_stats_season_with_seasons td:nth-child(6) {
+    width: 3.75%;
+}
+
+.team_playoff_stats_table_special_teams_stats_season_with_seasons th:nth-child(7),
+.team_playoff_stats_table_special_teams_stats_season_with_seasons td:nth-child(7) {
+    width: 5.5%;
+}
+
+.team_playoff_stats_table_special_teams_stats_season_with_seasons th:nth-child(8),
+.team_playoff_stats_table_special_teams_stats_season_with_seasons td:nth-child(8) {
+    width: 3.75%;
+}
+
+.team_playoff_stats_table_special_teams_stats_season_with_seasons th:nth-child(9),
+.team_playoff_stats_table_special_teams_stats_season_with_seasons td:nth-child(9) {
+    width: 5%;
+}
+
+.team_playoff_stats_table_special_teams_stats_season_with_seasons th:nth-child(10),
+.team_playoff_stats_table_special_teams_stats_season_with_seasons td:nth-child(10),
+.team_playoff_stats_table_special_teams_stats_season_with_seasons th:nth-child(11),
+.team_playoff_stats_table_special_teams_stats_season_with_seasons td:nth-child(11) {
+    width: 4%;
+}
+
+.team_playoff_stats_table_special_teams_stats_season_with_seasons th:nth-child(12),
+.team_playoff_stats_table_special_teams_stats_season_with_seasons td:nth-child(12) {
+    width: 4.75%;
+}
+
+.team_playoff_stats_table_special_teams_stats_season_with_seasons th:nth-child(13),
+.team_playoff_stats_table_special_teams_stats_season_with_seasons td:nth-child(13),
+.team_playoff_stats_table_special_teams_stats_season_with_seasons th:nth-child(14),
+.team_playoff_stats_table_special_teams_stats_season_with_seasons td:nth-child(14) {
+    width: 5.625%;
+}
+
+.team_playoff_stats_table_special_teams_stats_season_with_seasons th:nth-child(15),
+.team_playoff_stats_table_special_teams_stats_season_with_seasons td:nth-child(15),
+.team_playoff_stats_table_special_teams_stats_season_with_seasons th:nth-child(16),
+.team_playoff_stats_table_special_teams_stats_season_with_seasons td:nth-child(16) {
+    width: 4.5%;
+}
+
+.team_playoff_stats_table_special_teams_stats_season_with_seasons th:nth-child(17),
+.team_playoff_stats_table_special_teams_stats_season_with_seasons td:nth-child(17),
+.team_playoff_stats_table_special_teams_stats_season_with_seasons th:nth-child(18),
+.team_playoff_stats_table_special_teams_stats_season_with_seasons td:nth-child(18) {
+    width: 5.125%;
+}
+
+
+/* Team playoff stats ties season with seasons */
+.team_playoff_stats_ties_season_with_seasons {
+    font-size: 18px;
+}
+
+.team_playoff_stats_ties_season_with_seasons th:nth-child(1),
+.team_playoff_stats_ties_season_with_seasons td:nth-child(1) {
+    width: 25%;
+}
+
+.team_playoff_stats_ties_season_with_seasons th:nth-child(2),
+.team_playoff_stats_ties_season_with_seasons td:nth-child(2) {
+    width: 9.5%;
+}
+
+.team_playoff_stats_ties_season_with_seasons th:nth-child(3),
+.team_playoff_stats_ties_season_with_seasons td:nth-child(3),
+.team_playoff_stats_ties_season_with_seasons th:nth-child(4),
+.team_playoff_stats_ties_season_with_seasons td:nth-child(4),
+.team_playoff_stats_ties_season_with_seasons th:nth-child(5),
+.team_playoff_stats_ties_season_with_seasons td:nth-child(5),
+.team_playoff_stats_ties_season_with_seasons th:nth-child(6),
+.team_playoff_stats_ties_season_with_seasons td:nth-child(6) {
+    width: 4%;
+}
+
+.team_playoff_stats_ties_season_with_seasons th:nth-child(7),
+.team_playoff_stats_ties_season_with_seasons td:nth-child(7) {
+    width: 4.75%;
+}
+
+.team_playoff_stats_ties_season_with_seasons th:nth-child(8),
+.team_playoff_stats_ties_season_with_seasons td:nth-child(8) {
+    width: 6%;
+}
+
+.team_playoff_stats_ties_season_with_seasons th:nth-child(9),
+.team_playoff_stats_ties_season_with_seasons td:nth-child(9) {
+    width: 4.125%;
+}
+
+.team_playoff_stats_ties_season_with_seasons th:nth-child(10),
+.team_playoff_stats_ties_season_with_seasons td:nth-child(10) {
+    width: 5.5%;
+}
+
+.team_playoff_stats_ties_season_with_seasons th:nth-child(11),
+.team_playoff_stats_ties_season_with_seasons td:nth-child(11),
+.team_playoff_stats_ties_season_with_seasons th:nth-child(12),
+.team_playoff_stats_ties_season_with_seasons td:nth-child(12) {
+    width: 5.25%;
+}
+
+.team_playoff_stats_ties_season_with_seasons th:nth-child(13),
+.team_playoff_stats_ties_season_with_seasons td:nth-child(13) {
+    width: 5.875%;
+}
+
+.team_playoff_stats_ties_season_with_seasons th:nth-child(14),
+.team_playoff_stats_ties_season_with_seasons td:nth-child(14),
+.team_playoff_stats_ties_season_with_seasons th:nth-child(15),
+.team_playoff_stats_ties_season_with_seasons td:nth-child(15) {
+    width: 6.375%;
+}
+
+
+/* Team playoff stats season with seasons */
+.team_playoff_stats_season_with_seasons {
+    font-size: 19px;
+}
+
+.team_playoff_stats_season_with_seasons th:nth-child(1),
+.team_playoff_stats_season_with_seasons td:nth-child(1) {
+    width: 25%;
+}
+
+.team_playoff_stats_season_with_seasons th:nth-child(2),
+.team_playoff_stats_season_with_seasons td:nth-child(2) {
+    width: 9.5%;
+}
+
+.team_playoff_stats_season_with_seasons th:nth-child(3),
+.team_playoff_stats_season_with_seasons td:nth-child(3),
+.team_playoff_stats_season_with_seasons th:nth-child(4),
+.team_playoff_stats_season_with_seasons td:nth-child(4),
+.team_playoff_stats_season_with_seasons th:nth-child(5),
+.team_playoff_stats_season_with_seasons td:nth-child(5) {
+    width: 4.25%;
+}
+
+.team_playoff_stats_season_with_seasons th:nth-child(6),
+.team_playoff_stats_season_with_seasons td:nth-child(6) {
+    width: 5.25%;
+}
+
+.team_playoff_stats_season_with_seasons th:nth-child(7),
+.team_playoff_stats_season_with_seasons td:nth-child(7) {
+    width: 6.25%;
+}
+
+.team_playoff_stats_season_with_seasons th:nth-child(8),
+.team_playoff_stats_season_with_seasons td:nth-child(8) {
+    width: 4.75%;
+}
+
+.team_playoff_stats_season_with_seasons th:nth-child(9),
+.team_playoff_stats_season_with_seasons td:nth-child(9) {
+    width: 5.5%;
+}
+
+.team_playoff_stats_season_with_seasons th:nth-child(10),
+.team_playoff_stats_season_with_seasons td:nth-child(10),
+.team_playoff_stats_season_with_seasons th:nth-child(11),
+.team_playoff_stats_season_with_seasons td:nth-child(11) {
+    width: 4.5%;
+}
+
+.team_playoff_stats_season_with_seasons th:nth-child(12),
+.team_playoff_stats_season_with_seasons td:nth-child(12) {
+    width: 5%;
+}
+
+.team_playoff_stats_season_with_seasons th:nth-child(13),
+.team_playoff_stats_season_with_seasons td:nth-child(13),
+.team_playoff_stats_season_with_seasons th:nth-child(14),
+.team_playoff_stats_season_with_seasons td:nth-child(14) {
+    width: 6%;
+}
+
+
+/* team stats table ties and shootout season without names */
+.team_stats_table_ties_and_shootout_season_without_names {
+    font-size: 12px;
+}
+
+.team_stats_table_ties_and_shootout_season_without_names th:nth-child(1),
+.team_stats_table_ties_and_shootout_season_without_names td:nth-child(1) {
+    width: 6.5%;
+}
+
+.team_stats_table_ties_and_shootout_season_without_names th:nth-child(2),
+.team_stats_table_ties_and_shootout_season_without_names td:nth-child(2) {
+    width: 2.75%;
+}
+
+.team_stats_table_ties_and_shootout_season_without_names th:nth-child(3),
+.team_stats_table_ties_and_shootout_season_without_names td:nth-child(3),
+.team_stats_table_ties_and_shootout_season_without_names th:nth-child(4),
+.team_stats_table_ties_and_shootout_season_without_names td:nth-child(4),
+.team_stats_table_ties_and_shootout_season_without_names th:nth-child(5),
+.team_stats_table_ties_and_shootout_season_without_names td:nth-child(5) {
+    width: 2.5%;
+}
+
+.team_stats_table_ties_and_shootout_season_without_names th:nth-child(6),
+.team_stats_table_ties_and_shootout_season_without_names td:nth-child(6),
+.team_stats_table_ties_and_shootout_season_without_names th:nth-child(7),
+.team_stats_table_ties_and_shootout_season_without_names td:nth-child(7) {
+    width: 3%;
+}
+
+.team_stats_table_ties_and_shootout_season_without_names th:nth-child(8),
+.team_stats_table_ties_and_shootout_season_without_names td:nth-child(8) {
+    width: 4%;
+}
+
+.team_stats_table_ties_and_shootout_season_without_names th:nth-child(9),
+.team_stats_table_ties_and_shootout_season_without_names td:nth-child(9) {
+    width: 3%;
+}
+
+.team_stats_table_ties_and_shootout_season_without_names th:nth-child(10),
+.team_stats_table_ties_and_shootout_season_without_names td:nth-child(10) {
+    width: 3.75%;
+}
+
+.team_stats_table_ties_and_shootout_season_without_names th:nth-child(11),
+.team_stats_table_ties_and_shootout_season_without_names td:nth-child(11),
+.team_stats_table_ties_and_shootout_season_without_names th:nth-child(12),
+.team_stats_table_ties_and_shootout_season_without_names td:nth-child(12) {
+    width: 3.25%;
+}
+
+.team_stats_table_ties_and_shootout_season_without_names th:nth-child(13),
+.team_stats_table_ties_and_shootout_season_without_names td:nth-child(13) {
+    width: 3.5%;
+}
+
+.team_stats_table_ties_and_shootout_season_without_names th:nth-child(14),
+.team_stats_table_ties_and_shootout_season_without_names td:nth-child(14),
+.team_stats_table_ties_and_shootout_season_without_names th:nth-child(15),
+.team_stats_table_ties_and_shootout_season_without_names td:nth-child(15) {
+    width: 6%;
+}
+
+.team_stats_table_ties_and_shootout_season_without_names th:nth-child(16),
+.team_stats_table_ties_and_shootout_season_without_names td:nth-child(16) {
+    width: 3.25%;
+}
+
+.team_stats_table_ties_and_shootout_season_without_names th:nth-child(17),
+.team_stats_table_ties_and_shootout_season_without_names td:nth-child(17) {
+    width: 5%;
+}
+
+.team_stats_table_ties_and_shootout_season_without_names th:nth-child(18),
+.team_stats_table_ties_and_shootout_season_without_names td:nth-child(18) {
+    width: 4%;
+}
+
+.team_stats_table_ties_and_shootout_season_without_names th:nth-child(19),
+.team_stats_table_ties_and_shootout_season_without_names td:nth-child(19) {
+    width: 3.5%;
+}
+
+.team_stats_table_ties_and_shootout_season_without_names th:nth-child(20),
+.team_stats_table_ties_and_shootout_season_without_names td:nth-child(20),
+.team_stats_table_ties_and_shootout_season_without_names th:nth-child(21),
+.team_stats_table_ties_and_shootout_season_without_names td:nth-child(21) {
+    width: 4.5%;
+}
+
+.team_stats_table_ties_and_shootout_season_without_names th:nth-child(22),
+.team_stats_table_ties_and_shootout_season_without_names td:nth-child(22),
+.team_stats_table_ties_and_shootout_season_without_names th:nth-child(23),
+.team_stats_table_ties_and_shootout_season_without_names td:nth-child(23) {
+    width: 3.5%;
+}
+
+.team_stats_table_ties_and_shootout_season_without_names th:nth-child(24),
+.team_stats_table_ties_and_shootout_season_without_names td:nth-child(24),
+.team_stats_table_ties_and_shootout_season_without_names th:nth-child(25),
+.team_stats_table_ties_and_shootout_season_without_names td:nth-child(25),
+.team_stats_table_ties_and_shootout_season_without_names th:nth-child(26),
+.team_stats_table_ties_and_shootout_season_without_names td:nth-child(26) {
+    width: 4.25%;
+}
+
+
+/* team stats table ties and special teams stats season without names */
+.team_stats_table_ties_and_special_teams_stats_season_without_names {
+    font-size: 15px;
+}
+
+.team_stats_table_ties_and_special_teams_stats_season_without_names th:nth-child(1),
+.team_stats_table_ties_and_special_teams_stats_season_without_names td:nth-child(1) {
+    width: 7.5%;
+}
+
+.team_stats_table_ties_and_special_teams_stats_season_without_names th:nth-child(2),
+.team_stats_table_ties_and_special_teams_stats_season_without_names td:nth-child(2) {
+    width: 3%;
+}
+
+.team_stats_table_ties_and_special_teams_stats_season_without_names th:nth-child(3),
+.team_stats_table_ties_and_special_teams_stats_season_without_names td:nth-child(3),
+.team_stats_table_ties_and_special_teams_stats_season_without_names th:nth-child(4),
+.team_stats_table_ties_and_special_teams_stats_season_without_names td:nth-child(4),
+.team_stats_table_ties_and_special_teams_stats_season_without_names th:nth-child(5),
+.team_stats_table_ties_and_special_teams_stats_season_without_names td:nth-child(5) {
+    width: 2.75%;
+}
+
+.team_stats_table_ties_and_special_teams_stats_season_without_names th:nth-child(6),
+.team_stats_table_ties_and_special_teams_stats_season_without_names td:nth-child(6) {
+    width: 3.5%;
+}
+
+.team_stats_table_ties_and_special_teams_stats_season_without_names th:nth-child(7),
+.team_stats_table_ties_and_special_teams_stats_season_without_names td:nth-child(7) {
+    width: 4.5%;
+}
+
+.team_stats_table_ties_and_special_teams_stats_season_without_names th:nth-child(8),
+.team_stats_table_ties_and_special_teams_stats_season_without_names td:nth-child(8) {
+    width: 3.25%;
+}
+
+.team_stats_table_ties_and_special_teams_stats_season_without_names th:nth-child(9),
+.team_stats_table_ties_and_special_teams_stats_season_without_names td:nth-child(9),
+.team_stats_table_ties_and_special_teams_stats_season_without_names th:nth-child(10),
+.team_stats_table_ties_and_special_teams_stats_season_without_names td:nth-child(10),
+.team_stats_table_ties_and_special_teams_stats_season_without_names th:nth-child(11),
+.team_stats_table_ties_and_special_teams_stats_season_without_names td:nth-child(11) {
+    width: 4.25%;
+}
+
+.team_stats_table_ties_and_special_teams_stats_season_without_names th:nth-child(12),
+.team_stats_table_ties_and_special_teams_stats_season_without_names td:nth-child(12) {
+    width: 4.75%;
+}
+
+.team_stats_table_ties_and_special_teams_stats_season_without_names th:nth-child(13),
+.team_stats_table_ties_and_special_teams_stats_season_without_names td:nth-child(13),
+.team_stats_table_ties_and_special_teams_stats_season_without_names th:nth-child(14),
+.team_stats_table_ties_and_special_teams_stats_season_without_names td:nth-child(14) {
+    width: 6.5%;
+}
+
+.team_stats_table_ties_and_special_teams_stats_season_without_names th:nth-child(15),
+.team_stats_table_ties_and_special_teams_stats_season_without_names td:nth-child(15),
+.team_stats_table_ties_and_special_teams_stats_season_without_names th:nth-child(16),
+.team_stats_table_ties_and_special_teams_stats_season_without_names td:nth-child(16) {
+    width: 4.75%;
+}
+
+.team_stats_table_ties_and_special_teams_stats_season_without_names th:nth-child(17),
+.team_stats_table_ties_and_special_teams_stats_season_without_names td:nth-child(17),
+.team_stats_table_ties_and_special_teams_stats_season_without_names th:nth-child(18),
+.team_stats_table_ties_and_special_teams_stats_season_without_names td:nth-child(18) {
+    width: 5.75%;
+}
+
+.team_stats_table_ties_and_special_teams_stats_season_without_names th:nth-child(19),
+.team_stats_table_ties_and_special_teams_stats_season_without_names td:nth-child(19),
+.team_stats_table_ties_and_special_teams_stats_season_without_names th:nth-child(20),
+.team_stats_table_ties_and_special_teams_stats_season_without_names td:nth-child(20) {
+    width: 4.25%;
+}
+
+.team_stats_table_ties_and_special_teams_stats_season_without_names th:nth-child(21),
+.team_stats_table_ties_and_special_teams_stats_season_without_names td:nth-child(21),
+.team_stats_table_ties_and_special_teams_stats_season_without_names th:nth-child(22),
+.team_stats_table_ties_and_special_teams_stats_season_without_names td:nth-child(22) {
+    width: 5%;
+}
+
+
+/* team stats table ties season without names */
+.team_stats_table_ties_season_without_names {
+    font-size: 19px;
+}
+
+.team_stats_table_ties_season_without_names th:nth-child(1),
+.team_stats_table_ties_season_without_names td:nth-child(1) {
+    width: 9.25%;
+}
+
+.team_stats_table_ties_season_without_names th:nth-child(2),
+.team_stats_table_ties_season_without_names td:nth-child(2) {
+    width: 3.75%;
+}
+
+.team_stats_table_ties_season_without_names th:nth-child(3),
+.team_stats_table_ties_season_without_names td:nth-child(3) {
+    width: 3.5%;
+}
+
+.team_stats_table_ties_season_without_names th:nth-child(4),
+.team_stats_table_ties_season_without_names td:nth-child(4) {
+    width: 3.5%;
+}
+
+.team_stats_table_ties_season_without_names th:nth-child(5),
+.team_stats_table_ties_season_without_names td:nth-child(5) {
+    width: 3.5%;
+}
+
+.team_stats_table_ties_season_without_names th:nth-child(6),
+.team_stats_table_ties_season_without_names td:nth-child(6) {
+    width: 4.25%;
+}
+
+.team_stats_table_ties_season_without_names th:nth-child(7),
+.team_stats_table_ties_season_without_names td:nth-child(7) {
+    width: 6%;
+}
+
+.team_stats_table_ties_season_without_names th:nth-child(8),
+.team_stats_table_ties_season_without_names td:nth-child(8) {
+    width: 4.25%;
+}
+
+.team_stats_table_ties_season_without_names th:nth-child(9),
+.team_stats_table_ties_season_without_names td:nth-child(9) {
+    width: 5.25%;
+}
+
+.team_stats_table_ties_season_without_names th:nth-child(10),
+.team_stats_table_ties_season_without_names td:nth-child(10) {
+    width: 4.75%;
+}
+
+.team_stats_table_ties_season_without_names th:nth-child(11),
+.team_stats_table_ties_season_without_names td:nth-child(11) {
+    width: 4.75%;
+}
+
+.team_stats_table_ties_season_without_names th:nth-child(12),
+.team_stats_table_ties_season_without_names td:nth-child(12) {
+    width: 5.25%;
+}
+
+.team_stats_table_ties_season_without_names th:nth-child(13),
+.team_stats_table_ties_season_without_names td:nth-child(13) {
+    width: 7.75%;
+}
+
+.team_stats_table_ties_season_without_names th:nth-child(14),
+.team_stats_table_ties_season_without_names td:nth-child(14) {
+    width: 7.75%;
+}
+
+.team_stats_table_ties_season_without_names th:nth-child(15),
+.team_stats_table_ties_season_without_names td:nth-child(15) {
+    width: 6.75%;
+}
+
+.team_stats_table_ties_season_without_names th:nth-child(16),
+.team_stats_table_ties_season_without_names td:nth-child(16) {
+    width: 5.75%;
+}
+
+.team_stats_table_ties_season_without_names th:nth-child(17),
+.team_stats_table_ties_season_without_names td:nth-child(17) {
+    width: 7%;
+}
+
+.team_stats_table_ties_season_without_names th:nth-child(18),
+.team_stats_table_ties_season_without_names td:nth-child(18) {
+    width: 7%;
+}
+
+
+/* team_stats_table_overtime_losses_season_without_names */
+.team_stats_table_overtime_losses_season_without_names {
+    font-size: 12px;
+}
+
+.team_stats_table_overtime_losses_season_without_names th:nth-child(1),
+.team_stats_table_overtime_losses_season_without_names td:nth-child(1) {
+    width: 6.25%;
+}
+
+.team_stats_table_overtime_losses_season_without_names th:nth-child(2),
+.team_stats_table_overtime_losses_season_without_names td:nth-child(2),
+.team_stats_table_overtime_losses_season_without_names th:nth-child(3),
+.team_stats_table_overtime_losses_season_without_names td:nth-child(3),
+.team_stats_table_overtime_losses_season_without_names th:nth-child(4),
+.team_stats_table_overtime_losses_season_without_names td:nth-child(4) {
+    width: 2.75%;
+}
+
+.team_stats_table_overtime_losses_season_without_names th:nth-child(5),
+.team_stats_table_overtime_losses_season_without_names td:nth-child(5),
+.team_stats_table_overtime_losses_season_without_names th:nth-child(6),
+.team_stats_table_overtime_losses_season_without_names td:nth-child(6) {
+    width: 3.25%;
+}
+
+.team_stats_table_overtime_losses_season_without_names th:nth-child(7),
+.team_stats_table_overtime_losses_season_without_names td:nth-child(7) {
+    width: 4.25%;
+}
+
+.team_stats_table_overtime_losses_season_without_names th:nth-child(8),
+.team_stats_table_overtime_losses_season_without_names td:nth-child(8) {
+    width: 3%;
+}
+
+.team_stats_table_overtime_losses_season_without_names th:nth-child(9),
+.team_stats_table_overtime_losses_season_without_names td:nth-child(9) {
+    width: 4%;
+}
+
+.team_stats_table_overtime_losses_season_without_names th:nth-child(10),
+.team_stats_table_overtime_losses_season_without_names td:nth-child(10),
+.team_stats_table_overtime_losses_season_without_names th:nth-child(11),
+.team_stats_table_overtime_losses_season_without_names td:nth-child(11) {
+    width: 3.25%;
+}
+
+.team_stats_table_overtime_losses_season_without_names th:nth-child(12),
+.team_stats_table_overtime_losses_season_without_names td:nth-child(12) {
+    width: 3.75%;
+}
+
+.team_stats_table_overtime_losses_season_without_names th:nth-child(13),
+.team_stats_table_overtime_losses_season_without_names td:nth-child(13),
+.team_stats_table_overtime_losses_season_without_names th:nth-child(14),
+.team_stats_table_overtime_losses_season_without_names td:nth-child(14) {
+    width: 5.5%;
+}
+
+.team_stats_table_overtime_losses_season_without_names th:nth-child(15),
+.team_stats_table_overtime_losses_season_without_names td:nth-child(15),
+.team_stats_table_overtime_losses_season_without_names th:nth-child(16),
+.team_stats_table_overtime_losses_season_without_names td:nth-child(16) {
+    width: 4.25%;
+}
+
+.team_stats_table_overtime_losses_season_without_names th:nth-child(17),
+.team_stats_table_overtime_losses_season_without_names td:nth-child(17),
+.team_stats_table_overtime_losses_season_without_names th:nth-child(18),
+.team_stats_table_overtime_losses_season_without_names td:nth-child(18) {
+    width: 4%;
+}
+
+.team_stats_table_overtime_losses_season_without_names th:nth-child(19),
+.team_stats_table_overtime_losses_season_without_names td:nth-child(19),
+.team_stats_table_overtime_losses_season_without_names th:nth-child(20),
+.team_stats_table_overtime_losses_season_without_names td:nth-child(20) {
+    width: 5%;
+}
+
+.team_stats_table_overtime_losses_season_without_names th:nth-child(21),
+.team_stats_table_overtime_losses_season_without_names td:nth-child(21),
+.team_stats_table_overtime_losses_season_without_names th:nth-child(22),
+.team_stats_table_overtime_losses_season_without_names td:nth-child(22) {
+    width: 4%;
+}
+
+.team_stats_table_overtime_losses_season_without_names th:nth-child(23),
+.team_stats_table_overtime_losses_season_without_names td:nth-child(23),
+.team_stats_table_overtime_losses_season_without_names th:nth-child(24),
+.team_stats_table_overtime_losses_season_without_names td:nth-child(24) {
+    width: 4.25%;
+}
+
+.team_stats_table_overtime_losses_season_without_names th:nth-child(25),
+.team_stats_table_overtime_losses_season_without_names td:nth-child(25) {
+    width: 4.5%;
+}
+
+
+/* team playoff stats table overtime losses and ties season without names */
+.team_playoff_stats_table_overtime_losses_and_ties_season_without_names {
+    font-size: 17px;
+}
+
+.team_playoff_stats_table_overtime_losses_and_ties_season_without_names th:nth-child(1),
+.team_playoff_stats_table_overtime_losses_and_ties_season_without_names td:nth-child(1) {
+    width: 8.75%;
+}
+
+.team_playoff_stats_table_overtime_losses_and_ties_season_without_names th:nth-child(2),
+.team_playoff_stats_table_overtime_losses_and_ties_season_without_names td:nth-child(2),
+.team_playoff_stats_table_overtime_losses_and_ties_season_without_names th:nth-child(3),
+.team_playoff_stats_table_overtime_losses_and_ties_season_without_names td:nth-child(3),
+.team_playoff_stats_table_overtime_losses_and_ties_season_without_names th:nth-child(4),
+.team_playoff_stats_table_overtime_losses_and_ties_season_without_names td:nth-child(4) {
+    width: 4%;
+}
+
+.team_playoff_stats_table_overtime_losses_and_ties_season_without_names th:nth-child(5),
+.team_playoff_stats_table_overtime_losses_and_ties_season_without_names td:nth-child(5),
+.team_playoff_stats_table_overtime_losses_and_ties_season_without_names th:nth-child(6),
+.team_playoff_stats_table_overtime_losses_and_ties_season_without_names td:nth-child(6) {
+    width: 4.75%;
+}
+
+.team_playoff_stats_table_overtime_losses_and_ties_season_without_names th:nth-child(7),
+.team_playoff_stats_table_overtime_losses_and_ties_season_without_names td:nth-child(7) {
+    width: 5.75%;
+}
+
+.team_playoff_stats_table_overtime_losses_and_ties_season_without_names th:nth-child(8),
+.team_playoff_stats_table_overtime_losses_and_ties_season_without_names td:nth-child(8) {
+    width: 4.25%;
+}
+
+.team_playoff_stats_table_overtime_losses_and_ties_season_without_names th:nth-child(9),
+.team_playoff_stats_table_overtime_losses_and_ties_season_without_names td:nth-child(9) {
+    width: 5.5%;
+}
+
+.team_playoff_stats_table_overtime_losses_and_ties_season_without_names th:nth-child(10),
+.team_playoff_stats_table_overtime_losses_and_ties_season_without_names td:nth-child(10),
+.team_playoff_stats_table_overtime_losses_and_ties_season_without_names th:nth-child(11),
+.team_playoff_stats_table_overtime_losses_and_ties_season_without_names td:nth-child(11) {
+    width: 4.25%;
+}
+
+.team_playoff_stats_table_overtime_losses_and_ties_season_without_names th:nth-child(12),
+.team_playoff_stats_table_overtime_losses_and_ties_season_without_names td:nth-child(12) {
+    width: 5.5%;
+}
+
+.team_playoff_stats_table_overtime_losses_and_ties_season_without_names th:nth-child(13),
+.team_playoff_stats_table_overtime_losses_and_ties_season_without_names td:nth-child(13),
+.team_playoff_stats_table_overtime_losses_and_ties_season_without_names th:nth-child(14),
+.team_playoff_stats_table_overtime_losses_and_ties_season_without_names td:nth-child(14) {
+    width: 6.75%;
+}
+
+.team_playoff_stats_table_overtime_losses_and_ties_season_without_names th:nth-child(15),
+.team_playoff_stats_table_overtime_losses_and_ties_season_without_names td:nth-child(15),
+.team_playoff_stats_table_overtime_losses_and_ties_season_without_names th:nth-child(16),
+.team_playoff_stats_table_overtime_losses_and_ties_season_without_names td:nth-child(16) {
+    width: 5%;
+}
+
+.team_playoff_stats_table_overtime_losses_and_ties_season_without_names th:nth-child(17),
+.team_playoff_stats_table_overtime_losses_and_ties_season_without_names td:nth-child(17),
+.team_playoff_stats_table_overtime_losses_and_ties_season_without_names th:nth-child(18),
+.team_playoff_stats_table_overtime_losses_and_ties_season_without_names td:nth-child(18) {
+    width: 5.5%;
+}
+
+.team_playoff_stats_table_overtime_losses_and_ties_season_without_names th:nth-child(19),
+.team_playoff_stats_table_overtime_losses_and_ties_season_without_names td:nth-child(19) {
+    width: 5.75%;
+}
+
+
+/* team playoff stats overtime losses season without names */
+.team_playoff_stats_overtime_losses_season_without_names {
+    font-size: 18px;
+}
+
+.team_playoff_stats_overtime_losses_season_without_names th:nth-child(1),
+.team_playoff_stats_overtime_losses_season_without_names td:nth-child(1) {
+    width: 9%;
+}
+
+.team_playoff_stats_overtime_losses_season_without_names th:nth-child(2),
+.team_playoff_stats_overtime_losses_season_without_names td:nth-child(2) {
+    width: 4%;
+}
+
+.team_playoff_stats_overtime_losses_season_without_names th:nth-child(3),
+.team_playoff_stats_overtime_losses_season_without_names td:nth-child(3) {
+    width: 3.75%;
+}
+
+.team_playoff_stats_overtime_losses_season_without_names th:nth-child(4),
+.team_playoff_stats_overtime_losses_season_without_names td:nth-child(4) {
+    width: 3.75%;
+}
+
+.team_playoff_stats_overtime_losses_season_without_names th:nth-child(5),
+.team_playoff_stats_overtime_losses_season_without_names td:nth-child(5) {
+    width: 4.5%;
+}
+
+.team_playoff_stats_overtime_losses_season_without_names th:nth-child(6),
+.team_playoff_stats_overtime_losses_season_without_names td:nth-child(6) {
+    width: 4.5%;
+}
+
+.team_playoff_stats_overtime_losses_season_without_names th:nth-child(7),
+.team_playoff_stats_overtime_losses_season_without_names td:nth-child(7) {
+    width: 6%;
+}
+
+.team_playoff_stats_overtime_losses_season_without_names th:nth-child(8),
+.team_playoff_stats_overtime_losses_season_without_names td:nth-child(8) {
+    width: 4.25%;
+}
+
+.team_playoff_stats_overtime_losses_season_without_names th:nth-child(9),
+.team_playoff_stats_overtime_losses_season_without_names td:nth-child(9) {
+    width: 5.5%;
+}
+
+.team_playoff_stats_overtime_losses_season_without_names th:nth-child(10),
+.team_playoff_stats_overtime_losses_season_without_names td:nth-child(10) {
+    width: 4.5%;
+}
+
+.team_playoff_stats_overtime_losses_season_without_names th:nth-child(11),
+.team_playoff_stats_overtime_losses_season_without_names td:nth-child(11) {
+    width: 4.5%;
+}
+
+.team_playoff_stats_overtime_losses_season_without_names th:nth-child(12),
+.team_playoff_stats_overtime_losses_season_without_names td:nth-child(12) {
+    width: 5%;
+}
+
+.team_playoff_stats_overtime_losses_season_without_names th:nth-child(13),
+.team_playoff_stats_overtime_losses_season_without_names td:nth-child(13) {
+    width: 6.25%;
+}
+
+.team_playoff_stats_overtime_losses_season_without_names th:nth-child(14),
+.team_playoff_stats_overtime_losses_season_without_names td:nth-child(14) {
+    width: 6.25%;
+}
+
+.team_playoff_stats_overtime_losses_season_without_names th:nth-child(15),
+.team_playoff_stats_overtime_losses_season_without_names td:nth-child(15) {
+    width: 5%;
+}
+
+.team_playoff_stats_overtime_losses_season_without_names th:nth-child(16),
+.team_playoff_stats_overtime_losses_season_without_names td:nth-child(16) {
+    width: 5%;
+}
+
+.team_playoff_stats_overtime_losses_season_without_names th:nth-child(17),
+.team_playoff_stats_overtime_losses_season_without_names td:nth-child(17) {
+    width: 6%;
+}
+
+.team_playoff_stats_overtime_losses_season_without_names th:nth-child(18),
+.team_playoff_stats_overtime_losses_season_without_names td:nth-child(18) {
+    width: 6%;
+}
+
+.team_playoff_stats_overtime_losses_season_without_names th:nth-child(19),
+.team_playoff_stats_overtime_losses_season_without_names td:nth-child(19) {
+    width: 5.5%;
+}
+
+
+/* team playoff stats table faceoff win percentage and ties season without names */
+.team_playoff_stats_table_faceoff_win_percentage_and_ties_season_without_names {
+    font-size: 19px;
+}
+
+.team_playoff_stats_table_faceoff_win_percentage_and_ties_season_without_names th:nth-child(1),
+.team_playoff_stats_table_faceoff_win_percentage_and_ties_season_without_names td:nth-child(1) {
+    width: 9.5%;
+}
+
+.team_playoff_stats_table_faceoff_win_percentage_and_ties_season_without_names th:nth-child(2),
+.team_playoff_stats_table_faceoff_win_percentage_and_ties_season_without_names td:nth-child(2) {
+    width: 4.25%;
+}
+
+.team_playoff_stats_table_faceoff_win_percentage_and_ties_season_without_names th:nth-child(3),
+.team_playoff_stats_table_faceoff_win_percentage_and_ties_season_without_names td:nth-child(3) {
+    width: 4%;
+}
+
+.team_playoff_stats_table_faceoff_win_percentage_and_ties_season_without_names th:nth-child(4),
+.team_playoff_stats_table_faceoff_win_percentage_and_ties_season_without_names td:nth-child(4) {
+    width: 4%;
+}
+
+.team_playoff_stats_table_faceoff_win_percentage_and_ties_season_without_names th:nth-child(5),
+.team_playoff_stats_table_faceoff_win_percentage_and_ties_season_without_names td:nth-child(5) {
+    width: 4.75%;
+}
+
+.team_playoff_stats_table_faceoff_win_percentage_and_ties_season_without_names th:nth-child(6),
+.team_playoff_stats_table_faceoff_win_percentage_and_ties_season_without_names td:nth-child(6) {
+    width: 6.25%;
+}
+
+.team_playoff_stats_table_faceoff_win_percentage_and_ties_season_without_names th:nth-child(7),
+.team_playoff_stats_table_faceoff_win_percentage_and_ties_season_without_names td:nth-child(7) {
+    width: 4.5%;
+}
+
+.team_playoff_stats_table_faceoff_win_percentage_and_ties_season_without_names th:nth-child(8),
+.team_playoff_stats_table_faceoff_win_percentage_and_ties_season_without_names td:nth-child(8) {
+    width: 5.75%;
+}
+
+.team_playoff_stats_table_faceoff_win_percentage_and_ties_season_without_names th:nth-child(9),
+.team_playoff_stats_table_faceoff_win_percentage_and_ties_season_without_names td:nth-child(9) {
+    width: 4.5%;
+}
+
+.team_playoff_stats_table_faceoff_win_percentage_and_ties_season_without_names th:nth-child(10),
+.team_playoff_stats_table_faceoff_win_percentage_and_ties_season_without_names td:nth-child(10) {
+    width: 4.5%;
+}
+
+.team_playoff_stats_table_faceoff_win_percentage_and_ties_season_without_names th:nth-child(11),
+.team_playoff_stats_table_faceoff_win_percentage_and_ties_season_without_names td:nth-child(11) {
+    width: 6%;
+}
+
+.team_playoff_stats_table_faceoff_win_percentage_and_ties_season_without_names th:nth-child(12),
+.team_playoff_stats_table_faceoff_win_percentage_and_ties_season_without_names td:nth-child(12) {
+    width: 6.75%;
+}
+
+.team_playoff_stats_table_faceoff_win_percentage_and_ties_season_without_names th:nth-child(13),
+.team_playoff_stats_table_faceoff_win_percentage_and_ties_season_without_names td:nth-child(13) {
+    width: 6.75%;
+}
+
+.team_playoff_stats_table_faceoff_win_percentage_and_ties_season_without_names th:nth-child(14),
+.team_playoff_stats_table_faceoff_win_percentage_and_ties_season_without_names td:nth-child(14) {
+    width: 5%;
+}
+
+.team_playoff_stats_table_faceoff_win_percentage_and_ties_season_without_names th:nth-child(15),
+.team_playoff_stats_table_faceoff_win_percentage_and_ties_season_without_names td:nth-child(15) {
+    width: 5%;
+}
+
+.team_playoff_stats_table_faceoff_win_percentage_and_ties_season_without_names th:nth-child(16),
+.team_playoff_stats_table_faceoff_win_percentage_and_ties_season_without_names td:nth-child(16) {
+    width: 6%;
+}
+
+.team_playoff_stats_table_faceoff_win_percentage_and_ties_season_without_names th:nth-child(17),
+.team_playoff_stats_table_faceoff_win_percentage_and_ties_season_without_names td:nth-child(17) {
+    width: 6%;
+}
+
+.team_playoff_stats_table_faceoff_win_percentage_and_ties_season_without_names th:nth-child(18),
+.team_playoff_stats_table_faceoff_win_percentage_and_ties_season_without_names td:nth-child(18) {
+    width: 6.5%;
+}
+
+
+/* team playoff stats table faceoff win percentage season without names */
+.team_playoff_stats_table_faceoff_win_percentage_season_without_names {
+    font-size: 19px;
+}
+
+.team_playoff_stats_table_faceoff_win_percentage_season_without_names th:nth-child(1),
+.team_playoff_stats_table_faceoff_win_percentage_season_without_names td:nth-child(1) {
+    width: 9.75%;
+}
+
+.team_playoff_stats_table_faceoff_win_percentage_season_without_names th:nth-child(2),
+.team_playoff_stats_table_faceoff_win_percentage_season_without_names td:nth-child(2) {
+    width: 4%;
+}
+
+.team_playoff_stats_table_faceoff_win_percentage_season_without_names th:nth-child(3),
+.team_playoff_stats_table_faceoff_win_percentage_season_without_names td:nth-child(3),
+.team_playoff_stats_table_faceoff_win_percentage_season_without_names th:nth-child(4),
+.team_playoff_stats_table_faceoff_win_percentage_season_without_names td:nth-child(4) {
+    width: 3.75%;
+}
+
+.team_playoff_stats_table_faceoff_win_percentage_season_without_names th:nth-child(5),
+.team_playoff_stats_table_faceoff_win_percentage_season_without_names td:nth-child(5) {
+    width: 4.5%;
+}
+
+.team_playoff_stats_table_faceoff_win_percentage_season_without_names th:nth-child(6),
+.team_playoff_stats_table_faceoff_win_percentage_season_without_names td:nth-child(6) {
+    width: 5.5%;
+}
+
+.team_playoff_stats_table_faceoff_win_percentage_season_without_names th:nth-child(7),
+.team_playoff_stats_table_faceoff_win_percentage_season_without_names td:nth-child(7) {
+    width: 4.5%;
+}
+
+.team_playoff_stats_table_faceoff_win_percentage_season_without_names th:nth-child(8),
+.team_playoff_stats_table_faceoff_win_percentage_season_without_names td:nth-child(8) {
+    width: 5.5%;
+}
+
+.team_playoff_stats_table_faceoff_win_percentage_season_without_names th:nth-child(9),
+.team_playoff_stats_table_faceoff_win_percentage_season_without_names td:nth-child(9),
+.team_playoff_stats_table_faceoff_win_percentage_season_without_names th:nth-child(10),
+.team_playoff_stats_table_faceoff_win_percentage_season_without_names td:nth-child(10) {
+    width: 4.25%;
+}
+
+.team_playoff_stats_table_faceoff_win_percentage_season_without_names th:nth-child(11),
+.team_playoff_stats_table_faceoff_win_percentage_season_without_names td:nth-child(11) {
+    width: 6.25%;
+}
+
+.team_playoff_stats_table_faceoff_win_percentage_season_without_names th:nth-child(12),
+.team_playoff_stats_table_faceoff_win_percentage_season_without_names td:nth-child(12),
+.team_playoff_stats_table_faceoff_win_percentage_season_without_names th:nth-child(13),
+.team_playoff_stats_table_faceoff_win_percentage_season_without_names td:nth-child(13) {
+    width: 6.75%;
+}
+
+.team_playoff_stats_table_faceoff_win_percentage_season_without_names th:nth-child(14),
+.team_playoff_stats_table_faceoff_win_percentage_season_without_names td:nth-child(14),
+.team_playoff_stats_table_faceoff_win_percentage_season_without_names th:nth-child(15),
+.team_playoff_stats_table_faceoff_win_percentage_season_without_names td:nth-child(15) {
+    width: 5.75%;
+}
+
+.team_playoff_stats_table_faceoff_win_percentage_season_without_names th:nth-child(16),
+.team_playoff_stats_table_faceoff_win_percentage_season_without_names td:nth-child(16),
+.team_playoff_stats_table_faceoff_win_percentage_season_without_names th:nth-child(17),
+.team_playoff_stats_table_faceoff_win_percentage_season_without_names td:nth-child(17) {
+    width: 6.25%;
+}
+
+.team_playoff_stats_table_faceoff_win_percentage_season_without_names th:nth-child(18),
+.team_playoff_stats_table_faceoff_win_percentage_season_without_names td:nth-child(18) {
+    width: 6.5%;
+}
+
+
+/* team playoff stats table special teams stats season without names */
+.team_playoff_stats_table_special_teams_stats_season_without_names {
+    font-size: 20px;
+}
+
+.team_playoff_stats_table_special_teams_stats_season_without_names th:nth-child(1),
+.team_playoff_stats_table_special_teams_stats_season_without_names td:nth-child(1) {
+    width: 8.25%;
+}
+
+.team_playoff_stats_table_special_teams_stats_season_without_names th:nth-child(2),
+.team_playoff_stats_table_special_teams_stats_season_without_names td:nth-child(2) {
+    width: 3.5%;
+}
+
+.team_playoff_stats_table_special_teams_stats_season_without_names th:nth-child(3),
+.team_playoff_stats_table_special_teams_stats_season_without_names td:nth-child(3) {
+    width: 3.25%;
+}
+
+.team_playoff_stats_table_special_teams_stats_season_without_names th:nth-child(4),
+.team_playoff_stats_table_special_teams_stats_season_without_names td:nth-child(4) {
+    width: 3.25%;
+}
+
+.team_playoff_stats_table_special_teams_stats_season_without_names th:nth-child(5),
+.team_playoff_stats_table_special_teams_stats_season_without_names td:nth-child(5) {
+    width: 4.25%;
+}
+
+.team_playoff_stats_table_special_teams_stats_season_without_names th:nth-child(6),
+.team_playoff_stats_table_special_teams_stats_season_without_names td:nth-child(6) {
+    width: 5.5%;
+}
+
+.team_playoff_stats_table_special_teams_stats_season_without_names th:nth-child(7),
+.team_playoff_stats_table_special_teams_stats_season_without_names td:nth-child(7) {
+    width: 4%;
+}
+
+.team_playoff_stats_table_special_teams_stats_season_without_names th:nth-child(8),
+.team_playoff_stats_table_special_teams_stats_season_without_names td:nth-child(8) {
+    width: 5%;
+}
+
+.team_playoff_stats_table_special_teams_stats_season_without_names th:nth-child(9),
+.team_playoff_stats_table_special_teams_stats_season_without_names td:nth-child(9) {
+    width: 4.5%;
+}
+
+.team_playoff_stats_table_special_teams_stats_season_without_names th:nth-child(10),
+.team_playoff_stats_table_special_teams_stats_season_without_names td:nth-child(10) {
+    width: 4.5%;
+}
+
+.team_playoff_stats_table_special_teams_stats_season_without_names th:nth-child(11),
+.team_playoff_stats_table_special_teams_stats_season_without_names td:nth-child(11) {
+    width: 5%;
+}
+
+.team_playoff_stats_table_special_teams_stats_season_without_names th:nth-child(12),
+.team_playoff_stats_table_special_teams_stats_season_without_names td:nth-child(12) {
+    width: 6.25%;
+}
+
+.team_playoff_stats_table_special_teams_stats_season_without_names th:nth-child(13),
+.team_playoff_stats_table_special_teams_stats_season_without_names td:nth-child(13) {
+    width: 6.25%;
+}
+
+.team_playoff_stats_table_special_teams_stats_season_without_names th:nth-child(14),
+.team_playoff_stats_table_special_teams_stats_season_without_names td:nth-child(14) {
+    width: 4.75%;
+}
+
+.team_playoff_stats_table_special_teams_stats_season_without_names th:nth-child(15),
+.team_playoff_stats_table_special_teams_stats_season_without_names td:nth-child(15) {
+    width: 4.75%;
+}
+
+.team_playoff_stats_table_special_teams_stats_season_without_names th:nth-child(16),
+.team_playoff_stats_table_special_teams_stats_season_without_names td:nth-child(16) {
+    width: 5.5%;
+}
+
+.team_playoff_stats_table_special_teams_stats_season_without_names th:nth-child(17),
+.team_playoff_stats_table_special_teams_stats_season_without_names td:nth-child(17) {
+    width: 5.5%;
+}
+
+
+/* team playoff stats season without names */
+.team_playoff_stats_season_without_names {
+    font-size: 26px;
+}
+
+.team_playoff_stats_season_without_names th:nth-child(1),
+.team_playoff_stats_season_without_names td:nth-child(1) {
+    width: 10%;
+}
+
+.team_playoff_stats_season_without_names th:nth-child(2),
+.team_playoff_stats_season_without_names td:nth-child(2) {
+    width: 4.25%;
+}
+
+.team_playoff_stats_season_without_names th:nth-child(3),
+.team_playoff_stats_season_without_names td:nth-child(3) {
+    width: 4.25%;
+}
+
+.team_playoff_stats_season_without_names th:nth-child(4),
+.team_playoff_stats_season_without_names td:nth-child(4) {
+    width: 4.25%;
+}
+
+.team_playoff_stats_season_without_names th:nth-child(5),
+.team_playoff_stats_season_without_names td:nth-child(5) {
+    width: 5.25%;
+}
+
+.team_playoff_stats_season_without_names th:nth-child(6),
+.team_playoff_stats_season_without_names td:nth-child(6) {
+    width: 6.75%;
+}
+
+.team_playoff_stats_season_without_names th:nth-child(7),
+.team_playoff_stats_season_without_names td:nth-child(7) {
+    width: 5%;
+}
+
+.team_playoff_stats_season_without_names th:nth-child(8),
+.team_playoff_stats_season_without_names td:nth-child(8) {
+    width: 6.25%;
+}
+
+.team_playoff_stats_season_without_names th:nth-child(9),
+.team_playoff_stats_season_without_names td:nth-child(9) {
+    width: 5%;
+}
+
+.team_playoff_stats_season_without_names th:nth-child(10),
+.team_playoff_stats_season_without_names td:nth-child(10) {
+    width: 5%;
+}
+
+.team_playoff_stats_season_without_names th:nth-child(11),
+.team_playoff_stats_season_without_names td:nth-child(11) {
+    width: 6%;
+}
+
+.team_playoff_stats_season_without_names th:nth-child(12),
+.team_playoff_stats_season_without_names td:nth-child(12) {
+    width: 7%;
+}
+
+.team_playoff_stats_season_without_names th:nth-child(13),
+.team_playoff_stats_season_without_names td:nth-child(13) {
+    width: 7%;
+}
+
+
+#stat_viewing_container td {
+    vertical-align: middle;
+}
+
+th, td {
+    padding: 8px;
+    text-align: center;
+    border: 1px solid lightgray;
+}
+
+th {
+    padding: 0;
+}
+
+tbody tr:nth-child(odd) {
+    background-color: #f2f2f2;
+}
+
+th.name_field, td.name_field, th.team_field, td.team_field {
+    text-align: left;
+    position: relative;
+}
+
+.clinching_marker, .clinching_marker_placeholder {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    line-height: 15px;
+    position: absolute;
+    top: 7px;
+    left: 35px;
+}
+
+.clinching_marker {
+    background-color: #94c2ea;
+    border-radius: 4px;
+    text-align: center;
+}
+
+.standings_table_logo_container, .team_stats_table_logo_container, .team_playoff_stats_table_logo_container {
+    display: inline-flex;
+    position: absolute;
+    justify-content: center;
+    align-items: center;
+}
+
+.standings_table_logo_container {
+    width: 20px;
+    height: 20px;
+    top: 6px;
+    left: 65px;
+}
+
+.team_stats_table_logo_container {
+    width: 16px;
+    height: 16px;
+    top: 6px;
+    left: 40px;
+}
+
+.team_stats_table_with_seasons .team_stats_table_logo_container {
+    left: 35px;
+}
+
+.team_stats_table_ties_and_overtime_losses_season_with_seasons .team_stats_table_logo_container {
+    top: 5px;
+    left: 35px;
+}
+
+.team_stats_table_ties_and_shootout_season_with_seasons .team_stats_table_logo_container {
+    top: 3px;
+    left: 32px;
+}
+
+.team_playoff_stats_table_logo_container {
+    width: 18px;
+    height: 18px;
+    top: 7px;
+    left: 55px;
+}
+
+.team_playoff_stats_table_special_teams_season .team_playoff_stats_table_logo_container {
+    width: 19px;
+    height: 19px;
+    top: 7px;
+    left: 58px;
+}
+
+.team_playoff_stats_ties_in_playoffs_season .team_playoff_stats_table_logo_container,
+.team_playoff_stats_table_ties_season .team_playoff_stats_table_logo_container {
+    width: 25px;
+    height: 25px;
+    top: 7px;
+    left: 75px;
+}
+
+.team_playoff_stats_table_overtime_losses_and_ties_season_with_seasons .team_playoff_stats_table_logo_container {
+    width: 18px;
+    height: 18px;
+    top: 7px;
+    left: 50px;
+}
+
+.team_playoff_stats_overtime_losses_season_with_seasons .team_playoff_stats_table_logo_container {
+    width: 20px;
+    height: 20px;
+    top: 5px;
+    left: 50px;
+}
+
+.team_playoff_stats_table_faceoff_win_percentage_season_with_seasons .team_playoff_stats_table_logo_container,
+.team_playoff_stats_table_special_teams_stats_and_ties_season_with_seasons .team_playoff_stats_table_logo_container {
+    width: 20px;
+    height: 20px;
+    top: 5px;
+    left: 55px;
+}
+
+.team_playoff_stats_table_special_teams_stats_season_with_seasons .team_playoff_stats_table_logo_container {
+    width: 22px;
+    height: 22px;
+    top: 5px;
+    left: 55px;
+}
+
+.team_playoff_stats_ties_season_with_seasons .team_playoff_stats_table_logo_container {
+    width: 27px;
+    height: 27px;
+    top: 4px;
+    left: 65px;
+}
+
+.team_playoff_stats_season_with_seasons .team_playoff_stats_table_logo_container {
+    width: 27px;
+    height: 27px;
+    top: 5px;
+    left: 70px;
+}
+
+
+.team_logo {
+    position: relative;    
+}
+
+.standings_table .team_logo {
+    max-width: 20px;
+    max-height: 20px;   
+}
+
+.team_stats_table .team_logo {
+    max-width: 16px;
+    max-height: 16px;  
+}
+
+.team_stats_table_ties_season .team_logo {
+    max-width: 18px;
+    max-height: 18px;  
+}
+
+.team_stats_table_with_seasons .team_logo {
+    max-width: 15px;
+    max-height: 15px;  
+}
+
+.team_stats_table_ties_and_overtime_losses_season_with_seasons .team_logo {
+    max-width: 13px;
+    max-height: 13px;
+}
+
+.team_stats_table_ties_and_shootout_season_with_seasons .team_logo {
+    max-width: 12px;
+    max-height: 12px;
+}
+
+.team_playoff_stats_table .team_logo {
+    max-width: 18px;
+    max-height: 18px; 
+}
+
+.team_playoff_stats_table_special_teams_season .team_logo {
+    max-width: 19px;
+    max-height: 19px; 
+}
+
+.team_playoff_stats_ties_in_playoffs_season .team_logo,
+.team_playoff_stats_table_ties_season .team_logo {
+    max-width: 25px;
+    max-height: 25px; 
+}
+
+.team_playoff_stats_table_overtime_losses_and_ties_season_with_seasons .team_logo {
+    max-width: 18px;
+    max-height: 18px; 
+}
+
+.team_playoff_stats_overtime_losses_season_with_seasons .team_logo,
+.team_playoff_stats_table_faceoff_win_percentage_season_with_seasons .team_logo,
+.team_playoff_stats_table_special_teams_stats_and_ties_season_with_seasons .team_logo {
+    max-width: 20px;
+    max-height: 20px; 
+}
+
+.team_playoff_stats_table_special_teams_stats_season_with_seasons .team_logo {
+    max-width: 22px;
+    max-height: 22px; 
+}
+
+.team_playoff_stats_ties_season_with_seasons .team_logo {
+    max-width: 27px;
+    max-height: 27px; 
+}
+
+.team_playoff_stats_season_with_seasons .team_logo {
+    max-width: 27px;
+    max-height: 27px; 
+}
+
+.standings_rank_and_team, .team_stats_rank_and_team, .team_playoff_stats_rank_and_team {
+    position: absolute;
+    top: 6px;
+}
+
+.standings_rank_and_team {
+    left: 95px;
+}
+
+.team_stats_rank_and_team {
+    left: 65px;
+}
+
+.team_stats_table_ties_season .team_stats_rank_and_team {
+    left: 70px;
+}
+
+.team_stats_table_with_seasons .team_stats_rank_and_team {
+    left: 60px;
+}
+
+.team_stats_table_ties_and_overtime_losses_season_with_seasons .team_stats_rank_and_team {
+    left: 60px;
+}
+
+.team_stats_table_ties_and_shootout_season_with_seasons .team_stats_rank_and_team {
+    left: 55px;
+}
+
+.team_playoff_stats_rank_and_team {
+    left: 82px;
+}
+
+.team_playoff_stats_table_special_teams_season .team_playoff_stats_rank_and_team {
+    left: 87px;
+}
+
+.team_playoff_stats_ties_in_playoffs_season .team_playoff_stats_rank_and_team, 
+.team_playoff_stats_table_ties_season .team_playoff_stats_rank_and_team {
+    left: 110px;
+}
+
+.team_playoff_stats_table_overtime_losses_and_ties_season_with_seasons .team_playoff_stats_rank_and_team {
+    left: 77px;
+}
+
+.team_playoff_stats_table_faceoff_win_percentage_season_with_seasons .team_playoff_stats_rank_and_team,
+.team_playoff_stats_table_special_teams_stats_and_ties_season_with_seasons .team_playoff_stats_rank_and_team {
+    left: 85px;
+}
+
+.team_playoff_stats_table_special_teams_stats_season_with_seasons .team_playoff_stats_rank_and_team {
+    left: 88px;
+}
+
+.team_playoff_stats_ties_season_with_seasons .team_playoff_stats_rank_and_team {
+    left: 105px;
+}
+
+.team_playoff_stats_season_with_seasons .team_playoff_stats_rank_and_team {
+    left: 110px;
+}
+
+.stat_sorting_button {
+    width: 100%;
+    padding: 8px;
+    border: none;
+    background: none;
+    font: inherit;
+}
+
+.sorted_by_stat_button {
+    background-color: #FFFF66;
+}
+
+button:disabled {
+    border: 2px solid black;
+}
+
+.modal {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal_content {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+}
+
+.team_and_season_fields_container {
+    display: flex;
+    gap: 20px;
+}
+
+.modal_submit_button {
+    margin-top: 20px;
+    width: 80px;
+    height: 30px;
+}
+
+#player_type_container {
+    display: flex;
+    margin: 20px 0 30px 0;
+}
+
+#player_type_container button {
+    font-size: 19px;
+    width: 95px;
+    height: 55px;
+    background-color: white;
+}
+
+#player_type_container button:hover {
+    background-color: #c0c0c0;
+}
+
+#skaters_button {
+    margin-right: 0;
+    border: 1px solid black;
+    border-right: none;
+    border-radius: 16px 0 0 16px;
+}
+
+#goalies_button {
+    margin-left: 0;
+    border: 1px solid black;
+    border-radius: 0 16px 16px 0;
+}
+
+#checkbox {
+    margin-top: 60px;
+}
+
+#checkbox_text {
+    margin-top: 5px;
+    display: block;
+    text-align: center;
+    font-size: 16px;
+}
+
+
+/* Skater stats table time on ice/game and faceoff percentage season */
+.skater_stats_table_time_on_ice_per_game_and_faceoff_percentage_season {
+    font-size: 16px;
+}
+
+.skater_stats_table_time_on_ice_per_game_and_faceoff_percentage_season th:nth-child(1),
+.skater_stats_table_time_on_ice_per_game_and_faceoff_percentage_season td:nth-child(1) {
+    width: 16%;
+}
+
+.skater_stats_table_time_on_ice_per_game_and_faceoff_percentage_season th:nth-child(2),
+.skater_stats_table_time_on_ice_per_game_and_faceoff_percentage_season td:nth-child(2) {
+    width: 17.25%;
+}
+
+.skater_stats_table_time_on_ice_per_game_and_faceoff_percentage_season th:nth-child(3),
+.skater_stats_table_time_on_ice_per_game_and_faceoff_percentage_season td:nth-child(3) {
+    width: 3.5%;
+}
+
+.skater_stats_table_time_on_ice_per_game_and_faceoff_percentage_season th:nth-child(4),
+.skater_stats_table_time_on_ice_per_game_and_faceoff_percentage_season td:nth-child(4) {
+    width: 3.25%;
+}
+
+.skater_stats_table_time_on_ice_per_game_and_faceoff_percentage_season th:nth-child(5),
+.skater_stats_table_time_on_ice_per_game_and_faceoff_percentage_season td:nth-child(5) {
+    width: 3.25%;
+}
+
+.skater_stats_table_time_on_ice_per_game_and_faceoff_percentage_season th:nth-child(6),
+.skater_stats_table_time_on_ice_per_game_and_faceoff_percentage_season td:nth-child(6) {
+    width: 4%;
+}
+
+.skater_stats_table_time_on_ice_per_game_and_faceoff_percentage_season th:nth-child(7),
+.skater_stats_table_time_on_ice_per_game_and_faceoff_percentage_season td:nth-child(7) {
+    width: 3.75%;
+}
+
+.skater_stats_table_time_on_ice_per_game_and_faceoff_percentage_season th:nth-child(8),
+.skater_stats_table_time_on_ice_per_game_and_faceoff_percentage_season td:nth-child(8) {
+    width: 4.5%;
+}
+
+.skater_stats_table_time_on_ice_per_game_and_faceoff_percentage_season th:nth-child(9),
+.skater_stats_table_time_on_ice_per_game_and_faceoff_percentage_season td:nth-child(9) {
+    width: 4.25%;
+}
+
+.skater_stats_table_time_on_ice_per_game_and_faceoff_percentage_season th:nth-child(10),
+.skater_stats_table_time_on_ice_per_game_and_faceoff_percentage_season td:nth-child(10) {
+    width: 4.25%;
+}
+
+.skater_stats_table_time_on_ice_per_game_and_faceoff_percentage_season th:nth-child(11),
+.skater_stats_table_time_on_ice_per_game_and_faceoff_percentage_season td:nth-child(11),
+.skater_stats_table_time_on_ice_per_game_and_faceoff_percentage_season th:nth-child(12),
+.skater_stats_table_time_on_ice_per_game_and_faceoff_percentage_season td:nth-child(12) {
+    width: 4.25%;
+}
+
+.skater_stats_table_time_on_ice_per_game_and_faceoff_percentage_season th:nth-child(13),
+.skater_stats_table_time_on_ice_per_game_and_faceoff_percentage_season td:nth-child(13) {
+    width: 5.25%;
+}
+
+.skater_stats_table_time_on_ice_per_game_and_faceoff_percentage_season th:nth-child(14),
+.skater_stats_table_time_on_ice_per_game_and_faceoff_percentage_season td:nth-child(14) {
+    width: 4.5%;
+}
+
+.skater_stats_table_time_on_ice_per_game_and_faceoff_percentage_season th:nth-child(15),
+.skater_stats_table_time_on_ice_per_game_and_faceoff_percentage_season td:nth-child(15) {
+    width: 4.5%;
+}
+
+.skater_stats_table_time_on_ice_per_game_and_faceoff_percentage_season th:nth-child(16),
+.skater_stats_table_time_on_ice_per_game_and_faceoff_percentage_season td:nth-child(16) {
+    width: 4%;
+}
+
+.skater_stats_table_time_on_ice_per_game_and_faceoff_percentage_season th:nth-child(17),
+.skater_stats_table_time_on_ice_per_game_and_faceoff_percentage_season td:nth-child(17),
+.skater_stats_table_time_on_ice_per_game_and_faceoff_percentage_season th:nth-child(18),
+.skater_stats_table_time_on_ice_per_game_and_faceoff_percentage_season td:nth-child(18) {
+    width: 4.625%;
+}
+
+
+/* Skater stats table plus minus, shots and shooting percentage season */
+.skater_stats_table_plus_minus_and_shots_and_shooting_percentage_season {
+    font-size: 16px;
+}
+
+.skater_stats_table_plus_minus_and_shots_and_shooting_percentage_season th:nth-child(1),
+.skater_stats_table_plus_minus_and_shots_and_shooting_percentage_season td:nth-child(1) {
+    width: 16.5%;
+}
+
+.skater_stats_table_plus_minus_and_shots_and_shooting_percentage_season th:nth-child(2),
+.skater_stats_table_plus_minus_and_shots_and_shooting_percentage_season td:nth-child(2) {
+    width: 18.5%;
+}
+
+.skater_stats_table_plus_minus_and_shots_and_shooting_percentage_season th:nth-child(3),
+.skater_stats_table_plus_minus_and_shots_and_shooting_percentage_season td:nth-child(3) {
+    width: 4.25%;
+}
+
+.skater_stats_table_plus_minus_and_shots_and_shooting_percentage_season th:nth-child(4),
+.skater_stats_table_plus_minus_and_shots_and_shooting_percentage_season td:nth-child(4) {
+    width: 4.25%;
+}
+
+.skater_stats_table_plus_minus_and_shots_and_shooting_percentage_season th:nth-child(5),
+.skater_stats_table_plus_minus_and_shots_and_shooting_percentage_season td:nth-child(5) {
+    width: 4.25%;
+}
+
+.skater_stats_table_plus_minus_and_shots_and_shooting_percentage_season th:nth-child(6),
+.skater_stats_table_plus_minus_and_shots_and_shooting_percentage_season td:nth-child(6) {
+    width: 4.75%;
+}
+
+.skater_stats_table_plus_minus_and_shots_and_shooting_percentage_season th:nth-child(7),
+.skater_stats_table_plus_minus_and_shots_and_shooting_percentage_season td:nth-child(7) {
+    width: 4.5%;
+}
+
+.skater_stats_table_plus_minus_and_shots_and_shooting_percentage_season th:nth-child(8),
+.skater_stats_table_plus_minus_and_shots_and_shooting_percentage_season td:nth-child(8) {
+    width: 5%;
+}
+
+.skater_stats_table_plus_minus_and_shots_and_shooting_percentage_season th:nth-child(9),
+.skater_stats_table_plus_minus_and_shots_and_shooting_percentage_season td:nth-child(9),
+.skater_stats_table_plus_minus_and_shots_and_shooting_percentage_season th:nth-child(10),
+.skater_stats_table_plus_minus_and_shots_and_shooting_percentage_season td:nth-child(10) {
+    width: 4.5%;
+}
+
+.skater_stats_table_plus_minus_and_shots_and_shooting_percentage_season th:nth-child(11),
+.skater_stats_table_plus_minus_and_shots_and_shooting_percentage_season td:nth-child(11),
+.skater_stats_table_plus_minus_and_shots_and_shooting_percentage_season th:nth-child(12),
+.skater_stats_table_plus_minus_and_shots_and_shooting_percentage_season td:nth-child(12) {
+    width: 4.75%;
+}
+
+.skater_stats_table_plus_minus_and_shots_and_shooting_percentage_season th:nth-child(13),
+.skater_stats_table_plus_minus_and_shots_and_shooting_percentage_season td:nth-child(13),
+.skater_stats_table_plus_minus_and_shots_and_shooting_percentage_season th:nth-child(14),
+.skater_stats_table_plus_minus_and_shots_and_shooting_percentage_season td:nth-child(14) {
+    width: 4.75%;
+}
+
+.skater_stats_table_plus_minus_and_shots_and_shooting_percentage_season th:nth-child(15),
+.skater_stats_table_plus_minus_and_shots_and_shooting_percentage_season td:nth-child(15),
+.skater_stats_table_plus_minus_and_shots_and_shooting_percentage_season th:nth-child(16),
+.skater_stats_table_plus_minus_and_shots_and_shooting_percentage_season td:nth-child(16) {
+    width: 5%;
+}
+
+
+/* Skater stats table */
+.skater_stats_table {
+    font-size: 19px;
+}
+
+.skater_stats_table th:nth-child(1),
+.skater_stats_table td:nth-child(1) {
+    width: 17.75%;
+}
+
+.skater_stats_table th:nth-child(2),
+.skater_stats_table td:nth-child(2) {
+    width: 21.5%;
+}
+
+.skater_stats_table th:nth-child(3),
+.skater_stats_table td:nth-child(3),
+.skater_stats_table th:nth-child(4),
+.skater_stats_table td:nth-child(4),
+.skater_stats_table th:nth-child(5),
+.skater_stats_table td:nth-child(5) {
+    width: 5.25%;
+}
+
+.skater_stats_table th:nth-child(6),
+.skater_stats_table td:nth-child(6) {
+    width: 5.5%;
+}
+
+.skater_stats_table th:nth-child(7),
+.skater_stats_table td:nth-child(7),
+.skater_stats_table th:nth-child(8),
+.skater_stats_table td:nth-child(8) {
+    width: 6%;
+}
+
+.skater_stats_table th:nth-child(9),
+.skater_stats_table td:nth-child(9),
+.skater_stats_table th:nth-child(10),
+.skater_stats_table td:nth-child(10),
+.skater_stats_table th:nth-child(11),
+.skater_stats_table td:nth-child(11),
+.skater_stats_table th:nth-child(12),
+.skater_stats_table td:nth-child(12) {
+    width: 5.5%;
+}
+
+.skater_stats_table th:nth-child(13),
+.skater_stats_table td:nth-child(13) {
+    width: 5.5%;
+}
+
+
+/* Skater stats table time on ice/game and faceoff percentage season with seasons */
+.skater_stats_table_time_on_ice_per_game_and_faceoff_percentage_season_with_seasons {
+    font-size: 14.5px;
+}
+
+.skater_stats_table_time_on_ice_per_game_and_faceoff_percentage_season_with_seasons th:nth-child(1),
+.skater_stats_table_time_on_ice_per_game_and_faceoff_percentage_season_with_seasons td:nth-child(1) {
+    width: 15.5%;
+}
+
+.skater_stats_table_time_on_ice_per_game_and_faceoff_percentage_season_with_seasons th:nth-child(2),
+.skater_stats_table_time_on_ice_per_game_and_faceoff_percentage_season_with_seasons td:nth-child(2) {
+    width: 8%;
+}
+
+.skater_stats_table_time_on_ice_per_game_and_faceoff_percentage_season_with_seasons th:nth-child(3),
+.skater_stats_table_time_on_ice_per_game_and_faceoff_percentage_season_with_seasons td:nth-child(3) {
+    width: 16.625%;
+}
+
+.skater_stats_table_time_on_ice_per_game_and_faceoff_percentage_season_with_seasons th:nth-child(4),
+.skater_stats_table_time_on_ice_per_game_and_faceoff_percentage_season_with_seasons td:nth-child(4),
+.skater_stats_table_time_on_ice_per_game_and_faceoff_percentage_season_with_seasons th:nth-child(5),
+.skater_stats_table_time_on_ice_per_game_and_faceoff_percentage_season_with_seasons td:nth-child(5),
+.skater_stats_table_time_on_ice_per_game_and_faceoff_percentage_season_with_seasons th:nth-child(6),
+.skater_stats_table_time_on_ice_per_game_and_faceoff_percentage_season_with_seasons td:nth-child(6) {
+    width: 3.5%;
+}
+
+.skater_stats_table_time_on_ice_per_game_and_faceoff_percentage_season_with_seasons th:nth-child(7),
+.skater_stats_table_time_on_ice_per_game_and_faceoff_percentage_season_with_seasons td:nth-child(7) {
+    width: 3.75%;
+}
+
+.skater_stats_table_time_on_ice_per_game_and_faceoff_percentage_season_with_seasons th:nth-child(8),
+.skater_stats_table_time_on_ice_per_game_and_faceoff_percentage_season_with_seasons td:nth-child(8) {
+    width: 3.25%;
+}
+
+.skater_stats_table_time_on_ice_per_game_and_faceoff_percentage_season_with_seasons th:nth-child(9),
+.skater_stats_table_time_on_ice_per_game_and_faceoff_percentage_season_with_seasons td:nth-child(9) {
+    width: 3.5%;
+}
+
+.skater_stats_table_time_on_ice_per_game_and_faceoff_percentage_season_with_seasons th:nth-child(10),
+.skater_stats_table_time_on_ice_per_game_and_faceoff_percentage_season_with_seasons td:nth-child(10),
+.skater_stats_table_time_on_ice_per_game_and_faceoff_percentage_season_with_seasons th:nth-child(11),
+.skater_stats_table_time_on_ice_per_game_and_faceoff_percentage_season_with_seasons td:nth-child(11),
+.skater_stats_table_time_on_ice_per_game_and_faceoff_percentage_season_with_seasons th:nth-child(12),
+.skater_stats_table_time_on_ice_per_game_and_faceoff_percentage_season_with_seasons td:nth-child(12),
+.skater_stats_table_time_on_ice_per_game_and_faceoff_percentage_season_with_seasons th:nth-child(13),
+.skater_stats_table_time_on_ice_per_game_and_faceoff_percentage_season_with_seasons td:nth-child(13) {
+    width: 3.75%;
+}
+
+.skater_stats_table_time_on_ice_per_game_and_faceoff_percentage_season_with_seasons th:nth-child(14),
+.skater_stats_table_time_on_ice_per_game_and_faceoff_percentage_season_with_seasons td:nth-child(14) {
+    width: 4.875%;
+}
+
+.skater_stats_table_time_on_ice_per_game_and_faceoff_percentage_season_with_seasons th:nth-child(15),
+.skater_stats_table_time_on_ice_per_game_and_faceoff_percentage_season_with_seasons td:nth-child(15),
+.skater_stats_table_time_on_ice_per_game_and_faceoff_percentage_season_with_seasons th:nth-child(16),
+.skater_stats_table_time_on_ice_per_game_and_faceoff_percentage_season_with_seasons td:nth-child(16) {
+    width: 4%;
+}
+
+.skater_stats_table_time_on_ice_per_game_and_faceoff_percentage_season_with_seasons th:nth-child(17),
+.skater_stats_table_time_on_ice_per_game_and_faceoff_percentage_season_with_seasons td:nth-child(17) {
+    width: 3.75%;
+}
+
+.skater_stats_table_time_on_ice_per_game_and_faceoff_percentage_season_with_seasons th:nth-child(18),
+.skater_stats_table_time_on_ice_per_game_and_faceoff_percentage_season_with_seasons td:nth-child(18),
+.skater_stats_table_time_on_ice_per_game_and_faceoff_percentage_season_with_seasons th:nth-child(19),
+.skater_stats_table_time_on_ice_per_game_and_faceoff_percentage_season_with_seasons td:nth-child(19) {
+    width: 4.125%;
+}
+
+
+/* Skater stats table plus minus, shots and shooting percentage season with season */
+.skater_stats_table_plus_minus_and_shots_and_shooting_percentage_season_with_seasons {
+    font-size: 15px;
+}
+
+.skater_stats_table_plus_minus_and_shots_and_shooting_percentage_season_with_seasons th:nth-child(1),
+.skater_stats_table_plus_minus_and_shots_and_shooting_percentage_season_with_seasons td:nth-child(1) {
+    width: 15.5%;
+}
+
+.skater_stats_table_plus_minus_and_shots_and_shooting_percentage_season_with_seasons th:nth-child(2),
+.skater_stats_table_plus_minus_and_shots_and_shooting_percentage_season_with_seasons td:nth-child(2) {
+    width: 9.5%;
+}
+
+.skater_stats_table_plus_minus_and_shots_and_shooting_percentage_season_with_seasons th:nth-child(3),
+.skater_stats_table_plus_minus_and_shots_and_shooting_percentage_season_with_seasons td:nth-child(3) {
+    width: 18.5%;
+}
+
+.skater_stats_table_plus_minus_and_shots_and_shooting_percentage_season_with_seasons th:nth-child(4),
+.skater_stats_table_plus_minus_and_shots_and_shooting_percentage_season_with_seasons td:nth-child(4),
+.skater_stats_table_plus_minus_and_shots_and_shooting_percentage_season_with_seasons th:nth-child(5),
+.skater_stats_table_plus_minus_and_shots_and_shooting_percentage_season_with_seasons td:nth-child(5),
+.skater_stats_table_plus_minus_and_shots_and_shooting_percentage_season_with_seasons th:nth-child(6),
+.skater_stats_table_plus_minus_and_shots_and_shooting_percentage_season_with_seasons td:nth-child(6),
+.skater_stats_table_plus_minus_and_shots_and_shooting_percentage_season_with_seasons th:nth-child(7),
+.skater_stats_table_plus_minus_and_shots_and_shooting_percentage_season_with_seasons td:nth-child(7),
+.skater_stats_table_plus_minus_and_shots_and_shooting_percentage_season_with_seasons th:nth-child(8),
+.skater_stats_table_plus_minus_and_shots_and_shooting_percentage_season_with_seasons td:nth-child(8),
+.skater_stats_table_plus_minus_and_shots_and_shooting_percentage_season_with_seasons th:nth-child(9),
+.skater_stats_table_plus_minus_and_shots_and_shooting_percentage_season_with_seasons td:nth-child(9),
+.skater_stats_table_plus_minus_and_shots_and_shooting_percentage_season_with_seasons th:nth-child(10),
+.skater_stats_table_plus_minus_and_shots_and_shooting_percentage_season_with_seasons td:nth-child(10),
+.skater_stats_table_plus_minus_and_shots_and_shooting_percentage_season_with_seasons th:nth-child(11),
+.skater_stats_table_plus_minus_and_shots_and_shooting_percentage_season_with_seasons td:nth-child(11),
+.skater_stats_table_plus_minus_and_shots_and_shooting_percentage_season_with_seasons th:nth-child(12),
+.skater_stats_table_plus_minus_and_shots_and_shooting_percentage_season_with_seasons td:nth-child(12),
+.skater_stats_table_plus_minus_and_shots_and_shooting_percentage_season_with_seasons th:nth-child(13),
+.skater_stats_table_plus_minus_and_shots_and_shooting_percentage_season_with_seasons td:nth-child(13) {
+    width: 4%;
+}
+
+.skater_stats_table_plus_minus_and_shots_and_shooting_percentage_season_with_seasons th:nth-child(14),
+.skater_stats_table_plus_minus_and_shots_and_shooting_percentage_season_with_seasons td:nth-child(14) {
+    width: 4.5%;
+}
+
+.skater_stats_table_plus_minus_and_shots_and_shooting_percentage_season_with_seasons th:nth-child(15),
+.skater_stats_table_plus_minus_and_shots_and_shooting_percentage_season_with_seasons td:nth-child(15),
+.skater_stats_table_plus_minus_and_shots_and_shooting_percentage_season_with_seasons th:nth-child(16),
+.skater_stats_table_plus_minus_and_shots_and_shooting_percentage_season_with_seasons td:nth-child(16),
+.skater_stats_table_plus_minus_and_shots_and_shooting_percentage_season_with_seasons th:nth-child(17),
+.skater_stats_table_plus_minus_and_shots_and_shooting_percentage_season_with_seasons td:nth-child(17) {
+    width: 4%;
+}
+
+
+/* Skater stats table */
+.skater_stats_table_with_seasons {
+    font-size: 18px;
+}
+
+.skater_stats_table_with_seasons th:nth-child(1),
+.skater_stats_table_with_seasons td:nth-child(1) {
+    width: 17%;
+}
+
+.skater_stats_table_with_seasons th:nth-child(2),
+.skater_stats_table_with_seasons td:nth-child(2) {
+    width: 10.25%;
+}
+
+.skater_stats_table_with_seasons th:nth-child(3),
+.skater_stats_table_with_seasons td:nth-child(3) {
+    width: 21%;
+}
+
+.skater_stats_table_with_seasons th:nth-child(4),
+.skater_stats_table_with_seasons td:nth-child(4) {
+    width: 4.5%;
+}
+
+.skater_stats_table_with_seasons th:nth-child(5),
+.skater_stats_table_with_seasons td:nth-child(5),
+.skater_stats_table_with_seasons th:nth-child(6),
+.skater_stats_table_with_seasons td:nth-child(6) {
+    width: 4.25%;
+}
+
+.skater_stats_table_with_seasons th:nth-child(7),
+.skater_stats_table_with_seasons td:nth-child(7) {
+    width: 4.75%;
+}
+
+.skater_stats_table_with_seasons th:nth-child(8),
+.skater_stats_table_with_seasons td:nth-child(8),
+.skater_stats_table_with_seasons th:nth-child(9),
+.skater_stats_table_with_seasons td:nth-child(9),
+.skater_stats_table_with_seasons th:nth-child(10),
+.skater_stats_table_with_seasons td:nth-child(10) {
+    width: 5%;
+}
+
+.skater_stats_table_with_seasons th:nth-child(11),
+.skater_stats_table_with_seasons td:nth-child(11),
+.skater_stats_table_with_seasons th:nth-child(12),
+.skater_stats_table_with_seasons td:nth-child(12) {
+    width: 4.75%
+}
+
+.skater_stats_table_with_seasons th:nth-child(13),
+.skater_stats_table_with_seasons td:nth-child(13) {
+    width: 4.625%
+}
+
+.skater_stats_table_with_seasons th:nth-child(14),
+.skater_stats_table_with_seasons td:nth-child(14) {
+    width: 4.875%;
+}
+
+.skater_stats_table_time_on_ice_per_game_and_faceoff_percentage_season .team_logo,
+.skater_stats_table_plus_minus_and_shots_and_shooting_percentage_season .team_logo,
+.skater_stats_table_time_on_ice_per_game_and_faceoff_percentage_season_with_seasons .team_logo,
+.skater_stats_table_plus_minus_and_shots_and_shooting_percentage_season_with_seasons .team_logo {
+    max-width: 18px;
+    max-height: 18px;
+    margin-right: 10px;
+    top: 2px;
+}
+
+.skater_stats_table .team_logo,
+.skater_stats_table_with_seasons .team_logo {
+    max-width: 22px;
+    max-height: 22px;
+    margin-right: 10px;
+    top: 1px;
+}
+
+
+/* Goalie stats table overtime losses season */
+.goalie_stats_table_overtime_losses_season {
+    font-size: 18px;
+}
+
+.goalie_stats_table_overtime_losses_season th:nth-child(1),
+.goalie_stats_table_overtime_losses_season td:nth-child(1) {
+    width: 18%;
+}
+
+.goalie_stats_table_overtime_losses_season th:nth-child(2),
+.goalie_stats_table_overtime_losses_season td:nth-child(2) {
+    width: 21%;
+}
+
+.goalie_stats_table_overtime_losses_season th:nth-child(3),
+.goalie_stats_table_overtime_losses_season td:nth-child(3),
+.goalie_stats_table_overtime_losses_season th:nth-child(4),
+.goalie_stats_table_overtime_losses_season td:nth-child(4),
+.goalie_stats_table_overtime_losses_season th:nth-child(5),
+.goalie_stats_table_overtime_losses_season td:nth-child(5),
+.goalie_stats_table_overtime_losses_season th:nth-child(6),
+.goalie_stats_table_overtime_losses_season td:nth-child(6) {
+    width: 4%;
+}
+
+.goalie_stats_table_overtime_losses_season th:nth-child(7),
+.goalie_stats_table_overtime_losses_season td:nth-child(7) {
+    width: 4.5%;
+}
+
+.goalie_stats_table_overtime_losses_season th:nth-child(8),
+.goalie_stats_table_overtime_losses_season td:nth-child(8) {
+    width: 5.25%;
+}
+
+.goalie_stats_table_overtime_losses_season th:nth-child(9),
+.goalie_stats_table_overtime_losses_season td:nth-child(9) {
+    width: 5.5%;
+}
+
+.goalie_stats_table_overtime_losses_season th:nth-child(10),
+.goalie_stats_table_overtime_losses_season td:nth-child(10) {
+    width: 5.75%;
+}
+
+.goalie_stats_table_overtime_losses_season th:nth-child(11),
+.goalie_stats_table_overtime_losses_season td:nth-child(11) {
+    width: 4%;
+}
+
+.goalie_stats_table_overtime_losses_season th:nth-child(12),
+.goalie_stats_table_overtime_losses_season td:nth-child(12),
+.goalie_stats_table_overtime_losses_season th:nth-child(13),
+.goalie_stats_table_overtime_losses_season td:nth-child(13) {
+    width: 3.75%;
+}
+
+.goalie_stats_table_overtime_losses_season th:nth-child(14),
+.goalie_stats_table_overtime_losses_season td:nth-child(14) {
+    width: 5%;
+}
+
+.goalie_stats_table_overtime_losses_season th:nth-child(15),
+.goalie_stats_table_overtime_losses_season td:nth-child(15) {
+    width: 7.5%;
+}
+
+
+/* Goalie stats table */
+.goalie_stats_table {
+    font-size: 18px;
+}
+
+.goalie_stats_table th:nth-child(1),
+.goalie_stats_table td:nth-child(1) {
+    width: 18.5%;
+}
+
+.goalie_stats_table th:nth-child(2),
+.goalie_stats_table td:nth-child(2) {
+    width: 21.5%;
+}
+
+.goalie_stats_table th:nth-child(3),
+.goalie_stats_table td:nth-child(3),
+.goalie_stats_table th:nth-child(4),
+.goalie_stats_table td:nth-child(4),
+.goalie_stats_table th:nth-child(5),
+.goalie_stats_table td:nth-child(5),
+.goalie_stats_table th:nth-child(6),
+.goalie_stats_table td:nth-child(6) {
+    width: 4%;
+}
+
+.goalie_stats_table th:nth-child(7),
+.goalie_stats_table td:nth-child(7) {
+    width: 3.5%;
+}
+
+.goalie_stats_table th:nth-child(8),
+.goalie_stats_table td:nth-child(8) {
+    width: 5.25%;
+}
+
+.goalie_stats_table th:nth-child(9),
+.goalie_stats_table td:nth-child(9) {
+    width: 5.5%;
+}
+
+.goalie_stats_table th:nth-child(10),
+.goalie_stats_table td:nth-child(10) {
+    width: 5.75%;
+}
+
+.goalie_stats_table th:nth-child(11),
+.goalie_stats_table td:nth-child(11) {
+    width: 4%;
+}
+
+.goalie_stats_table th:nth-child(12),
+.goalie_stats_table td:nth-child(12),
+.goalie_stats_table th:nth-child(13),
+.goalie_stats_table td:nth-child(13) {
+    width: 3.75%;
+}
+
+.goalie_stats_table th:nth-child(14),
+.goalie_stats_table td:nth-child(14) {
+    width: 5%;
+}
+
+.goalie_stats_table th:nth-child(15),
+.goalie_stats_table td:nth-child(15) {
+    width: 7.5%;
+}
+
+
+/* Goalie playoff stats table */
+.goalie_playoff_stats_table {
+    font-size: 18px;
+}
+
+.goalie_playoff_stats_table th:nth-child(1),
+.goalie_playoff_stats_table td:nth-child(1) {
+    width: 20%;
+}
+
+.goalie_playoff_stats_table th:nth-child(2),
+.goalie_playoff_stats_table td:nth-child(2) {
+    width: 23%;
+}
+
+.goalie_playoff_stats_table th:nth-child(3),
+.goalie_playoff_stats_table td:nth-child(3) {
+    width: 4%;
+}
+
+.goalie_playoff_stats_table th:nth-child(4),
+.goalie_playoff_stats_table td:nth-child(4) {
+    width: 4%;
+}
+
+.goalie_playoff_stats_table th:nth-child(5),
+.goalie_playoff_stats_table td:nth-child(5) {
+    width: 4%;
+}
+
+.goalie_playoff_stats_table th:nth-child(6),
+.goalie_playoff_stats_table td:nth-child(6) {
+    width: 4%;
+}
+
+.goalie_playoff_stats_table th:nth-child(7),
+.goalie_playoff_stats_table td:nth-child(7) {
+    width: 5%;
+}
+
+.goalie_playoff_stats_table th:nth-child(8),
+.goalie_playoff_stats_table td:nth-child(8) {
+    width: 5.5%
+}
+
+.goalie_playoff_stats_table th:nth-child(9),
+.goalie_playoff_stats_table td:nth-child(9) {
+    width: 6%
+}
+
+.goalie_playoff_stats_table th:nth-child(10),
+.goalie_playoff_stats_table td:nth-child(10) {
+    width: 4.25%;
+}
+
+.goalie_playoff_stats_table th:nth-child(11),
+.goalie_playoff_stats_table td:nth-child(11) {
+    width: 4%;
+}
+
+.goalie_playoff_stats_table th:nth-child(12),
+.goalie_playoff_stats_table td:nth-child(12) {
+    width: 4%;
+}
+
+.goalie_playoff_stats_table th:nth-child(13),
+.goalie_playoff_stats_table td:nth-child(13) {
+    width: 5%;
+}
+
+.goalie_playoff_stats_table th:nth-child(14),
+.goalie_playoff_stats_table td:nth-child(14) {
+    width: 7.25%;
+}
+
+
+/* Goalie stats table overtime losses season with seasons */
+.goalie_stats_table_overtime_losses_season_with_seasons {
+    font-size: 17px;
+}
+
+.goalie_stats_table_overtime_losses_season_with_seasons th:nth-child(1),
+.goalie_stats_table_overtime_losses_season_with_seasons td:nth-child(1) {
+    width: 16%;
+}
+
+.goalie_stats_table_overtime_losses_season_with_seasons th:nth-child(2),
+.goalie_stats_table_overtime_losses_season_with_seasons td:nth-child(2) {
+    width: 9%;
+}
+
+.goalie_stats_table_overtime_losses_season_with_seasons th:nth-child(3),
+.goalie_stats_table_overtime_losses_season_with_seasons td:nth-child(3) {
+    width: 19.5%;
+}
+
+.goalie_stats_table_overtime_losses_season_with_seasons th:nth-child(4),
+.goalie_stats_table_overtime_losses_season_with_seasons td:nth-child(4),
+.goalie_stats_table_overtime_losses_season_with_seasons th:nth-child(5),
+.goalie_stats_table_overtime_losses_season_with_seasons td:nth-child(5),
+.goalie_stats_table_overtime_losses_season_with_seasons th:nth-child(6),
+.goalie_stats_table_overtime_losses_season_with_seasons td:nth-child(6),
+.goalie_stats_table_overtime_losses_season_with_seasons th:nth-child(7),
+.goalie_stats_table_overtime_losses_season_with_seasons td:nth-child(7) {
+    width: 3.75%;
+}
+
+.goalie_stats_table_overtime_losses_season_with_seasons th:nth-child(8),
+.goalie_stats_table_overtime_losses_season_with_seasons td:nth-child(8) {
+    width: 4%;
+}
+
+.goalie_stats_table_overtime_losses_season_with_seasons th:nth-child(9),
+.goalie_stats_table_overtime_losses_season_with_seasons td:nth-child(9) {
+    width: 5.25%;
+}
+
+.goalie_stats_table_overtime_losses_season_with_seasons th:nth-child(10),
+.goalie_stats_table_overtime_losses_season_with_seasons td:nth-child(10) {
+    width: 5%;
+}
+
+.goalie_stats_table_overtime_losses_season_with_seasons th:nth-child(11),
+.goalie_stats_table_overtime_losses_season_with_seasons td:nth-child(11) {
+    width: 5.5%;
+}
+
+.goalie_stats_table_overtime_losses_season_with_seasons th:nth-child(12),
+.goalie_stats_table_overtime_losses_season_with_seasons td:nth-child(12) {
+    width: 4%;
+}
+
+.goalie_stats_table_overtime_losses_season_with_seasons th:nth-child(13),
+.goalie_stats_table_overtime_losses_season_with_seasons td:nth-child(13),
+.goalie_stats_table_overtime_losses_season_with_seasons th:nth-child(14),
+.goalie_stats_table_overtime_losses_season_with_seasons td:nth-child(14) {
+    width: 3.25%;
+}
+
+.goalie_stats_table_overtime_losses_season_with_seasons th:nth-child(15),
+.goalie_stats_table_overtime_losses_season_with_seasons td:nth-child(15) {
+    width: 4%;
+}
+
+.goalie_stats_table_overtime_losses_season_with_seasons th:nth-child(16),
+.goalie_stats_table_overtime_losses_season_with_seasons td:nth-child(16) {
+    width: 6.25%;
+}
+
+
+/* Goalie stats table overtime losses and ties season with seasons */
+.goalie_stats_table_overtime_losses_and_ties_season_with_seasons {
+    font-size: 16px;
+}
+
+.goalie_stats_table_overtime_losses_and_ties_season_with_seasons th:nth-child(1),
+.goalie_stats_table_overtime_losses_and_ties_season_with_seasons td:nth-child(1) {
+    width: 16%;
+}
+
+.goalie_stats_table_overtime_losses_and_ties_season_with_seasons th:nth-child(2),
+.goalie_stats_table_overtime_losses_and_ties_season_with_seasons td:nth-child(2) {
+    width: 8.25%;
+}
+
+.goalie_stats_table_overtime_losses_and_ties_season_with_seasons th:nth-child(3),
+.goalie_stats_table_overtime_losses_and_ties_season_with_seasons td:nth-child(3) {
+    width: 19.5%;
+}
+
+.goalie_stats_table_overtime_losses_and_ties_season_with_seasons th:nth-child(4),
+.goalie_stats_table_overtime_losses_and_ties_season_with_seasons td:nth-child(4),
+.goalie_stats_table_overtime_losses_and_ties_season_with_seasons th:nth-child(5),
+.goalie_stats_table_overtime_losses_and_ties_season_with_seasons td:nth-child(5),
+.goalie_stats_table_overtime_losses_and_ties_season_with_seasons th:nth-child(6),
+.goalie_stats_table_overtime_losses_and_ties_season_with_seasons td:nth-child(6),
+.goalie_stats_table_overtime_losses_and_ties_season_with_seasons th:nth-child(7),
+.goalie_stats_table_overtime_losses_and_ties_season_with_seasons td:nth-child(7),
+.goalie_stats_table_overtime_losses_and_ties_season_with_seasons th:nth-child(8),
+.goalie_stats_table_overtime_losses_and_ties_season_with_seasons td:nth-child(8) {
+    width: 3.5%;
+}
+
+.goalie_stats_table_overtime_losses_and_ties_season_with_seasons th:nth-child(9),
+.goalie_stats_table_overtime_losses_and_ties_season_with_seasons td:nth-child(9) {
+    width: 4%;
+}
+
+.goalie_stats_table_overtime_losses_and_ties_season_with_seasons th:nth-child(10),
+.goalie_stats_table_overtime_losses_and_ties_season_with_seasons td:nth-child(10) {
+    width: 5%;
+}
+
+.goalie_stats_table_overtime_losses_and_ties_season_with_seasons th:nth-child(11),
+.goalie_stats_table_overtime_losses_and_ties_season_with_seasons td:nth-child(11) {
+    width: 4.5%;
+}
+
+.goalie_stats_table_overtime_losses_and_ties_season_with_seasons th:nth-child(12),
+.goalie_stats_table_overtime_losses_and_ties_season_with_seasons td:nth-child(12) {
+    width: 5%;
+}
+
+.goalie_stats_table_overtime_losses_and_ties_season_with_seasons th:nth-child(13),
+.goalie_stats_table_overtime_losses_and_ties_season_with_seasons td:nth-child(13) {
+    width: 3.5%;
+}
+
+.goalie_stats_table_overtime_losses_and_ties_season_with_seasons th:nth-child(14),
+.goalie_stats_table_overtime_losses_and_ties_season_with_seasons td:nth-child(14),
+.goalie_stats_table_overtime_losses_and_ties_season_with_seasons th:nth-child(15),
+.goalie_stats_table_overtime_losses_and_ties_season_with_seasons td:nth-child(15) {
+    width: 3.25%;
+}
+
+.goalie_stats_table_overtime_losses_and_ties_season_with_seasons th:nth-child(16),
+.goalie_stats_table_overtime_losses_and_ties_season_with_seasons td:nth-child(16) {
+    width: 4%;
+}
+
+.goalie_stats_table_overtime_losses_and_ties_season_with_seasons th:nth-child(17),
+.goalie_stats_table_overtime_losses_and_ties_season_with_seasons td:nth-child(17) {
+    width: 6.25%;
+}
+
+
+/* Goalie stats table with seasons */
+.goalie_stats_table_with_seasons {
+    font-size: 17px;
+}
+
+.goalie_stats_table_with_seasons th:nth-child(1),
+.goalie_stats_table_with_seasons td:nth-child(1) {
+    width: 16%;
+}
+
+.goalie_stats_table_with_seasons th:nth-child(2),
+.goalie_stats_table_with_seasons td:nth-child(2) {
+    width: 9%;
+}
+
+.goalie_stats_table_with_seasons th:nth-child(3),
+.goalie_stats_table_with_seasons td:nth-child(3) {
+    width: 19.5%;
+}
+
+.goalie_stats_table_with_seasons th:nth-child(4),
+.goalie_stats_table_with_seasons td:nth-child(4),
+.goalie_stats_table_with_seasons th:nth-child(5),
+.goalie_stats_table_with_seasons td:nth-child(5),
+.goalie_stats_table_with_seasons th:nth-child(6),
+.goalie_stats_table_with_seasons td:nth-child(6) {
+    width: 3.75%;
+}
+
+.goalie_stats_table_with_seasons th:nth-child(7),
+.goalie_stats_table_with_seasons td:nth-child(7) {
+    width: 3.5%;
+}
+
+.goalie_stats_table_with_seasons th:nth-child(8),
+.goalie_stats_table_with_seasons td:nth-child(8) {
+    width: 4%;
+}
+
+.goalie_stats_table_with_seasons th:nth-child(9),
+.goalie_stats_table_with_seasons td:nth-child(9) {
+    width: 5.25%;
+}
+
+.goalie_stats_table_with_seasons th:nth-child(10),
+.goalie_stats_table_with_seasons td:nth-child(10) {
+    width: 5%;
+}
+
+.goalie_stats_table_with_seasons th:nth-child(11),
+.goalie_stats_table_with_seasons td:nth-child(11) {
+    width: 5.5%;
+}
+
+.goalie_stats_table_with_seasons th:nth-child(12),
+.goalie_stats_table_with_seasons td:nth-child(12) {
+    width: 4%;
+}
+
+.goalie_stats_table_with_seasons th:nth-child(13),
+.goalie_stats_table_with_seasons td:nth-child(13),
+.goalie_stats_table_with_seasons th:nth-child(14),
+.goalie_stats_table_with_seasons td:nth-child(14) {
+    width: 3.25%;
+}
+
+.goalie_stats_table_with_seasons th:nth-child(15),
+.goalie_stats_table_with_seasons td:nth-child(15) {
+    width: 4%;
+}
+
+.goalie_stats_table_with_seasons th:nth-child(16),
+.goalie_stats_table_with_seasons td:nth-child(16) {
+    width: 6.5%;
+}
+
+
+/* Goalie playoff stats table with seasons */
+.goalie_playoff_stats_table_with_seasons {
+    font-size: 17px;
+}
+
+.goalie_playoff_stats_table_with_seasons th:nth-child(1),
+.goalie_playoff_stats_table_with_seasons td:nth-child(1) {
+    width: 16.5%;
+}
+
+.goalie_playoff_stats_table_with_seasons th:nth-child(2),
+.goalie_playoff_stats_table_with_seasons td:nth-child(2) {
+    width: 9%;
+}
+
+.goalie_playoff_stats_table_with_seasons th:nth-child(3),
+.goalie_playoff_stats_table_with_seasons td:nth-child(3) {
+    width: 20.5%;
+}
+
+.goalie_playoff_stats_table_with_seasons th:nth-child(4),
+.goalie_playoff_stats_table_with_seasons td:nth-child(4) {
+    width: 4%;
+}
+
+.goalie_playoff_stats_table_with_seasons th:nth-child(5),
+.goalie_playoff_stats_table_with_seasons td:nth-child(5) {
+    width: 4%;
+}
+
+.goalie_playoff_stats_table_with_seasons th:nth-child(6),
+.goalie_playoff_stats_table_with_seasons td:nth-child(6) {
+    width: 3.75%;
+}
+
+.goalie_playoff_stats_table_with_seasons th:nth-child(7),
+.goalie_playoff_stats_table_with_seasons td:nth-child(7) {
+    width: 3.75%;
+}
+
+.goalie_playoff_stats_table_with_seasons th:nth-child(8),
+.goalie_playoff_stats_table_with_seasons td:nth-child(8) {
+    width: 4.75%;
+}
+
+.goalie_playoff_stats_table_with_seasons th:nth-child(9),
+.goalie_playoff_stats_table_with_seasons td:nth-child(9) {
+    width: 5.25%;
+}
+
+.goalie_playoff_stats_table_with_seasons th:nth-child(10),
+.goalie_playoff_stats_table_with_seasons td:nth-child(10) {
+    width: 5.75%;
+}
+
+.goalie_playoff_stats_table_with_seasons th:nth-child(11),
+.goalie_playoff_stats_table_with_seasons td:nth-child(11) {
+    width: 4.25%;
+}
+
+.goalie_playoff_stats_table_with_seasons th:nth-child(12),
+.goalie_playoff_stats_table_with_seasons td:nth-child(12) {
+    width: 3.75%;
+}
+
+.goalie_playoff_stats_table_with_seasons th:nth-child(13),
+.goalie_playoff_stats_table_with_seasons td:nth-child(13) {
+    width: 3.75%;
+}
+
+.goalie_playoff_stats_table_with_seasons th:nth-child(14),
+.goalie_playoff_stats_table_with_seasons td:nth-child(14) {
+    width: 4.5%;
+}
+
+.goalie_playoff_stats_table_with_seasons th:nth-child(15),
+.goalie_playoff_stats_table_with_seasons td:nth-child(15) {
+    width: 6.5%;
+}
+
+
+.goalie_stats_table_overtime_losses_season .team_logo,
+.goalie_stats_table .team_logo,
+.goalie_playoff_stats_table .team_logo {
+    max-width: 22px;
+    max-height: 22px;
+    margin-right: 10px;
+    top: 5px;
+}
+
+.goalie_stats_table_overtime_losses_season_with_seasons .team_logo,
+.goalie_stats_table_overtime_losses_and_ties_season_with_seasons .team_logo,
+.goalie_stats_table_with_seasons .team_logo,
+.goalie_playoff_stats_table_with_seasons .team_logo {
+    max-width: 20px;
+    max-height: 20px;
+    margin-right: 10px;
+    top: 2px;
+}
+
+
+/* Skater stats table time on ice per game and faceoff percentage season without names */
+.skater_stats_table_time_on_ice_per_game_and_faceoff_percentage_season_without_names {
+    font-size: 18px;
+}
+
+.skater_stats_table_time_on_ice_per_game_and_faceoff_percentage_season_without_names th:nth-child(1),
+.skater_stats_table_time_on_ice_per_game_and_faceoff_percentage_season_without_names td:nth-child(1) {
+    width: 9%;
+}
+
+.skater_stats_table_time_on_ice_per_game_and_faceoff_percentage_season_without_names th:nth-child(2),
+.skater_stats_table_time_on_ice_per_game_and_faceoff_percentage_season_without_names td:nth-child(2) {
+    width: 19%;
+}
+
+.skater_stats_table_time_on_ice_per_game_and_faceoff_percentage_season_without_names th:nth-child(3),
+.skater_stats_table_time_on_ice_per_game_and_faceoff_percentage_season_without_names td:nth-child(3) {
+    width: 4%;
+}
+
+.skater_stats_table_time_on_ice_per_game_and_faceoff_percentage_season_without_names th:nth-child(4),
+.skater_stats_table_time_on_ice_per_game_and_faceoff_percentage_season_without_names td:nth-child(4) {
+    width: 3.75%;
+}
+
+.skater_stats_table_time_on_ice_per_game_and_faceoff_percentage_season_without_names th:nth-child(5),
+.skater_stats_table_time_on_ice_per_game_and_faceoff_percentage_season_without_names td:nth-child(5) {
+    width: 3.75%;
+}
+
+.skater_stats_table_time_on_ice_per_game_and_faceoff_percentage_season_without_names th:nth-child(6),
+.skater_stats_table_time_on_ice_per_game_and_faceoff_percentage_season_without_names td:nth-child(6) {
+    width: 4.5%;
+}
+
+.skater_stats_table_time_on_ice_per_game_and_faceoff_percentage_season_without_names th:nth-child(7),
+.skater_stats_table_time_on_ice_per_game_and_faceoff_percentage_season_without_names td:nth-child(7) {
+    width: 4%;
+}
+
+.skater_stats_table_time_on_ice_per_game_and_faceoff_percentage_season_without_names th:nth-child(8),
+.skater_stats_table_time_on_ice_per_game_and_faceoff_percentage_season_without_names td:nth-child(8) {
+    width: 4.5%;
+}
+
+.skater_stats_table_time_on_ice_per_game_and_faceoff_percentage_season_without_names th:nth-child(9),
+.skater_stats_table_time_on_ice_per_game_and_faceoff_percentage_season_without_names td:nth-child(9) {
+    width: 4.5%;
+}
+
+.skater_stats_table_time_on_ice_per_game_and_faceoff_percentage_season_without_names th:nth-child(10),
+.skater_stats_table_time_on_ice_per_game_and_faceoff_percentage_season_without_names td:nth-child(10) {
+    width: 4.5%;
+}
+
+.skater_stats_table_time_on_ice_per_game_and_faceoff_percentage_season_without_names th:nth-child(11),
+.skater_stats_table_time_on_ice_per_game_and_faceoff_percentage_season_without_names td:nth-child(11) {
+    width: 4.5%;
+}
+
+.skater_stats_table_time_on_ice_per_game_and_faceoff_percentage_season_without_names th:nth-child(12),
+.skater_stats_table_time_on_ice_per_game_and_faceoff_percentage_season_without_names td:nth-child(12) {
+    width: 4.5%
+}
+
+.skater_stats_table_time_on_ice_per_game_and_faceoff_percentage_season_without_names th:nth-child(13),
+.skater_stats_table_time_on_ice_per_game_and_faceoff_percentage_season_without_names td:nth-child(13) {
+    width: 6%
+}
+
+.skater_stats_table_time_on_ice_per_game_and_faceoff_percentage_season_without_names th:nth-child(14),
+.skater_stats_table_time_on_ice_per_game_and_faceoff_percentage_season_without_names td:nth-child(14) {
+    width: 5%;
+}
+
+.skater_stats_table_time_on_ice_per_game_and_faceoff_percentage_season_without_names th:nth-child(15),
+.skater_stats_table_time_on_ice_per_game_and_faceoff_percentage_season_without_names td:nth-child(15) {
+    width: 4.5%;
+}
+
+.skater_stats_table_time_on_ice_per_game_and_faceoff_percentage_season_without_names th:nth-child(16),
+.skater_stats_table_time_on_ice_per_game_and_faceoff_percentage_season_without_names td:nth-child(16) {
+    width: 4.5%;
+}
+
+.skater_stats_table_time_on_ice_per_game_and_faceoff_percentage_season_without_names th:nth-child(17),
+.skater_stats_table_time_on_ice_per_game_and_faceoff_percentage_season_without_names td:nth-child(17) {
+    width: 4.5%;
+}
+
+.skater_stats_table_time_on_ice_per_game_and_faceoff_percentage_season_without_names th:nth-child(18),
+.skater_stats_table_time_on_ice_per_game_and_faceoff_percentage_season_without_names td:nth-child(18) {
+    width: 5%;
+}
+
+
+/* Skater stats table plus minus and shots and shooting percentage season without names */
+.skater_stats_table_plus_minus_and_shots_and_shooting_percentage_season_without_names {
+    font-size: 21px;
+}
+
+.skater_stats_table_plus_minus_and_shots_and_shooting_percentage_season_without_names th:nth-child(1),
+.skater_stats_table_plus_minus_and_shots_and_shooting_percentage_season_without_names td:nth-child(1) {
+    width: 10%;
+}
+
+.skater_stats_table_plus_minus_and_shots_and_shooting_percentage_season_without_names th:nth-child(2),
+.skater_stats_table_plus_minus_and_shots_and_shooting_percentage_season_without_names td:nth-child(2) {
+    width: 22.5%;
+}
+
+.skater_stats_table_plus_minus_and_shots_and_shooting_percentage_season_without_names th:nth-child(3),
+.skater_stats_table_plus_minus_and_shots_and_shooting_percentage_season_without_names td:nth-child(3) {
+    width: 4.5%;
+}
+
+.skater_stats_table_plus_minus_and_shots_and_shooting_percentage_season_without_names th:nth-child(4),
+.skater_stats_table_plus_minus_and_shots_and_shooting_percentage_season_without_names td:nth-child(4),
+.skater_stats_table_plus_minus_and_shots_and_shooting_percentage_season_without_names th:nth-child(5),
+.skater_stats_table_plus_minus_and_shots_and_shooting_percentage_season_without_names td:nth-child(5) {
+    width: 4%;
+}
+
+.skater_stats_table_plus_minus_and_shots_and_shooting_percentage_season_without_names th:nth-child(6),
+.skater_stats_table_plus_minus_and_shots_and_shooting_percentage_season_without_names td:nth-child(6) {
+    width: 5%;
+}
+
+.skater_stats_table_plus_minus_and_shots_and_shooting_percentage_season_without_names th:nth-child(7),
+.skater_stats_table_plus_minus_and_shots_and_shooting_percentage_season_without_names td:nth-child(7) {
+    width: 4.5%;
+}
+
+.skater_stats_table_plus_minus_and_shots_and_shooting_percentage_season_without_names th:nth-child(8),
+.skater_stats_table_plus_minus_and_shots_and_shooting_percentage_season_without_names td:nth-child(8),
+.skater_stats_table_plus_minus_and_shots_and_shooting_percentage_season_without_names th:nth-child(9),
+.skater_stats_table_plus_minus_and_shots_and_shooting_percentage_season_without_names td:nth-child(9),
+.skater_stats_table_plus_minus_and_shots_and_shooting_percentage_season_without_names th:nth-child(10),
+.skater_stats_table_plus_minus_and_shots_and_shooting_percentage_season_without_names td:nth-child(10) {
+    width: 5%;
+}
+
+.skater_stats_table_plus_minus_and_shots_and_shooting_percentage_season_without_names th:nth-child(11),
+.skater_stats_table_plus_minus_and_shots_and_shooting_percentage_season_without_names td:nth-child(11),
+.skater_stats_table_plus_minus_and_shots_and_shooting_percentage_season_without_names th:nth-child(12),
+.skater_stats_table_plus_minus_and_shots_and_shooting_percentage_season_without_names td:nth-child(12) {
+    width: 5%;
+}
+
+.skater_stats_table_plus_minus_and_shots_and_shooting_percentage_season_without_names th:nth-child(13),
+.skater_stats_table_plus_minus_and_shots_and_shooting_percentage_season_without_names td:nth-child(13) {
+    width: 6%;
+}
+
+.skater_stats_table_plus_minus_and_shots_and_shooting_percentage_season_without_names th:nth-child(14),
+.skater_stats_table_plus_minus_and_shots_and_shooting_percentage_season_without_names td:nth-child(14) {
+    width: 5%;
+}
+
+.skater_stats_table_plus_minus_and_shots_and_shooting_percentage_season_without_names th:nth-child(15),
+.skater_stats_table_plus_minus_and_shots_and_shooting_percentage_season_without_names td:nth-child(15) {
+    width: 4%;
+}
+
+.skater_stats_table_plus_minus_and_shots_and_shooting_percentage_season_without_names th:nth-child(16),
+.skater_stats_table_plus_minus_and_shots_and_shooting_percentage_season_without_names td:nth-child(16) {
+    width: 5.5%;
+}
+
+
+/* goalie stats table overtime losses and ties season without names */
+.goalie_stats_table_overtime_losses_and_ties_season_without_names {
+    font-size: 21px;
+}
+
+.goalie_stats_table_overtime_losses_and_ties_season_without_names th:nth-child(1),
+.goalie_stats_table_overtime_losses_and_ties_season_without_names td:nth-child(1) {
+    width: 10%;
+}
+
+.goalie_stats_table_overtime_losses_and_ties_season_without_names th:nth-child(2),
+.goalie_stats_table_overtime_losses_and_ties_season_without_names td:nth-child(2) {
+    width: 20.25%;
+}
+
+.goalie_stats_table_overtime_losses_and_ties_season_without_names th:nth-child(3),
+.goalie_stats_table_overtime_losses_and_ties_season_without_names td:nth-child(3),
+.goalie_stats_table_overtime_losses_and_ties_season_without_names th:nth-child(4),
+.goalie_stats_table_overtime_losses_and_ties_season_without_names td:nth-child(4) {
+    width: 4.75%;
+}
+
+.goalie_stats_table_overtime_losses_and_ties_season_without_names th:nth-child(5),
+.goalie_stats_table_overtime_losses_and_ties_season_without_names td:nth-child(5),
+.goalie_stats_table_overtime_losses_and_ties_season_without_names th:nth-child(6),
+.goalie_stats_table_overtime_losses_and_ties_season_without_names td:nth-child(6),
+.goalie_stats_table_overtime_losses_and_ties_season_without_names th:nth-child(7),
+.goalie_stats_table_overtime_losses_and_ties_season_without_names td:nth-child(7) {
+    width: 4%;
+}
+
+.goalie_stats_table_overtime_losses_and_ties_season_without_names th:nth-child(8),
+.goalie_stats_table_overtime_losses_and_ties_season_without_names td:nth-child(8) {
+    width: 5.5%
+}
+
+.goalie_stats_table_overtime_losses_and_ties_season_without_names th:nth-child(9),
+.goalie_stats_table_overtime_losses_and_ties_season_without_names td:nth-child(9),
+.goalie_stats_table_overtime_losses_and_ties_season_without_names th:nth-child(10),
+.goalie_stats_table_overtime_losses_and_ties_season_without_names td:nth-child(10) {
+    width: 5.75%;
+}
+
+.goalie_stats_table_overtime_losses_and_ties_season_without_names th:nth-child(11),
+.goalie_stats_table_overtime_losses_and_ties_season_without_names td:nth-child(11) {
+    width: 6%;
+}
+
+.goalie_stats_table_overtime_losses_and_ties_season_without_names th:nth-child(12),
+.goalie_stats_table_overtime_losses_and_ties_season_without_names td:nth-child(12) {
+    width: 4.5%;
+}
+
+.goalie_stats_table_overtime_losses_and_ties_season_without_names th:nth-child(13),
+.goalie_stats_table_overtime_losses_and_ties_season_without_names td:nth-child(13),
+.goalie_stats_table_overtime_losses_and_ties_season_without_names th:nth-child(14),
+.goalie_stats_table_overtime_losses_and_ties_season_without_names td:nth-child(14) {
+    width: 4%;
+}
+
+.goalie_stats_table_overtime_losses_and_ties_season_without_names th:nth-child(15),
+.goalie_stats_table_overtime_losses_and_ties_season_without_names td:nth-child(15) {
+    width: 5%;
+}
+
+.goalie_stats_table_overtime_losses_and_ties_season_without_names th:nth-child(16),
+.goalie_stats_table_overtime_losses_and_ties_season_without_names td:nth-child(16) {
+    width: 7.75%;
+}
+
+
+/* goalie playoff stats table without names */
+.goalie_playoff_stats_table_without_names {
+    font-size: 23px;
+}
+
+.goalie_playoff_stats_table_without_names th:nth-child(1),
+.goalie_playoff_stats_table_without_names td:nth-child(1) {
+    width: 11%;
+}
+
+.goalie_playoff_stats_table_without_names th:nth-child(2),
+.goalie_playoff_stats_table_without_names td:nth-child(2) {
+    width: 24%;
+}
+
+.goalie_playoff_stats_table_without_names th:nth-child(3),
+.goalie_playoff_stats_table_without_names td:nth-child(3),
+.goalie_playoff_stats_table_without_names th:nth-child(4),
+.goalie_playoff_stats_table_without_names td:nth-child(4) {
+    width: 5%;
+}
+
+.goalie_playoff_stats_table_without_names th:nth-child(5),
+.goalie_playoff_stats_table_without_names td:nth-child(5),
+.goalie_playoff_stats_table_without_names th:nth-child(6),
+.goalie_playoff_stats_table_without_names td:nth-child(6) {
+    width: 4.5%;
+}
+
+.goalie_playoff_stats_table_without_names th:nth-child(7),
+.goalie_playoff_stats_table_without_names td:nth-child(7) {
+    width: 5.75%;
+}
+
+.goalie_playoff_stats_table_without_names th:nth-child(8),
+.goalie_playoff_stats_table_without_names td:nth-child(8) {
+    width: 6%
+}
+
+.goalie_playoff_stats_table_without_names th:nth-child(9),
+.goalie_playoff_stats_table_without_names td:nth-child(9) {
+    width: 6.75%;
+}
+
+.goalie_playoff_stats_table_without_names th:nth-child(10),
+.goalie_playoff_stats_table_without_names td:nth-child(10) {
+    width: 5%;
+}
+
+.goalie_playoff_stats_table_without_names th:nth-child(11),
+.goalie_playoff_stats_table_without_names td:nth-child(11),
+.goalie_playoff_stats_table_without_names th:nth-child(12),
+.goalie_playoff_stats_table_without_names td:nth-child(12) {
+    width: 4%;
+}
+
+.goalie_playoff_stats_table_without_names th:nth-child(13),
+.goalie_playoff_stats_table_without_names td:nth-child(13) {
+    width: 5.5%;
+}
+
+.goalie_playoff_stats_table_without_names th:nth-child(14),
+.goalie_playoff_stats_table_without_names td:nth-child(14) {
+    width: 9%;
+}
+
+
+.skater_stats_table_time_on_ice_per_game_and_faceoff_percentage_season .team_logo,
+.skater_stats_table_plus_minus_and_shots_and_shooting_percentage_season .team_logo,
+.skater_stats_table_time_on_ice_per_game_and_faceoff_percentage_season_with_seasons .team_logo,
+.skater_stats_table_plus_minus_and_shots_and_shooting_percentage_season_with_seasons .team_logo {
+    max-width: 18px;
+    max-height: 18px;
+    margin-right: 10px;
+    top: 2px;
+}
+
+.skater_stats_table .team_logo,
+.skater_stats_table_with_seasons .team_logo {
+    max-width: 22px;
+    max-height: 22px;
+    margin-right: 10px;
+    top: 1px;
+}
+
+
+#season_type_field_container {
+    display: flex;
+    margin-bottom: 20px;
+}
+
+#season_type_field_container button {
+    font-size: 13px;
+    width: 110px;
+    height: 35px;
+    background-color: white;
+}
+
+#season_type_field_container button:hover {
+    background-color: #c0c0c0;
+}
+
+#regular_season_season_type_button {
+    margin-right: 0;
+    border: 1px solid black;
+    border-right: none;
+    border-radius: 16px 0 0 16px;
+}
+
+#playoffs_season_type_button {
+    margin-left: 0;
+    border: 1px solid black;
+    border-radius: 0 16px 16px 0;
+}
+
+#team_select_modal {
+    font-size: 14px;
+}
+
+#team_select_container {
+    display: flex;
+    margin-top: 20px;
+    justify-content: center;
+}
+
+#team_select_container button {
+    font-size: 12px;
+    width: 125px;
+    height: 35px;
+    background-color: white;
+}
+
+#team_select_container button:hover {
+    background-color: #c0c0c0;
+}
+
+#team_select_container button:first-child {
+    margin-right: 0;
+    border: 1px solid black;
+    border-right: none;
+    border-radius: 16px 0 0 16px;
+}
+
+#team_select_container button:last-child {
+    margin-left: 0;
+    border: 1px solid black;
+    border-radius: 0 16px 16px 0;
+}

@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NHL DB</title>
+    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../styles/styles.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="../scripts/scripts.js" defer></script>
+</head>
+<body>
+    <div id="top_container">
+        <h1 id="nhl_db_title">NHL DB</h1>
+        <div id="add_stats_button_container">
+            <a href="/add_stats.html">
+                <button id="add_stats_button">Add Stats</button>
+            </a>
+        </div>
+    </div>
+
+    <div id="stat_viewing_button_container">
+        <a href="/player_season_stats.html">
+            <button class="stat_viewing_button" id="player_season_stats_button">Player Season Stats</button>
+        </a>
+        <a href="/player_playoff_stats.html">
+            <button class="stat_viewing_button" id="player_playoff_stats_button">Player Playoff Stats</button>
+        </a>        
+        <a href="/skater_lookup.html">
+            <button class="stat_viewing_button" id="skater_lookup_button">Skater Lookup</button>
+        </a>
+        <a href="/goalie_lookup.html">
+            <button class="stat_viewing_button" id="goalie_lookup_button">Goalie Lookup</button>
+        </a>
+        <a href="/standings.html">
+            <button class="stat_viewing_button" id="standings_button">Standings</button>
+        </a>
+        <a href="/team_season_stats.html">
+            <button class="stat_viewing_button" id="team_season_stats_button">Team Season Stats</button>
+        </a>
+        <a href="/team_playoff_stats.html">
+            <button class="stat_viewing_button" id="team_playoff_stats_button">Team Playoff Stats</button>
+        </a>
+        <a href="/team_lookup.html">
+            <button class="stat_viewing_button" id="team_lookup_button">Team Lookup</button>
+        </a>
+    </div>
+    
+    <div id="stats_container">
+        <div id="stat_selecting_container">
+            <div class="dropdown">
+                <div class="dropdown_button" id="season_dropdown_button" onclick="displaySeasons()">Select Season</div>
+                <div class="dropdown_content" id="season_selector">
+                    <div class="season_dropdown_option">2023-2024</div>
+                    <div class="season_dropdown_option">2022-2023</div>
+                    <div class="season_dropdown_option">2021-2022</div>
+                    <div class="season_dropdown_option">2020-2021</div>
+                    <div class="season_dropdown_option">2019-2020</div>
+                    <div class="season_dropdown_option">2018-2019</div>
+                    <div class="season_dropdown_option">2017-2018</div>
+                    <div class="season_dropdown_option">2016-2017</div>
+                    <div class="season_dropdown_option">2015-2016</div>
+                    <div class="season_dropdown_option">2014-2015</div>
+                    <div class="season_dropdown_option">2013-2014</div>
+                    <div class="season_dropdown_option">2012-2013</div>
+                    <div class="season_dropdown_option">2011-2012</div>
+                    <div class="season_dropdown_option">2010-2011</div>
+                    <div class="season_dropdown_option">2009-2010</div>
+                    <div class="season_dropdown_option">2008-2009</div>
+                    <div class="season_dropdown_option">2007-2008</div>
+                    <div class="season_dropdown_option">2006-2007</div>
+                    <div class="season_dropdown_option">2005-2006</div>
+                    <div class="season_dropdown_option">2003-2004</div>
+                    <div class="season_dropdown_option">2002-2003</div>
+                    <div class="season_dropdown_option">2001-2002</div>
+                    <div class="season_dropdown_option">2000-2001</div>
+                    <div class="season_dropdown_option">1999-2000</div>
+                    <div class="season_dropdown_option">1998-1999</div>
+                    <div class="season_dropdown_option">1997-1998</div>
+                    <div class="season_dropdown_option">1996-1997</div>
+                    <div class="season_dropdown_option">1995-1996</div>
+                    <div class="season_dropdown_option">1994-1995</div>
+                    <div class="season_dropdown_option">1993-1994</div>
+                    <div class="season_dropdown_option">1992-1993</div>
+                    <div class="season_dropdown_option">1991-1992</div>
+                    <div class="season_dropdown_option">1990-1991</div>
+                    <div class="season_dropdown_option">1989-1990</div>
+                    <div class="season_dropdown_option">1988-1989</div>
+                    <div class="season_dropdown_option">1987-1988</div>
+                    <div class="season_dropdown_option">1986-1987</div>
+                    <div class="season_dropdown_option">1985-1986</div>
+                    <div class="season_dropdown_option">1984-1985</div>
+                    <div class="season_dropdown_option">1983-1984</div>
+                    <div class="season_dropdown_option">1982-1983</div>
+                    <div class="season_dropdown_option">1981-1982</div>
+                    <div class="season_dropdown_option">1980-1981</div>
+                    <div class="season_dropdown_option">1979-1980</div>
+                    <div class="season_dropdown_option">1978-1979</div>
+                    <div class="season_dropdown_option">1977-1978</div>
+                    <div class="season_dropdown_option">1976-1977</div>
+                    <div class="season_dropdown_option">1975-1976</div>
+                    <div class="season_dropdown_option">1974-1975</div>
+                    <div class="season_dropdown_option">1973-1974</div>
+                    <div class="season_dropdown_option">1972-1973</div>
+                    <div class="season_dropdown_option">1971-1972</div>
+                    <div class="season_dropdown_option">1970-1971</div>
+                    <div class="season_dropdown_option">1969-1970</div>
+                    <div class="season_dropdown_option">1968-1969</div>
+                    <div class="season_dropdown_option">1967-1968</div>
+                    <div class="season_dropdown_option">1966-1967</div>
+                    <div class="season_dropdown_option">1965-1966</div>
+                    <div class="season_dropdown_option">1964-1965</div>
+                    <div class="season_dropdown_option">1963-1964</div>
+                    <div class="season_dropdown_option">1962-1963</div>
+                    <div class="season_dropdown_option">1961-1962</div>
+                    <div class="season_dropdown_option">1960-1961</div>
+                    <div class="season_dropdown_option">1959-1960</div>
+                    <div class="season_dropdown_option">1958-1959</div>
+                    <div class="season_dropdown_option">1957-1958</div>
+                    <div class="season_dropdown_option">1956-1957</div>
+                    <div class="season_dropdown_option">1955-1956</div>
+                    <div class="season_dropdown_option">1954-1955</div>
+                    <div class="season_dropdown_option">1953-1954</div>
+                    <div class="season_dropdown_option">1952-1953</div>
+                    <div class="season_dropdown_option">1951-1952</div>
+                    <div class="season_dropdown_option">1950-1951</div>
+                    <div class="season_dropdown_option">1949-1950</div>
+                    <div class="season_dropdown_option">1948-1949</div>
+                    <div class="season_dropdown_option">1947-1948</div>
+                    <div class="season_dropdown_option">1946-1947</div>
+                    <div class="season_dropdown_option">1945-1946</div>
+                    <div class="season_dropdown_option">1944-1945</div>
+                    <div class="season_dropdown_option">1943-1944</div>
+                    <div class="season_dropdown_option">1942-1943</div>
+                    <div class="season_dropdown_option">1941-1942</div>
+                    <div class="season_dropdown_option">1940-1941</div>
+                    <div class="season_dropdown_option">1939-1940</div>
+                    <div class="season_dropdown_option">1938-1939</div>
+                    <div class="season_dropdown_option">1937-1938</div>
+                    <div class="season_dropdown_option">1936-1937</div>
+                    <div class="season_dropdown_option">1935-1936</div>
+                    <div class="season_dropdown_option">1934-1935</div>
+                    <div class="season_dropdown_option">1933-1934</div>
+                    <div class="season_dropdown_option">1932-1933</div>
+                    <div class="season_dropdown_option">1931-1932</div>
+                    <div class="season_dropdown_option">1930-1931</div>
+                    <div class="season_dropdown_option">1929-1930</div>
+                    <div class="season_dropdown_option">1928-1929</div>
+                    <div class="season_dropdown_option">1927-1928</div>
+                    <div class="season_dropdown_option">1926-1927</div>
+                    <div class="season_dropdown_option">1925-1926</div>
+                    <div class="season_dropdown_option">1924-1925</div>
+                    <div class="season_dropdown_option">1923-1924</div>
+                    <div class="season_dropdown_option">1922-1923</div>
+                    <div class="season_dropdown_option">1921-1922</div>
+                    <div class="season_dropdown_option">1920-1921</div>
+                    <div class="season_dropdown_option">1919-1920</div>
+                    <div class="season_dropdown_option">1918-1919</div>
+                    <div class="season_dropdown_option">1917-1918</div>
+                </div>
+            </div>
+        </div>
+        <div id="stat_viewing_container">
+            <div id="stat_view_button_container">
+                <button class="stat_view_button" id="wildcard_button">Wildcard</button>
+                <button class="stat_view_button" id="division_button">Division</button>
+                <button class="stat_view_button" id="conference_button">Conference</button>
+                <button class="stat_view_button" id="league_button">League</button>
+            </div>
+            
+        </div>        
+    </div>
+</body>
+</html>

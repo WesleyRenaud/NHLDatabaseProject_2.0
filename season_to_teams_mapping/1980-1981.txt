@@ -1,0 +1,27 @@
+Conference: Clarence Campbell
+Division: Norris
+Chicago Blackhawks
+Detroit Red Wings
+Minnesota North Stars
+St. Louis Blues
+Toronto Maple Leafs
+Winnipeg Jets
+Division: Smythe
+Calgary Flames
+Edmonton Oilers
+Los Angeles Kings
+Vancouver Canucks
+Colorado Rockies
+Conference: Prince of Whales
+Division: Adams
+Boston Bruins
+Buffalo Sabres
+Hartford Whalers
+Montreal Canadiens
+Quebec Nordiques
+Division: Patrick
+New York Islanders
+New York Rangers
+Philadelphia Flyers
+Pittsburgh Penguins
+Washington Capitals

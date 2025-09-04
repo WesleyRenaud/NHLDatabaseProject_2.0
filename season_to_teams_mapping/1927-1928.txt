@@ -1,0 +1,12 @@
+Division: American
+Boston Bruins
+Chicago Blackhawks
+Detroit Cougars
+New York Rangers
+Pittsburgh Pirates
+Division: Canadien
+Montreal Canadiens
+Montreal Maroons
+New York Americans
+Ottawa Senators
+Toronto Maple Leafs

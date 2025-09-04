@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NHL DB</title>
+    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../styles/styles.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="../scripts/scripts.js" defer></script>
+</head>
+<body>
+    <div id="top_container">
+        <h1 id="nhl_db_title">NHL DB</h1>
+        <div id="add_stats_button_container">
+            <a href="/add_stats.html">
+                <button id="add_stats_button">Add Stats</button>
+            </a>
+        </div>
+    </div>
+
+    <div id="stat_viewing_button_container">
+        <a href="/player_season_stats.html">
+            <button class="stat_viewing_button" id="player_season_stats_button">Player Season Stats</button>
+        </a>
+        <a href="/player_playoff_stats.html">
+            <button class="stat_viewing_button" id="player_playoff_stats_button">Player Playoff Stats</button>
+        </a>        
+        <a href="/skater_lookup.html">
+            <button class="stat_viewing_button" id="skater_lookup_button">Skater Lookup</button>
+        </a>
+        <a href="/goalie_lookup.html">
+            <button class="stat_viewing_button" id="goalie_lookup_button">Goalie Lookup</button>
+        </a>
+        <a href="/standings.html">
+            <button class="stat_viewing_button" id="standings_button">Standings</button>
+        </a>
+        <a href="/team_season_stats.html">
+            <button class="stat_viewing_button" id="team_season_stats_button">Team Season Stats</button>
+        </a>
+        <a href="/team_playoff_stats.html">
+            <button class="stat_viewing_button" id="team_playoff_stats_button">Team Playoff Stats</button>
+        </a>
+        <a href="/team_lookup.html">
+            <button class="stat_viewing_button" id="team_lookup_button">Team Lookup</button>
+        </a>
+    </div>
+    
+    <div id="stats_container">
+        <div id="stat_selecting_container">
+        </div>
+        <div id="stat_viewing_container">
+            <button id="season_type_change_button">Playoffs</button>
+
+            <div id="search_bar_container">
+                <span class="search_icon">&#128269;</span> <!-- Unicode search icon -->
+                <input type="text" id="search_bar" placeholder="...">
+            </div>            
+        </div>        
+    </div>    
+</body>
+</html>

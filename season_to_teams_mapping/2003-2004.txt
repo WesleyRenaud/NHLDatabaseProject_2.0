@@ -1,0 +1,38 @@
+Conference: Eastern
+Division: Atlantic
+New Jersey Devils
+New York Islanders
+New York Rangers
+Philadelphia Flyers
+Pittsburgh Penguins
+Division: Northeast
+Boston Bruins
+Buffalo Sabres
+Montreal Canadiens
+Ottawa Senators
+Toronto Maple Leafs
+Division: Southeast
+Atlanta Thrashers
+Carolina Hurricanes
+Florida Panthers
+Tampa Bay Lightning
+Washington Capitals
+Conference: Western
+Division: Central
+Chicago Blackhawks
+Columbus Blue Jackets
+Detroit Red Wings
+Nashville Predators
+St. Louis Blues
+Division: Northwest
+Calgary Flames
+Colorado Avalanche
+Edmonton Oilers
+Minnesota Wild
+Vancouver Canucks
+Division: Pacific
+Anaheim Ducks
+Dallas Stars
+Los Angeles Kings
+Phoenix Coyotes
+San Jose Sharks

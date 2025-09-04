@@ -1,0 +1,16 @@
+Division: East
+Boston Bruins
+Buffalo Sabres
+Detroit Red Wings
+Montreal Canadiens
+New York Rangers
+Toronto Maple Leafs
+Vancouver Canucks
+Division: West
+California Golden Seals
+Chicago Blackhawks
+Los Angeles Kings
+Minnesota North Stars
+Philadelphia Flyers
+Pittsburgh Penguins
+St. Louis Blues
