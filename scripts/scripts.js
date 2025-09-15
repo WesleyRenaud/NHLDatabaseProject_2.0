@@ -1166,7 +1166,7 @@ function addSkaterRegularSeason() {
 
     var overtimeGoals = document.getElementById('overtime_goals').value;
     overtimeGoals = Number(overtimeGoals);
-    if (!Number.isInteger(overtimeGoals) || overtimeGoals > gameWinningGoals) {
+    if (!Number.isInteger(overtimeGoals) || overtimeGoals > goals) {
         invalidFields.push('Overtime Goals');
     }
 
@@ -1602,8 +1602,18 @@ function restoreSkaterSeasonStats(type, season, team) {
     document.getElementById('game_winning_goals').value = skaterSeason.gameWinningGoals;
     document.getElementById('overtime_goals').value = skaterSeason.overtimeGoals;
     document.getElementById('shots').value = skaterSeason.shots;
-    document.getElementById('shooting_percentage').value = skaterSeason.shootingPercentage;
-    document.getElementById('faceoff_percentage').value = skaterSeason.faceoffPercentage;
+    if (isShootingPercentageSeason(season)) {
+        document.getElementById('shooting_percentage').value = round(skaterSeason.shootingPercentage, 1).toFixed(1);
+    }
+    else {
+        document.getElementById('shooting_percentage').value = skaterSeason.shootingPercentage;
+    }
+    if (isFaceoffPercentageSeason(season)) {
+        document.getElementById('faceoff_percentage').value = round(skaterSeason.faceoffPercentage, 1).toFixed(1);
+    }
+    else {
+        document.getElementById('faceoff_percentage').value = skaterSeason.faceoffPercentage;
+    }
 }
 
 function finishSkater() {
@@ -2049,8 +2059,8 @@ function restoreGoalieSeasonStats(type, season, team) {
         document.getElementById('overtime_losses').value = goalieSeason.overtimeLosses;
     }
     document.getElementById('shots_against').value = goalieSeason.shotsAgainst;
-    document.getElementById('goals_against_average').value = goalieSeason.goalsAgainstAverage;
-    document.getElementById('save_percentage').value = goalieSeason.savePercentage;
+    document.getElementById('goals_against_average').value = round(goalieSeason.goalsAgainstAverage, 2).toFixed(2);
+    document.getElementById('save_percentage').value = round(goalieSeason.savePercentage, 3).toFixed(3);
     document.getElementById('shutouts').value = goalieSeason.shutouts;
     document.getElementById('goals').value = goalieSeason.goals;
     document.getElementById('assists').value = goalieSeason.assists;
@@ -4312,7 +4322,8 @@ function getSkaterStats(type, team, firstSeason, lastSeason, position) {
                 button.addEventListener('click', function() {
                     var stat = getStatNameFromAbbreviation(button.textContent);
                     multiplier *= -1; // toggles between 1 and -1
-                    getSkaterStatsByStat(type, team, firstSeason, lastSeason, position, stat, multiplier);
+                    sortSkaterStats(response.skater_stats, stat, multiplier);
+                    displaySkaterStats(response);
                 });
             });
         },
@@ -4327,9 +4338,6 @@ function displaySkaterStats(response) {
 
     var skaterStats = response.skater_stats;
 
-    if (response.first_season == response.last_season && response.first_season == '1919-1920') {
-        alert('There are no stats for the selected season.');
-    }
     for (var i = 0; i < skaterStats.length; i++) {       
         if (i == 0) {
             var fields = [];
@@ -4530,41 +4538,12 @@ function isPeriodWithSkaterStat(stat, season) {
     }
 }
 
-function getSkaterStatsByStat(type, team, firstSeason, lastSeason, position, stat, multiplier) {
-    $.ajax({
-        type: 'POST',
-        url: '/get_skater_stats',
-        data: JSON.stringify({
-            type: type,
-            team: team,
-            first_season: firstSeason,
-            last_season: lastSeason,
-            position: position,
-            stat: stat,
-            multiplier: multiplier
-        }),
-        contentType: 'application/json',
-        success: function(response) {
-            sortedByStat = stat;
 
-            displaySkaterStats(response);
-            
-            var statSortingButtons = document.querySelectorAll('.stat_sorting_button');
-
-            statSortingButtons.forEach(function(button) {
-                button.addEventListener('click', function() {
-                    var newStat = getStatNameFromAbbreviation(button.textContent);
-                    if (newStat == sortedByStat) {
-                        multiplier *= -1;
-                    }
-                    else {
-                        sortedByStat = newStat;
-                        multiplier = 1;
-                    }
-                    getSkaterStatsByStat(type, team, firstSeason, lastSeason, position, sortedByStat, multiplier);
-                });
-            });
-        }
+function sortSkaterStats(seasons, stat, multiplier) {
+    seasons.sort((season1, season2) => {
+        if (season1[stat] < season2[stat]) return 1 * multiplier;
+        if (season1[stat] > season2[stat]) return -1 * multiplier;
+        return 0;
     });
 }
 
@@ -5457,7 +5436,7 @@ function editSkater() {
                     if (skaters.length > 1) {
                         // TO-DO: provide system for the user to choose between the players
                     }
-                    else {
+                    else if (skaters.length == 1) {
                         var skater = skaters[0];
                         // re-populate the fields so they can be updated
                         document.getElementById('name').value = name;
@@ -5532,6 +5511,9 @@ function editSkater() {
                         localStorage.setItem('player', JSON.stringify(player));
 
                         addEditSeasonButton('Skater');
+                    }
+                    else {
+                        alert('Error - skater not found');
                     }              
                 },
                 error: function() {
@@ -5597,7 +5579,6 @@ function editGoalie() {
                 }),
                 contentType: 'application/json',
                 success: function(response) {
-                    console.log(response);
                     var goalies = response.goalies;
                     if (goalies.length > 1) {
                         // TO-DO: provide system for the user to choose between the players

@@ -3990,12 +3990,12 @@ button:disabled {
 
 .skater_stats_table_time_on_ice_per_game_and_faceoff_percentage_season th:nth-child(1),
 .skater_stats_table_time_on_ice_per_game_and_faceoff_percentage_season td:nth-child(1) {
-    width: 16%;
+    width: 15.5%;
 }
 
 .skater_stats_table_time_on_ice_per_game_and_faceoff_percentage_season th:nth-child(2),
 .skater_stats_table_time_on_ice_per_game_and_faceoff_percentage_season td:nth-child(2) {
-    width: 17.25%;
+    width: 18.25%;
 }
 
 .skater_stats_table_time_on_ice_per_game_and_faceoff_percentage_season th:nth-child(3),
@@ -4042,7 +4042,7 @@ button:disabled {
 .skater_stats_table_time_on_ice_per_game_and_faceoff_percentage_season td:nth-child(11),
 .skater_stats_table_time_on_ice_per_game_and_faceoff_percentage_season th:nth-child(12),
 .skater_stats_table_time_on_ice_per_game_and_faceoff_percentage_season td:nth-child(12) {
-    width: 4.25%;
+    width: 4.375%;
 }
 
 .skater_stats_table_time_on_ice_per_game_and_faceoff_percentage_season th:nth-child(13),
@@ -4057,7 +4057,7 @@ button:disabled {
 
 .skater_stats_table_time_on_ice_per_game_and_faceoff_percentage_season th:nth-child(15),
 .skater_stats_table_time_on_ice_per_game_and_faceoff_percentage_season td:nth-child(15) {
-    width: 4.5%;
+    width: 4.25%;
 }
 
 .skater_stats_table_time_on_ice_per_game_and_faceoff_percentage_season th:nth-child(16),

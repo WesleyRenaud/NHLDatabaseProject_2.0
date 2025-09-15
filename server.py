@@ -634,6 +634,7 @@ class MyHandler( BaseHTTPRequestHandler ):
                         if first_season == last_season:
                             team_logo_path = self.nhl_util.get_team_logo_path( team_name, season )
                         else:
+                            #print( team_name, skater_stats[i].season )
                             team_logo_path = self.nhl_util.get_team_logo_path( team_name, skater_stats[i].season )
                         logos.append( team_logo_path )
 

@@ -502,13 +502,14 @@ class NHLUtil():
                     folder += '/' + file_name
 
                     if os.path.exists( folder ):
-                        for file_name in os.listdir( folder ):
-                            if file_name.endswith('.png'):
-                                first_season = self.get_first_season( file_name )
-                                second_season = self.get_second_season( file_name )
-                                
-                                if self.is_in_between_seasons( season, first_season, second_season ):
-                                    return folder + '/' + file_name
+                        if '.DS_Store' not in folder:
+                            for file_name in os.listdir( folder ):
+                                if file_name.endswith('.png'):
+                                    first_season = self.get_first_season( file_name )
+                                    second_season = self.get_second_season( file_name )
+                                    
+                                    if self.is_in_between_seasons( season, first_season, second_season ):
+                                        return folder + '/' + file_name
 
 
     # This method returns the first season from the name of a file representing a team's logo between two 

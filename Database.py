@@ -853,9 +853,9 @@ class Database():
     def get_skater_stats_for_one_player( self, name ): 
         cur = self.conn.cursor()
 
-        cur.execute( """ UPDATE SkaterSeason SET TEAM = 'Nashville Predators' WHERE SKATERSEASONID = 34450;""" )
-        cur.execute( """ UPDATE SkaterSeason SET TYPE = 'Regular Season' WHERE SKATERSEASONID = 34732;""" )
-        cur.execute( """ UPDATE Skater SET NAME = 'Murph Chamberlain' WHERE SKATERID = 1243;""" )
+        cur.execute( """ UPDATE SkaterSeason SET TEAM = 'Montreal Maroons' WHERE SKATERSEASONID = 38237;""" )
+        cur.execute( """ UPDATE SkaterSeason SET TEAM = 'Montreal Maroons' WHERE SKATERSEASONID = 38238;""" )
+        cur.execute( """ UPDATE SkaterSeason SET TEAM = 'Montreal Maroons' WHERE SKATERSEASONID = 38239;""" )
         self.conn.commit()
 
         data = cur.execute( """ SELECT SKATERID, TEAM, NUMBER, POSITION, HEIGHT, WEIGHT, BIRTHDAY,
