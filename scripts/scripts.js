@@ -1148,7 +1148,8 @@ function addSkaterRegularSeason() {
 
     var timeOnIcePerGame = document.getElementById('time_on_ice_per_game').value;
     if (isTimeOnIcePerGameSeason(season)) {
-        if (timeOnIcePerGame.length != 4 && timeOnIcePerGame.length != 5 || timeOnIcePerGame[timeOnIcePerGame.length - 3] != ':') {
+        if ((timeOnIcePerGame.length != 4 && timeOnIcePerGame.length != 5 || timeOnIcePerGame[timeOnIcePerGame.length - 3] != ':') &&
+             timeOnIcePerGame != '--') {
             invalidFields.push('Time On Ice/Game');
         }
     }

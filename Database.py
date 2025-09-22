@@ -853,7 +853,7 @@ class Database():
     def get_skater_stats_for_one_player( self, name ): 
         cur = self.conn.cursor()
 
-        cur.execute( """ UPDATE SkaterSeason SET TEAM = 'Vegas Golden Knights' WHERE SKATERSEASONID = 40662;""" )
+        cur.execute( """ UPDATE SkaterSeason SET TEAM = 'Nashville Predators' WHERE SKATERSEASONID = 41840;""" )
 
         self.conn.commit()
 
