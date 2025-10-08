@@ -853,8 +853,6 @@ class Database():
     def get_skater_stats_for_one_player( self, name ): 
         cur = self.conn.cursor()
 
-        cur.execute( """ UPDATE SkaterSeason SET TEAM = 'New York Rangers' WHERE SKATERSEASONID = 46911;""" )
-
         self.conn.commit()
 
         data = cur.execute( """ SELECT SKATERID, TEAM, NUMBER, POSITION, HEIGHT, WEIGHT, BIRTHDAY,
@@ -1640,9 +1638,7 @@ class Database():
     # the seasons which the team was active.
     def get_team_stats_for_one_team( self, team ):
         cur = self.conn.cursor()
-
-        cur.execute( """ UPDATE Team SET TIES = 'null' WHERE TIES = 'None'; """ )
-        cur.execute( """ UPDATE Team SET TIES = 'null' WHERE TIES IS NULL; """ )
+        
         self.conn.commit()
 
         city = self.nhl_util.get_city( team )
