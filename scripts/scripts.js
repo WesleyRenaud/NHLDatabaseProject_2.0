@@ -15,7 +15,9 @@ function enableSingleSeasonSelect() {
     var startingSeasonTextField = document.querySelector('#starting-season-text-field');
     var endingSeasonTextField = document.querySelector('#ending-season-text-field');
     startingSeasonTextField.disabled = true;
+    startingSeasonTextField.value = '';
     endingSeasonTextField.disabled = true;
+    endingSeasonTextField.value = '';
 }
 
 function enableMultipleSeasonSelect() {
@@ -28,6 +30,7 @@ function enableMultipleSeasonSelect() {
     // Disable the season dropdown button
     var seasonDropdownButton = document.querySelector('#season-dropdown-button');
     seasonDropdownButton.disabled = true;
+    seasonDropdownButton.textContent = 'Select Season';
 
     // Enable the multiple season text fields
     var startingSeasonTextField = document.querySelector('#starting-season-text-field');
@@ -78,6 +81,58 @@ function displayPositions() {
             });
 
             positionDropdownButton.textContent = positionDropdownItem.textContent;
+        });
+    });
+}
+
+function displayTeams() {
+    // First check if a season/multiple seasons have been selected
+    var singleSeasonButton = document.querySelector('#single-season-button');
+    var multipleSeasonsButton = document.querySelector('#multiple-seasons-button');
+    if (!singleSeasonButton.classList.contains('button-selected') && !multipleSeasonsButton.classList.contains('button-selected')) {
+        alert('Error - a season must be selected first');
+        return;
+    }
+    else if (singleSeasonButton.classList.contains('button-selected')) {
+        var season = document.querySelector('#season-dropdown-button').textContent;
+        if (!isValidSeason(season)) {
+            alert('Error - a season must be selected first');
+            return;
+        }
+    }
+    else {
+        var startingSeason = document.querySelector('#starting-season-text-field').value;
+        var endingSeason = document.querySelector('#ending-season-text-field').value;
+        if (!isValidSeason(startingSeason)) {
+            alert('Error - invalid starting season');
+            return;
+        }
+        else if (!isValidSeason(endingSeason)) {
+            alert('Error - invalid ending season');
+            return
+        }
+    }
+
+    // Get all of the teams
+    var teamDropdownItems = document.querySelectorAll('.team-dropdown-option');
+    var teamSelector = document.querySelector('#team-selector');
+    var teamDropdownButton = document.querySelector('#team-dropdown-button');
+
+    teamDropdownItems.forEach(item => {
+        item.style.display = 'block';
+    });
+    
+    teamSelector.style.display = 'block';
+
+    teamDropdownItems.forEach(teamDropdownItem => {
+        teamDropdownItem.addEventListener('click', function () {
+            teamSelector.style.display = 'none';
+            teamDropdownItems.forEach(item => {
+                item.style.display = 'none';
+            });
+
+            teamDropdownButton.textContent = teamDropdownItem.textContent;
+            teamDropdownButton.style.fontSize = '12px';
         });
     });
 }

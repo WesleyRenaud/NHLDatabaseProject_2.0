@@ -49,10 +49,12 @@ button:hover {
 }
 
 .dropdown-content {
-    position: absolute;
+    position: fixed;
     z-index: 1;
     max-height: 200px;
     width: 100%;
+    overflow-y: scroll;
+    overflow-x: hidden;
 }
 
 #stat-viewing-button-container {
@@ -139,13 +141,8 @@ button:hover {
     width: 110px;
 }
 
-.season-dropdown-option:hover, .team-dropdown-option, .position-dropdown-option:hover {
+.season-dropdown-option:hover, .team-dropdown-option:hover, .position-dropdown-option:hover {
     background-color: #f0f0f0;
-}
-
-#season-selector {
-    overflow-y: auto;
-    display: block;
 }
 
 .text-field-container {
