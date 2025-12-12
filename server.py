@@ -13,8 +13,8 @@ class MyHandler( BaseHTTPRequestHandler ):
     def do_GET( self ):
         parsed = urlparse( self.path )
 
-        if parsed.path in ['/view_stats.html']:
-            fp = open( './pages/view_stats.html' )
+        if parsed.path in ['/view-stats.html']:
+            fp = open( './pages/view-stats.html' )
             content = fp.read()
 
             self.send_response( 200 )
@@ -24,8 +24,8 @@ class MyHandler( BaseHTTPRequestHandler ):
             self.wfile.write( bytes( content, 'utf-8' ) )
 
 
-        elif parsed.path in ['/player_season_stats.html']:
-            fp = open( './pages/player_season_stats.html' )
+        elif parsed.path in ['/skater-season-stats.html']:
+            fp = open( './pages/skater-season-stats.html' )
             content = fp.read()
 
             self.send_response( 200 )
@@ -35,8 +35,8 @@ class MyHandler( BaseHTTPRequestHandler ):
             self.wfile.write( bytes( content, 'utf-8' ) )
 
 
-        elif parsed.path in ['/player_playoff_stats.html']:
-            fp = open( './pages/player_playoff_stats.html' )
+        elif parsed.path in ['/skater-playoff-stats.html']:
+            fp = open( './pages/skater-playoff-stats.html' )
             content = fp.read()
 
             self.send_response( 200 )
@@ -46,8 +46,8 @@ class MyHandler( BaseHTTPRequestHandler ):
             self.wfile.write( bytes( content, 'utf-8' ) )
 
 
-        elif parsed.path in ['/skater_lookup.html']:
-            fp = open( './pages/skater_lookup.html' )
+        elif parsed.path in ['/goalie-season-stats.html']:
+            fp = open( './pages/goalie-season-stats.html' )
             content = fp.read()
 
             self.send_response( 200 )
@@ -57,8 +57,30 @@ class MyHandler( BaseHTTPRequestHandler ):
             self.wfile.write( bytes( content, 'utf-8' ) )
 
 
-        elif parsed.path in ['/goalie_lookup.html']:
-            fp = open( './pages/goalie_lookup.html' )
+        elif parsed.path in ['/goalie-playoff-stats.html']:
+            fp = open( './pages/goalie-playoff-stats.html' )
+            content = fp.read()
+
+            self.send_response( 200 )
+            self.send_header( 'Content-type', 'text/html' )
+            self.send_header( 'Content-length', len( content ) )
+            self.end_headers()
+            self.wfile.write( bytes( content, 'utf-8' ) )
+
+
+        elif parsed.path in ['/skater-lookup.html']:
+            fp = open( './pages/skater-lookup.html' )
+            content = fp.read()
+
+            self.send_response( 200 )
+            self.send_header( 'Content-type', 'text/html' )
+            self.send_header( 'Content-length', len( content ) )
+            self.end_headers()
+            self.wfile.write( bytes( content, 'utf-8' ) )
+
+
+        elif parsed.path in ['/goalie-lookup.html']:
+            fp = open( './pages/goalie-lookup.html' )
             content = fp.read()
 
             self.send_response( 200 )
@@ -79,8 +101,8 @@ class MyHandler( BaseHTTPRequestHandler ):
             self.wfile.write( bytes( content, 'utf-8' ) )
 
 
-        elif parsed.path in ['/team_season_stats.html']:
-            fp = open( './pages/team_season_stats.html' )
+        elif parsed.path in ['/team-season-stats.html']:
+            fp = open( './pages/team-season-stats.html' )
             content = fp.read()
 
             self.send_response( 200 )
@@ -90,8 +112,8 @@ class MyHandler( BaseHTTPRequestHandler ):
             self.wfile.write( bytes( content, 'utf-8' ) )
 
 
-        elif parsed.path in ['/team_playoff_stats.html']:
-            fp = open( './pages/team_playoff_stats.html' )
+        elif parsed.path in ['/team-playoff-stats.html']:
+            fp = open( './pages/team-playoff-stats.html' )
             content = fp.read()
 
             self.send_response( 200 )
@@ -101,8 +123,8 @@ class MyHandler( BaseHTTPRequestHandler ):
             self.wfile.write( bytes( content, 'utf-8' ) )
 
 
-        elif parsed.path in ['/team_lookup.html']:
-            fp = open( './pages/team_lookup.html' )
+        elif parsed.path in ['/team-lookup.html']:
+            fp = open( './pages/team-lookup.html' )
             content = fp.read()
 
             self.send_response( 200 )
@@ -112,8 +134,8 @@ class MyHandler( BaseHTTPRequestHandler ):
             self.wfile.write( bytes( content, 'utf-8' ) )
 
 
-        elif parsed.path in ['/add_stats.html']:
-            fp = open( './pages/add_stats.html' )
+        elif parsed.path in ['/add-stats.html']:
+            fp = open( './pages/add-stats.html' )
             content = fp.read()
 
             self.send_response( 200 )
@@ -123,8 +145,8 @@ class MyHandler( BaseHTTPRequestHandler ):
             self.wfile.write( bytes( content, 'utf-8' ) )
 
 
-        elif parsed.path in ['/add_skater.html']:
-            fp = open( './pages/add_skater.html' )
+        elif parsed.path in ['/add-skater.html']:
+            fp = open( './pages/add-skater.html' )
             content = fp.read()
 
             self.send_response( 200 )
@@ -134,8 +156,8 @@ class MyHandler( BaseHTTPRequestHandler ):
             self.wfile.write( bytes( content, 'utf-8' ) )
 
 
-        elif parsed.path in ['/add_skater_regular_season.html']:
-            fp = open( './pages/add_skater_regular_season.html' )
+        elif parsed.path in ['/add-skater-regular-season.html']:
+            fp = open( './pages/add-skater-regular-season.html' )
             content = fp.read()
 
             self.send_response( 200 )
@@ -145,8 +167,8 @@ class MyHandler( BaseHTTPRequestHandler ):
             self.wfile.write( bytes( content, 'utf-8' ) )
 
 
-        elif parsed.path in ['/add_skater_playoffs.html']:
-            fp = open( './pages/add_skater_playoffs.html' )
+        elif parsed.path in ['/add-skater-playoffs.html']:
+            fp = open( './pages/add-skater-playoffs.html' )
             content = fp.read()
 
             self.send_response( 200 )
@@ -156,8 +178,8 @@ class MyHandler( BaseHTTPRequestHandler ):
             self.wfile.write( bytes( content, 'utf-8' ) )
 
 
-        elif parsed.path in ['/add_goalie.html']:
-            fp = open( './pages/add_goalie.html' )
+        elif parsed.path in ['/add-goalie.html']:
+            fp = open( './pages/add-goalie.html' )
             content = fp.read()
 
             self.send_response( 200 )
@@ -167,8 +189,8 @@ class MyHandler( BaseHTTPRequestHandler ):
             self.wfile.write( bytes( content, 'utf-8' ) )
 
 
-        elif parsed.path in ['/add_goalie_regular_season.html']:
-            fp = open( './pages/add_goalie_regular_season.html' )
+        elif parsed.path in ['/add-goalie-regular-season.html']:
+            fp = open( './pages/add-goalie-regular-season.html' )
             content = fp.read()
 
             self.send_response( 200 )
@@ -178,8 +200,8 @@ class MyHandler( BaseHTTPRequestHandler ):
             self.wfile.write( bytes( content, 'utf-8' ) )
 
 
-        elif parsed.path in ['/add_goalie_playoffs.html']:
-            fp = open( './pages/add_goalie_playoffs.html' )
+        elif parsed.path in ['/add-goalie-playoffs.html']:
+            fp = open( './pages/add-goalie-playoffs.html' )
             content = fp.read()
 
             self.send_response( 200 )
@@ -189,8 +211,8 @@ class MyHandler( BaseHTTPRequestHandler ):
             self.wfile.write( bytes( content, 'utf-8' ) )
 
 
-        elif parsed.path in ['/add_team_regular_season.html']:
-            fp = open( './pages/add_team_regular_season.html' )
+        elif parsed.path in ['/add-team-regular-season.html']:
+            fp = open( './pages/add-team-regular-season.html' )
             content = fp.read()
 
             self.send_response( 200 )
@@ -200,8 +222,8 @@ class MyHandler( BaseHTTPRequestHandler ):
             self.wfile.write( bytes( content, 'utf-8' ) )
 
 
-        elif parsed.path in ['/add_team_playoffs.html']:
-            fp = open( './pages/add_team_playoffs.html' )
+        elif parsed.path in ['/add-team-playoffs.html']:
+            fp = open( './pages/add-team-playoffs.html' )
             content = fp.read()
 
             self.send_response( 200 )

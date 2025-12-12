@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NHL DB</title>
+    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../styles/styles.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="../scripts/scripts.js" defer></script>
+</head>
+<body>
+    <div id="top-container">
+        <h1 id="nhl-db-title">NHL DB</h1>
+        <div id="view-stats-button-container">
+            <a href="/view-stats.html">
+                <button id="view-stats-button">View Stats</button>
+            </a>
+        </div>
+    </div>
+
+    <div id="stat-adding-button-container">
+        <a href="/add-skater.html">
+            <button class="stat-adding-button" id="add-skater-button">Add Skater</button>
+        </a>
+        <a href="/add-goalie.html">
+            <button class="stat-adding-button" id="add-goalie-button">Add Goalie</button>
+        </a>        
+        <a href="/add-team-regular-season.html">
+            <button class="stat-adding-button" id="add-team-regular-season-button">Add Team Season</button>
+        </a>
+        <a href="/add-team-playoffs.html">
+            <button class="stat-adding-button" id="add-team-playoffs-button">Add Team Playoffs</button>
+        </a>
+    </div>
+
+    <div id="stat-adding-container">
+        <div id="stat-fields-container">
+            <div class="stat-field">
+                <label for="season">Season:</label>
+                <input type="text" id="season" name="season">
+            </div>
+            <div class="stat-field">
+                <label for="team">Team:</label>
+                <input type="text" id="team" name="team">
+            </div>
+            <div class="stat-field">
+                <label for="games-played">Games Played:</label>
+                <input type="text" id="games-played" name="games-played">
+            </div>
+            <div class="stat-field">
+                <label for="goals">Goals:</label>
+                <input type="text" id="goals" name="goals">
+            </div>
+            <div class="stat-field">
+                <label for="assists">Assists:</label>
+                <input type="text" id="assists" name="assists">
+            </div>
+            <div class="stat-field">
+                <label for="points">Points:</label>
+                <input type="text" id="points" name="points">
+            </div>
+            <div class="stat-field">
+                <label for="plus-minus">Plus-Minus:</label>
+                <input type="text" id="plus-minus" name="plus-minus">
+            </div>
+            <div class="stat-field">
+                <label for="penalty-minutes">Penalty Minutes:</label>
+                <input type="text" id="penalty-minutes" name="penalty-minutes">
+            </div>
+            <div class="stat-field">
+                <label for="powerplay-goals">Powerplay Goals:</label>
+                <input type="text" id="powerplay-goals" name="powerplay-goals">
+            </div>
+            <div class="stat-field">
+                <label for="powerplay-points">Powerplay Points:</label>
+                <input type="text" id="powerplay-points" name="powerplay-points">
+            </div>
+            <div class="stat-field">
+                <label for="shorthanded-goals">Short-Handed Goals:</label>
+                <input type="text" id="shorthanded-goals" name="shorthanded-goals">
+            </div>
+            <div class="stat-field">
+                <label for="shorthanded-points">Short-Handed Points:</label>
+                <input type="text" id="shorthanded-points" name="shorthanded-points">
+            </div>
+            <div class="stat-field">
+                <label for="time-on-ice-per-game">Time On Ice/Game:</label>
+                <input type="text" id="time-on-ice-per-game" name="time-on-ice-per-game">
+            </div>
+            <div class="stat-field">
+                <label for="game-winning-goals">Game-Winning Goals:</label>
+                <input type="text" id="game-winning-goals" name="game-winning-goals">
+            </div>
+            <div class="stat-field">
+                <label for="overtime-goals">Overtime Goals:</label>
+                <input type="text" id="overtime-goals" name="overtime-goals">
+            </div>
+            <div class="stat-field">
+                <label for="shots">Shots:</label>
+                <input type="text" id="shots" name="shots">
+            </div>
+            <div class="stat-field">
+                <label for="shooting-percentage">Shooting Percentage:</label>
+                <input type="text" id="shooting-percentage" name="shooting-percentage">
+            </div>
+            <div class="stat-field">
+                <label for="faceoff-percentage">Faceoff Percentage:</label>
+                <input type="text" id="faceoff-percentage" name="faceoff-percentage">
+            </div>
+        </div>
+
+        <button class="confirm-button" onclick="addSkaterPlayoffs()">Add Stats</button>
+    </div>    
+</body>
+</html>

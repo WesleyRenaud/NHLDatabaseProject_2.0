@@ -31,7 +31,7 @@
         </a>
         <a href="/goalie-playoff-stats.html">
             <button class="stat-viewing-button" id="goalie-playoff-stats-button">Goalie Playoff Stats</button>
-        </a>        
+        </a>
         <a href="/skater-lookup.html">
             <button class="stat-viewing-button" id="skater-lookup-button">Skater Lookup</button>
         </a>
@@ -54,9 +54,15 @@
     
     <div id="stats-container">
         <div id="stat-selecting-container">
+            <div id="season-type-container">
+                <button id="single-season-button" onclick="enableSingleSeasonSelect()">Single Season</button>
+                <button id="multiple-seasons-button" onclick="enableMultipleSeasonSelect()">Multiple Seasons</button>
+            </div>
+
             <div class="dropdown">
-                <div class="dropdown-button" id="season-dropdown-button" onclick="displaySeasons()">Select Season</div>
+                <button class="dropdown-button" id="season-dropdown-button" onclick="displaySeasons()" disabled>Select Season</button>
                 <div class="dropdown-content" id="season-selector">
+                    <div class="season-dropdown-option">2024-2025</div>
                     <div class="season-dropdown-option">2023-2024</div>
                     <div class="season-dropdown-option">2022-2023</div>
                     <div class="season-dropdown-option">2021-2022</div>
@@ -165,16 +171,45 @@
                     <div class="season-dropdown-option">1917-1918</div>
                 </div>
             </div>
+
+            <div class="text-field-container">
+                <div class="text-field-row">
+                    <span>From:</span>
+                    <input type="text" name="starting-season-text-field" id="starting-season-text-field" disabled>
+                </div>
+                <div class="text-field-row">
+                    <span>To:</span>
+                    <input type="text" name="ending-season-text-field" id="ending-season-text-field" disabled>
+                </div>
+            </div>   
+            
+            <div dropdown="dropdown">
+                <button class="dropdown-button" id="position-dropdown-button" onclick="displayPositions()">Select Position</button>
+                <div class="dropdown-content" id="position-selector">
+                    <div class="position-dropdown-option">Forward</div>
+                    <div class="position-dropdown-option">Left Wing</div>
+                    <div class="position-dropdown-option">Right Wing</div>
+                    <div class="position-dropdown-option">Center</div>
+                    <div class="position-dropdown-option">Defense</div>
+                </div>
+            </div>
+
+            <div class="text-field-container">
+                <div class="text-field-row">
+                    <span>Team:</span>
+                    <input type="text" name="team-text-field" id="team-text-field">
+                </div>
+            </div> 
+
+            <input type="checkbox" id="checkbox">
+            <div id="checkbox-text">
+                Combine Seasons on Different Teams
+            </div>
+
+            <button id="fetch-button" onclick="fetchSkaterStats()">Fetch</button>
         </div>
         <div id="stat-viewing-container">
-            <div id="stat-view-button-container">
-                <button class="stat-view-button" id="wildcard-button">Wildcard</button>
-                <button class="stat-view-button" id="division-button">Division</button>
-                <button class="stat-view-button" id="conference-button">Conference</button>
-                <button class="stat-view-button" id="league-button">League</button>
-            </div>
-            
-        </div>        
+        </div>
     </div>
 </body>
 </html>
