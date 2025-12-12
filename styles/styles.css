@@ -175,7 +175,7 @@ button:hover {
     margin-right: 5px;
 }
 
-#position-dropdown-button {
+#position-dropdown-button, #team-dropdown-button {
     margin-top: 20px;
 }
 
