@@ -740,7 +740,7 @@ class Database():
         cur = self.conn.cursor()
 
         if self.nhl_util.is_faceoff_percentage_season( season ) and self.nhl_util.is_time_on_ice_per_game_season( season ):
-            if team != 'all':
+            if team != None:
                 data = cur.execute( """ SELECT SKATERID, TEAM, GAMES_PLAYED, GOALS, ASSISTS, POINTS,
                                                PLUS_MINUS, PENALTY_MINUTES, POWERPLAY_GOALS, 
                                                POWERPLAY_POINTS, SHORTHANDED_GOALS, 

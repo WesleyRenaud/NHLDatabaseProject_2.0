@@ -207,8 +207,6 @@ function fetchSkaterStats() {
 
     var multiplier = -1;
 
-    console.log(type, firstSeason, lastSeason, position, team);
-
     $.ajax({
         type: 'POST',
         url: '/get-skater-stats',
@@ -3417,6 +3415,8 @@ function getFieldAbbreviation(stat) {
     switch (stat) {
         case 'rank-and-team':
             return '\u00A0\u00A0Rank\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0Team';
+        case 'rank_and_team':
+            return '\u00A0\u00A0Rank\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0Team';
 
         case 'season':
             return 'Season';
@@ -3428,6 +3428,8 @@ function getFieldAbbreviation(stat) {
             return 'Team';
 
         case 'games-played':
+            return 'GP';
+        case 'games_played':
             return 'GP';
 
         case 'wins':
@@ -3441,26 +3443,40 @@ function getFieldAbbreviation(stat) {
 
         case 'overtime-losses':
             return 'OTL';
+        case 'overtime_losses':
+            return 'OTL';
 
         case 'points':
             return 'PTS';
 
         case 'points-percentage':
             return 'P%';
+        case 'points_percentage':
+            return 'P%';
 
         case 'regulation-wins':
+            return 'RW';
+        case 'regulation_wins':
             return 'RW';
 
         case 'regulation-and-overtime-wins':
             return 'ROW';
+        case 'regulation_and_overtime_wins':
+            return 'ROW';
 
         case 'goals-for':
+            return 'GF';
+        case 'goals_for':
             return 'GF';
 
         case 'goals-against':
             return 'GA';
+        case 'goals_against':
+            return 'GA';
 
         case 'goal-differential':
+            return 'DIFF';
+        case 'goal_differential':
             return 'DIFF';
 
         case 'home':
@@ -3474,32 +3490,50 @@ function getFieldAbbreviation(stat) {
         
         case 'last-10':
             return 'L10';
+        case 'last_10':
+            return 'L10';
             
         case 'streak':
             return 'STRK';
 
         case 'shootout-wins':
             return 'SOW';
+        case 'shootout_wins':
+            return 'SOW';
 
         case 'goals-for-per-game':
+            return 'GF/GP';
+        case 'goals_for_per_game':
             return 'GF/GP';
 
         case 'goals-against-per-game':
             return 'GA/GP';
+        case 'goals_against_per_game':
+            return 'GA/GP';
 
         case 'powerplay-percentage':
+            return 'PP%';
+        case 'powerplay_percentage':
             return 'PP%';
 
         case 'penalty-kill-percentage':
             return 'PK%';
+        case 'penalty_kill_percentage':
+            return 'PK%';
 
         case 'net-powerplay-percentage':
+            return 'NPP%';
+        case 'net_powerplay_percentage':
             return 'NPP%';
 
         case 'net-penalty-kill-percentage':
             return 'NPK%';
+        case 'net_penalty_kill_percentage':
+            return 'NPK%';
         
         case 'faceoff-win-percentage':
+            return 'FOW%';
+        case 'faceoff_win_percentage':
             return 'FOW%';
 
         case 'goals':
@@ -3510,29 +3544,47 @@ function getFieldAbbreviation(stat) {
 
         case 'plus-minus':
             return '+/-';
+        case 'plus_minus':
+            return '+/-';
 
         case 'penalty-minutes':
+            return 'PIM';
+        case 'penalty_minutes':
             return 'PIM';
 
         case 'powerplay-goals':
             return 'PPG';
+        case 'powerplay_goals':
+            return 'PPG';
 
         case 'powerplay-points':
+            return 'PPP';
+        case 'powerplay_points':
             return 'PPP';
 
         case 'shorthanded-goals':
             return 'SHG';
+        case 'shorthanded_goals':
+            return 'SHG';
 
         case 'shorthanded-points':
+            return 'SHP';
+        case 'shorthanded_points':
             return 'SHP';
 
         case 'time-on-ice-per-game':
             return 'TOI/G';
+        case 'time_on_ice_per_game':
+            return 'TOI/G';
 
         case 'game-winning-goals':
             return 'GWG';
+        case 'game_winning_goals':
+            return 'GWG';
 
         case 'overtime-goals':
+            return 'OTG';
+        case 'overtime_goals':
             return 'OTG';
 
         case 'shots':
@@ -3540,26 +3592,40 @@ function getFieldAbbreviation(stat) {
 
         case 'shooting-percentage':
             return 'S%';
+        case 'shooting_percentage':
+            return 'S%';
 
         case 'faceoff-percentage':
+            return 'FO%';
+        case 'faceoff_percentage':
             return 'FO%';
 
         case 'games-started':
             return 'GS';
+        case 'games_started':
+            return 'GS';
 
         case 'shots-against':
+            return 'SA';
+        case 'shots_against':
             return 'SA';
 
         case 'goals-against-average':
             return 'GAA';
+        case 'goals_against_average':
+            return 'GAA';
 
         case 'save-percentage':
+            return 'SV%';
+        case 'save_percentage':
             return 'SV%';
 
         case 'shutouts':
             return 'SO';
 
         case 'time-on-ice':
+            return 'TOI';
+        case 'time_on_ice':
             return 'TOI';
     }
 }
@@ -4102,11 +4168,12 @@ function isTiesInPlayoffsSeason(season) {
 function displaySkaterStats(response) {
     resetStatsScreen();
 
-    var skaterStats = response.skater-stats;
+    var skaterStats = response.skater_stats;
 
     for (var i = 0; i < skaterStats.length; i++) {       
         if (i == 0) {
             var fields = [];
+            // TO-DO: Add a rank field
     
             // Add the fields to the table
             for (var key in skaterStats[i]) {
@@ -4118,7 +4185,7 @@ function displaySkaterStats(response) {
             var table = document.createElement('table');
             // the seasons determine which stats we need to include in the table and how the coluns should be sized
             if (response.name != null) {
-                var lastSeason = response.last-season;
+                var lastSeason = response.last_season;
 
                 if (isTimeOnIcePerGameSeason(lastSeason) && isFaceoffPercentageSeason(lastSeason)) {
                     table.classList.add('skater-stats-table-time-on-ice-per-game-and-faceoff-percentage-season-without-names');
@@ -4131,8 +4198,8 @@ function displaySkaterStats(response) {
                 }
             }
             else {
-                if (response.first-season == response.last-season) {
-                    var season = response.first-season;
+                if (response.first_season == response.last_season) {
+                    var season = response.first_season;
 
                     if (isTimeOnIcePerGameSeason(season) && isFaceoffPercentageSeason(season)) {
                         table.classList.add('skater-stats-table-time-on-ice-per-game-and-faceoff-percentage-season');
@@ -4145,7 +4212,7 @@ function displaySkaterStats(response) {
                     }
                 }
                 else {
-                    var lastSeason = response.last-season;
+                    var lastSeason = response.last_season;
 
                     if (isTimeOnIcePerGameSeason(lastSeason) && isFaceoffPercentageSeason(lastSeason)) {
                         table.classList.add('skater-stats-table-time-on-ice-per-game-and-faceoff-percentage-season-with-seasons');
@@ -4163,7 +4230,7 @@ function displaySkaterStats(response) {
     
             var headerRow = document.createElement('tr');
             fields.forEach(function(field) {
-                if (response.name == null || isPeriodWithSkaterStat(field, response.last-season)) {
+                if (response.name == null || isPeriodWithSkaterStat(field, response.last_season)) {
                     var th = document.createElement('th');
                     if (sortedByStat != null && field === sortedByStat) {
                         th.classList.add('sorted-by-stat-button');
@@ -4183,6 +4250,7 @@ function displaySkaterStats(response) {
                     }
                     else {
                         var button = document.createElement('button');
+                        console.log(field, getFieldAbbreviation(field));
                         button.textContent = getFieldAbbreviation(field);
                         button.classList.add('stat-sorting-button');
                         
@@ -4213,7 +4281,7 @@ function displaySkaterStats(response) {
 
         var dataRow = document.createElement('tr');
         fields.forEach(function(field) {
-            if (response.name == null || isPeriodWithSkaterStat(field, response.last-season)) {
+            if (response.name == null || isPeriodWithSkaterStat(field, response.last_season)) {
                 var td = document.createElement('td');
 
                 if (sortedByStat != null && field === sortedByStat) {
@@ -4355,7 +4423,7 @@ function displayGoalieStats(response, type) {
 
     var goalieStats = response.goalie-stats;
 
-    if (response.first-season == response.last-season && response.first-season == '1919-1920') {
+    if (response.first_season == response.last_season && response.first_season == '1919-1920') {
         alert('There are no stats for the selected season.');
     }
     for (var i = 0; i < goalieStats.length; i++) {       
@@ -4372,8 +4440,8 @@ function displayGoalieStats(response, type) {
             var table = document.createElement('table');
             // the seasons determine which stats we need to include in the table and how the coluns should be sized
             if (response.name != null) {
-                var firstSeason = response.first-season;
-                var lastSeason = response.last-season;
+                var firstSeason = response.first_season;
+                var lastSeason = response.last_season;
 
                 if (type == 'Regular Season') {
                     if (!isOvertimeLossesSeason(type, firstSeason) && isOvertimeLossesSeason(type, lastSeason)) {
@@ -4393,8 +4461,8 @@ function displayGoalieStats(response, type) {
             }
             else {
                 if (type == 'Regular Season') {
-                    if (response.first-season == response.last-season) {
-                        var season = response.first-season;
+                    if (response.first_season == response.last_season) {
+                        var season = response.first_season;
         
                         if (isOvertimeLossesSeason(type, season)) {
                             table.classList.add('goalie-stats-table-overtime-losses-season');
@@ -4404,8 +4472,8 @@ function displayGoalieStats(response, type) {
                         }
                     }
                     else {
-                        var firstSeason = response.first-season;
-                        var lastSeason = response.last-season;
+                        var firstSeason = response.first_season;
+                        var lastSeason = response.last_season;
         
                         if (!isOvertimeLossesSeason(type, firstSeason) && isOvertimeLossesSeason(type, lastSeason)) {
                             table.classList.add('goalie-stats-table-overtime-losses-and-ties-season-with-seasons');
@@ -4419,7 +4487,7 @@ function displayGoalieStats(response, type) {
                     }
                 }
                 else {
-                    if (response.first-season == response.last-season) {
+                    if (response.first_season == response.last_season) {
                         table.classList.add('goalie-playoff-stats-table');
                     }
                     else {
@@ -4435,8 +4503,8 @@ function displayGoalieStats(response, type) {
                 sortedByStat = sortedByStat.replace('-', '-');
             }
             fields.forEach(function(field) {
-                if (response.name == null || isPeriodWithGoalieStat(field, response.first-season, type) ||
-                                             isPeriodWithGoalieStat(field, response.last-season, type)) {
+                if (response.name == null || isPeriodWithGoalieStat(field, response.first_season, type) ||
+                                             isPeriodWithGoalieStat(field, response.last_season, type)) {
                     var th = document.createElement('th');
                     if (sortedByStat != null && field === sortedByStat) {
                         th.classList.add('sorted-by-stat-button');
@@ -4487,8 +4555,8 @@ function displayGoalieStats(response, type) {
 
         var dataRow = document.createElement('tr');
         fields.forEach(function(field) {
-            if (response.name == null || isPeriodWithGoalieStat(field, response.first-season, type) ||
-                                             isPeriodWithGoalieStat(field, response.last-season, type)) {
+            if (response.name == null || isPeriodWithGoalieStat(field, response.first_season, type) ||
+                                             isPeriodWithGoalieStat(field, response.last_season, type)) {
                 var td = document.createElement('td');
 
                 if (sortedByStat != null && field === sortedByStat) {
@@ -4649,7 +4717,7 @@ function displayTeamStats(response, type) {
 
     var teamStats = response.team-stats;
 
-    if (response.first-season == response.last-season && response.first-season == '1919-1920') {
+    if (response.first_season == response.last_season && response.first_season == '1919-1920') {
         alert('There are no stats for the selected season.');
     }
     for (var i = 0; i < teamStats.length; i++) {       
@@ -4671,8 +4739,8 @@ function displayTeamStats(response, type) {
             var table = document.createElement('table');
             // the seasons determine which stats we need to include in the table and how the coluns should be sized
             if (response.team == null) {
-                if (response.first-season == response.last-season) {
-                    var season = response.first-season;
+                if (response.first_season == response.last_season) {
+                    var season = response.first_season;
 
                     if (type == 'Regular Season') {
                         table.classList.add('team-stats-table');
@@ -4714,8 +4782,8 @@ function displayTeamStats(response, type) {
                     }
                 }
                 else {
-                    var firstSeason = response.first-season;
-                    var lastSeason = response.last-season;
+                    var firstSeason = response.first_season;
+                    var lastSeason = response.last_season;
 
                     table.classList.add('team-stats-table-with-seasons');
                     if (type == 'Regular Season') {
@@ -4785,8 +4853,8 @@ function displayTeamStats(response, type) {
                 }
             }
             else {
-                var firstSeason = response.first-season;
-                var lastSeason = response.last-season;
+                var firstSeason = response.first_season;
+                var lastSeason = response.last_season;
 
                 if (type == 'Regular Season') {
                     if (isTiesSeason(firstSeason)) {
@@ -4832,7 +4900,7 @@ function displayTeamStats(response, type) {
     
             var headerRow = document.createElement('tr');
             fields.forEach(function(field) {
-                if (response.team == 'all' || isPeriodWithTeamStat(field, response.first-season, response.last-season, type)) {
+                if (response.team == 'all' || isPeriodWithTeamStat(field, response.first_season, response.last_season, type)) {
                     var th = document.createElement('th');
             
                     if (sortedByStat != null && field === sortedByStat) {
@@ -4875,7 +4943,7 @@ function displayTeamStats(response, type) {
 
         var dataRow = document.createElement('tr');
         fields.forEach(function(field) {
-            if (response.team == 'all' || isPeriodWithTeamStat(field, response.first-season, response.last-season, type)) {
+            if (response.team == 'all' || isPeriodWithTeamStat(field, response.first_season, response.last_season, type)) {
                 var td = document.createElement('td');
 
                 if (sortedByStat != null && field === sortedByStat) {

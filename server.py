@@ -270,7 +270,7 @@ class MyHandler( BaseHTTPRequestHandler ):
 
 
     def do_POST( self ):
-        if self.path == '/add_team':
+        if self.path == '/add-team':
             content_length = int( self.headers[ 'Content-Length'] )
             post_data = self.rfile.read( content_length )
             team_data = json.loads( post_data.decode( 'utf-8' ) )
@@ -297,7 +297,7 @@ class MyHandler( BaseHTTPRequestHandler ):
             self.wfile.write(json.dumps(response).encode('utf-8'))
 
 
-        if self.path == '/add_skater':
+        if self.path == '/add-skater':
             content_length = int( self.headers[ 'Content-Length'] )
             post_data = self.rfile.read( content_length )
             skater_data = json.loads( post_data.decode( 'utf-8' ) )
@@ -331,7 +331,7 @@ class MyHandler( BaseHTTPRequestHandler ):
             self.database.add_skater( skater )
 
 
-        elif self.path == '/add_goalie':
+        elif self.path == '/add-goalie':
             content_length = int( self.headers[ 'Content-Length'] )
             post_data = self.rfile.read( content_length )
             goalie_data = json.loads( post_data.decode( 'utf-8' ) )
@@ -361,7 +361,7 @@ class MyHandler( BaseHTTPRequestHandler ):
             self.database.add_goalie( goalie )
 
 
-        elif self.path == '/get_wildcard_standings':
+        elif self.path == '/get-wildcard-standings':
             content_length = int( self.headers[ 'Content-Length'] )
             post_data = self.rfile.read( content_length )
             data = json.loads( post_data.decode( 'utf-8' ) )
@@ -398,7 +398,7 @@ class MyHandler( BaseHTTPRequestHandler ):
             self.wfile.write(json.dumps(response).encode('utf-8'))
 
 
-        elif self.path == '/get_division_standings':
+        elif self.path == '/get-division-standings':
             content_length = int( self.headers[ 'Content-Length'] )
             post_data = self.rfile.read( content_length )
             data = json.loads( post_data.decode( 'utf-8' ) )
@@ -443,7 +443,7 @@ class MyHandler( BaseHTTPRequestHandler ):
             self.wfile.write(json.dumps(response).encode('utf-8'))
 
 
-        elif self.path == '/get_conference_standings':
+        elif self.path == '/get-conference-standings':
             content_length = int( self.headers[ 'Content-Length'] )
             post_data = self.rfile.read( content_length )
             data = json.loads( post_data.decode( 'utf-8' ) )
@@ -487,7 +487,7 @@ class MyHandler( BaseHTTPRequestHandler ):
             self.wfile.write(json.dumps(response).encode('utf-8'))
 
 
-        elif self.path == '/get_league_standings':
+        elif self.path == '/get-league-standings':
             content_length = int( self.headers[ 'Content-Length'] )
             post_data = self.rfile.read( content_length )
             data = json.loads( post_data.decode( 'utf-8' ) )
@@ -532,7 +532,7 @@ class MyHandler( BaseHTTPRequestHandler ):
             self.wfile.write(json.dumps(response).encode('utf-8'))
 
 
-        elif self.path == '/get_team_stats':
+        elif self.path == '/get-team-stats':
             content_length = int( self.headers[ 'Content-Length'] )
             post_data = self.rfile.read( content_length )
             data = json.loads( post_data.decode( 'utf-8' ) )
@@ -608,16 +608,16 @@ class MyHandler( BaseHTTPRequestHandler ):
             self.wfile.write(json.dumps(response).encode('utf-8'))
 
 
-        elif self.path == '/get_skater_stats':
+        elif self.path == '/get-skater-stats':
             content_length = int( self.headers[ 'Content-Length'] )
             post_data = self.rfile.read( content_length )
             data = json.loads( post_data.decode( 'utf-8' ) )
 
             name = data.get( 'name' )
             type = data.get( 'type' )
-            team = data.get( 'team' )
             first_season = data.get( 'first_season' )
             last_season = data.get( 'last_season' )
+            team = data.get( 'team' )
             stat = data.get( 'stat' )
             multiplier = data.get( 'multiplier' )
 
@@ -684,7 +684,7 @@ class MyHandler( BaseHTTPRequestHandler ):
             self.wfile.write(json.dumps(response).encode('utf-8'))
 
 
-        elif self.path == '/get_goalie_stats':
+        elif self.path == '/get-goalie-stats':
             content_length = int( self.headers[ 'Content-Length'] )
             post_data = self.rfile.read( content_length )
             data = json.loads( post_data.decode( 'utf-8' ) )
