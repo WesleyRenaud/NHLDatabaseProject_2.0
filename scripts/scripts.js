@@ -4172,13 +4172,16 @@ function displaySkaterStats(response) {
 
     for (var i = 0; i < skaterStats.length; i++) {       
         if (i == 0) {
-            var fields = [];
-            // TO-DO: Add a rank field
-    
+            var fields = [];    
             // Add the fields to the table
             for (var key in skaterStats[i]) {
                 if (skaterStats[i].hasOwnProperty(key) && skaterStats[i][key] !== null && key != 'type') {
-                    fields.push(key);
+                    if (key == 'name') {
+                        fields.push('rank-and-name');
+                    }
+                    else {
+                        fields.push(key);
+                    }
                 }
             }
     
@@ -4236,11 +4239,11 @@ function displaySkaterStats(response) {
                         th.classList.add('sorted-by-stat-button');
                     }
 
-                    if (field === 'name' || field === 'team') {
+                    if (field === 'rank-and-name' || field === 'team') {
                         th.style.position = 'relative';
                         th.style.left = '5px';
 
-                        if (field === 'name') {
+                        if (field === 'rank-and-name') {
                             th.textContent = 'Name';
         
                         }
@@ -4288,9 +4291,19 @@ function displaySkaterStats(response) {
                     td.classList.add('sorted-by-stat-button');
                 }
 
-                if (field === 'name') {
+                if (field === 'rank-and-name') {
                     td.classList.add('name-field');
-                    td.textContent = skaterStats[i].name;
+
+                    var rankSpan = document.createElement('span');
+                    rankSpan.id = 'player-rank';
+                    rankSpan.innerHTML = (i + 1) + ".";
+
+                    var nameSpan = document.createElement('span');
+                    nameSpan.id = 'player-name';
+                    nameSpan.innerHTML = skaterStats[i].name;
+
+                    td.append(rankSpan);
+                    td.append(nameSpan);
                 }
                 else if (field === 'team') {
                     td.classList.add('team-field');

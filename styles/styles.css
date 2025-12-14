@@ -3639,6 +3639,12 @@ th.name-field, td.name-field, th.team-field, td.team-field {
     position: relative;
 }
 
+#player-rank {
+    text-align: right;
+    width: 10px;
+    padding-right: 15px;
+}
+
 .clinching-marker, .clinching-marker-placeholder {
     display: inline-block;
     width: 20px;
