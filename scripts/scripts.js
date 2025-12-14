@@ -18,6 +18,9 @@ function enableSingleSeasonSelect() {
     startingSeasonTextField.value = '';
     endingSeasonTextField.disabled = true;
     endingSeasonTextField.value = '';
+
+    var teamDropdownButton = document.querySelector('#team-dropdown-button');
+    teamDropdownButton.textContent = 'Select Team';
 }
 
 function enableMultipleSeasonSelect() {
@@ -37,6 +40,9 @@ function enableMultipleSeasonSelect() {
     var endingSeasonTextField = document.querySelector('#ending-season-text-field');
     startingSeasonTextField.disabled = false;
     endingSeasonTextField.disabled = false;
+
+    var teamDropdownButton = document.querySelector('#team-dropdown-button');
+    teamDropdownButton.textContent = 'Select Team';
 }
 
 function displaySeasons() {
@@ -59,6 +65,9 @@ function displaySeasons() {
 
             seasonDropdownButton.textContent = seasonDropdownItem.textContent;
         });
+
+        var teamDropdownButton = document.querySelector('#team-dropdown-button');
+        teamDropdownButton.textContent = 'Select Team';
     });
 }
 
@@ -99,6 +108,8 @@ function displayTeams() {
             alert('Error - a season must be selected first');
             return;
         }
+        var startingSeason = season;
+        var endingSeason = season;
     }
     else {
         var startingSeason = document.querySelector('#starting-season-text-field').value;
@@ -118,8 +129,12 @@ function displayTeams() {
     var teamSelector = document.querySelector('#team-selector');
     var teamDropdownButton = document.querySelector('#team-dropdown-button');
 
-    teamDropdownItems.forEach(item => {
-        item.style.display = 'block';
+    teamDropdownItems.forEach(teamDropdownItem => {
+        var team = teamDropdownItem.textContent;
+        // Check if the team played during the season
+        if (didTeamPlayInRange(team, startingSeason, endingSeason)) {
+            teamDropdownItem.style.display = 'block';
+        }
     });
     
     teamSelector.style.display = 'block';
@@ -127,12 +142,13 @@ function displayTeams() {
     teamDropdownItems.forEach(teamDropdownItem => {
         teamDropdownItem.addEventListener('click', function () {
             teamSelector.style.display = 'none';
+
             teamDropdownItems.forEach(item => {
                 item.style.display = 'none';
             });
 
             teamDropdownButton.textContent = teamDropdownItem.textContent;
-            teamDropdownButton.style.fontSize = '12px';
+            teamDropdownButton.style.fontSize = '10px';
         });
     });
 }
@@ -158,10 +174,12 @@ function fetchSkaterStats() {
             alert('Error - no season selected');
             return;
         }
+        var firstSeason = season;
+        var lastSeason = season;
     }
     else {
-        var startingSeason = document.querySelector('#starting-season-text-field').value;
-        var endingSeason = document.querySelector('#ending-season-text-field').value;
+        var firstSeason = document.querySelector('#starting-season-text-field').value;
+        var lastSeason = document.querySelector('#ending-season-text-field').value;
         if (!isValidSeason(startingSeason)) {
             alert('Error - invalid starting season');
             return;
@@ -182,13 +200,14 @@ function fetchSkaterStats() {
     }
 
     // Get the team
-    var team = document.querySelector('#team-text-field').value;
+    var team = document.querySelector('#team-dropdown-button').textContent;
+    if (team == 'Select Team') {
+        team = null;
+    }
 
-    // TO-DO: Call actual fetch from database
-}
-
-function fetchSkaterStatsFromDatabase(type, firstSeason, lastSeason, position, team) {
     var multiplier = -1;
+
+    console.log(type, firstSeason, lastSeason, position, team);
 
     $.ajax({
         type: 'POST',
@@ -5725,5 +5744,372 @@ function isGoalieTiesInPlayoffsSeason(season) {
         return true;
     }
 
+    return false;
+}
+
+function didTeamPlayInRange(team, firstSeason, lastSeason) {
+    var firstSeasonFirstYear = getFirstYear(firstSeason);
+    var lastSeasonFirstYear = getFirstYear(lastSeason);
+
+    switch (team) {
+        case 'Anaheim Ducks':
+            if (firstSeasonFirstYear >= 1993 || lastSeasonFirstYear >= 1993) {
+                return true;
+            }
+            return false;
+        
+        case 'Arizona Coyotes':
+            if (firstSeasonFirstYear <= 2023 && lastSeasonFirstYear >= 2014) {
+                return true;
+            }
+            return false;
+
+        case 'Atlanta Flames':
+            if (firstSeasonFirstYear <= 1979 && lastSeasonFirstYear >= 1972) {
+                return true;
+            }
+            return false;
+        
+        case 'Atlanta Thrashers':
+            if (firstSeasonFirstYear <= 2010 && lastSeasonFirstYear >= 1999) {
+                return true;
+            }
+            return false;
+
+        case 'Boston Bruins':
+            if (firstSeasonFirstYear >= 1924 || lastSeasonFirstYear >= 1924) {
+                return true;
+            }
+            return false;
+
+        case 'Buffalo Sabres':
+            if (firstSeasonFirstYear >= 1970 || lastSeasonFirstYear >= 1970) {
+                return true;
+            }
+            return false;
+
+        case 'Calgary Flames':
+            if (firstSeasonFirstYear >= 1980 || lastSeasonFirstYear >= 1980) {
+                return true;
+            }
+            return false;
+
+        case 'California Golden Seals':
+            if (firstSeasonFirstYear <= 1975 && lastSeasonFirstYear >= 1970) {
+                return true;
+            }
+            return false;
+
+        case 'Carolina Hurricanes':
+            if (firstSeasonFirstYear >= 1997 || lastSeasonFirstYear >= 1997) {
+                return true;
+            }
+            return false;
+
+        case 'Chicago Blackhawks':
+            if (firstSeasonFirstYear >= 1926 || lastSeasonFirstYear >= 1926) {
+                return true;
+            }
+            return false;
+
+        case 'Cleveland Barons':
+            if (firstSeasonFirstYear <= 1977 && lastSeasonFirstYear >= 1976) {
+                return true;
+            }
+            return false;
+
+        case 'Colorado Avalanche':
+            if (firstSeasonFirstYear >= 1995 || lastSeasonFirstYear >= 1995) {
+                return true;
+            }
+            return false;
+
+        case 'Colorado Rockies':
+            if (firstSeasonFirstYear <= 1981 && lastSeasonFirstYear >= 1976) {
+                return true;
+            }
+            return false;
+
+        case 'Columbus Blue Jackets':
+            if (firstSeasonFirstYear >= 1999 || lastSeasonFirstYear >= 1999) {
+                return true;
+            }
+            return false;
+
+        case 'Dallas Stars':
+            if (firstSeasonFirstYear >= 1993 || lastSeasonFirstYear >= 1993) {
+                return true;
+            }
+            return false;
+
+        case 'Detroit Cougars':
+            if (firstSeasonFirstYear <= 1929 && lastSeasonFirstYear >= 1926) {
+                return true;
+            }
+            return false;
+
+        case 'Detroit Falcons':
+            if (firstSeasonFirstYear <= 1931 && lastSeasonFirstYear >= 1930) {
+                return true;
+            }
+            return false;
+
+        case 'Detroit Red Wings':
+            if (firstSeasonFirstYear >= 1932 || lastSeasonFirstYear >= 1932) {
+                return true;
+            }
+            return false;
+
+        case 'Edmonton Oilers':
+            if (firstSeasonFirstYear >= 1972 || lastSeasonFirstYear >= 1972) {
+                return true;
+            }
+            return false;
+
+        case 'Florida Panthers':
+            if (firstSeasonFirstYear >= 1993 || lastSeasonFirstYear >= 1993) {
+                return true;
+            }
+            return false;
+
+        case 'Hamilton Tigers':
+            if (firstSeasonFirstYear <= 1924 && lastSeasonFirstYear >= 1920) {
+                return true;
+            }
+            return false;
+
+        case 'Hartford Whalers':
+            if (firstSeasonFirstYear <= 1996 && lastSeasonFirstYear >= 1979) {
+                return true;
+            }
+            return false;
+
+        case 'Kansas City Scouts':
+            if (firstSeasonFirstYear <= 1975 && lastSeasonFirstYear >= 1974) {
+                return true;
+            }
+            return false;
+
+        case 'Los Angeles Kings':
+            if (firstSeasonFirstYear >= 1967 || lastSeasonFirstYear >= 1967) {
+                return true;
+            }
+            return false;
+
+        case 'Minnesota North Stars':
+            if (firstSeasonFirstYear <= 1992 && lastSeasonFirstYear >= 1967) {
+                return true;
+            }
+            return false;
+
+        case 'Minnesota Wild':
+            if (firstSeasonFirstYear >= 1999 || lastSeasonFirstYear >= 1999) {
+                return true;
+            }
+            return false;
+
+        case 'Montreal Canadiens':
+            return true;
+
+        case 'Montreal Maroons':
+            if (firstSeasonFirstYear <= 1937 && lastSeasonFirstYear >= 1924) {
+                return true;
+            }
+            return false;
+        
+        case 'Montreal Wanderers':
+            if (firstSeasonFirstYear <= 1917 || lastSeasonFirstYear <= 1917) {
+                return true;
+            }
+            return false;
+
+        case 'Nashville Predators':
+            if (firstSeasonFirstYear >= 1998 || lastSeasonFirstYear >= 1998) {
+                return true;
+            }
+            return false;
+
+        case 'New Jersey Devils':
+            if (firstSeasonFirstYear >= 1982 || lastSeasonFirstYear >= 1982) {
+                return true;
+            }
+            return false;
+
+        case 'New York Americans': 
+            if (firstSeasonFirstYear <= 1940 && lastSeasonFirstYear >= 1925) {
+                return true;
+            }
+            return false;
+
+        case 'Brooklyn Americans':
+            if (firstSeasonFirstYear <= 1942 && lastSeasonFirstYear >= 1941) {
+                return true;
+            }
+            return false;
+
+        case 'New York Islanders':
+            if (firstSeasonFirstYear >= 1972 || lastSeasonFirstYear >= 1972) {
+                return true;
+            }
+            return false;
+
+        case 'New York Rangers':
+            if (firstSeasonFirstYear >= 1926 || lastSeasonFirstYear >= 1926) {
+                return true;
+            }
+            return false;
+
+        case 'Oakland Seals':
+            if (firstSeasonFirstYear <= 1969 && lastSeasonFirstYear >= 1967) {
+                return true;
+            }
+            return false;
+
+        case 'California Golden Seals':
+            if (firstSeasonFirstYear <= 1975 && lastSeasonFirstYear >= 1970) {
+                return true;
+            }
+            return false;
+
+        case 'Ottawa Senators':
+            if (firstSeasonFirstYear <= 1933 && lastSeasonFirstYear >= 1917 ||
+                firstSeasonFirstYear >= 1992 || lastSeasonFirstYear >= 1992) {
+                return true;
+            }
+            return false;
+
+        case 'Philadelphia Flyers':
+            if (firstSeasonFirstYear >= 1967 || lastSeasonFirstYear >= 1967) {
+                return true;
+            }
+            return false;
+
+        case 'Philadelphia Quakers':
+            if (firstSeasonFirstYear <= 1930 && lastSeasonFirstYear >= 1930) {
+                return true;
+            }
+            return false;
+
+        case 'Phoenix Coyotes':
+            if (firstSeasonFirstYear <= 2013 && lastSeasonFirstYear >= 1996) {
+                return true;
+            }
+            return false;
+
+        case 'Arizona Coyotes':
+            if (firstSeasonFirstYear <= 2023 && lastSeasonFirstYear >= 2014) {
+                return true;
+            }
+            return false;
+
+        case 'Pittsburgh Penguins':
+            if (firstSeasonFirstYear >= 1967 || lastSeasonFirstYear >= 1967) {
+                return true;
+            }
+            return false;
+
+        case 'Pittsburgh Pirates':
+            if (firstSeasonFirstYear <= 1929 && lastSeasonFirstYear >= 1925) {
+                return true;
+            }
+            return false;
+
+        case 'Quebec Bulldogs':
+            if (firstSeasonFirstYear <= 1919 && lastSeasonFirstYear >= 1919) {
+                return true;
+            }
+            return false;
+
+        case 'Quebec Nordiques':
+            if (firstSeasonFirstYear <= 1994 && lastSeasonFirstYear >= 1972) {
+                return true;
+            }
+            return false;
+
+        case 'San Jose Sharks':
+            if (firstSeasonFirstYear >= 1991 || lastSeasonFirstYear >= 1991) {
+                return true;
+            }
+            return false;
+
+        case 'Seattle Kraken':
+            if (firstSeasonFirstYear >= 2022 || lastSeasonFirstYear >= 2022) {
+                return true;
+            }
+            return false;
+
+        case 'St. Louis Blues':
+            if (firstSeasonFirstYear >= 1967 || lastSeasonFirstYear >= 1967) {
+                return true;
+            }
+            return false;
+
+        case 'St. Louis Eagles':
+            if (firstSeasonFirstYear <= 1934 && lastSeasonFirstYear >= 1934) {
+                return true;
+            }
+            return false;
+
+        case 'Tampa Bay Lightning':
+            if (firstSeasonFirstYear >= 1992 || lastSeasonFirstYear >= 1992) {
+                return true;
+            }
+            return false;
+
+        case 'Toronto Arenas':
+            if (firstSeasonFirstYear <= 1918 && lastSeasonFirstYear >= 1917) {
+                return true;
+            }
+            return false;
+
+        case 'Toronto St. Patricks':
+            if (firstSeasonFirstYear <= 1926 && lastSeasonFirstYear >= 1920) {
+                return true;
+            }
+            return false;
+
+        case 'Toronto Maple Leafs':
+            if (firstSeasonFirstYear >= 1927 || lastSeasonFirstYear >= 1927) {
+                return true;
+            }
+            return false;
+
+        case 'Utah Hockey Club':
+            if (firstSeasonFirstYear <= 2024 && lastSeasonFirstYear >= 2024) {
+                return true;
+            }
+            return false;
+
+        case 'Utah Mammoth':
+            if (firstSeasonFirstYear >= 2025 || lastSeasonFirstYear >= 2025) {
+                return true;
+            }
+            return false;
+
+        case 'Vancouver Canucks':
+            if (firstSeasonFirstYear >= 1970 || lastSeasonFirstYear >= 1970) {
+                return true;
+            }
+            return false;
+
+        case 'Vegas Golden Knights':
+            if (firstSeasonFirstYear >= 2017 || lastSeasonFirstYear >= 2017) {
+                return true;
+            }
+            return false;
+
+        case 'Washington Capitals':
+            if (firstSeasonFirstYear >= 1974 || lastSeasonFirstYear >= 1974) {
+                return true;
+            }
+            return false;
+
+        case 'Winnipeg Jets':
+            if (firstSeasonFirstYear <= 1995 && lastSeasonFirstYear >= 1979 ||
+                firstSeasonFirstYear >= 2011 || lastSeasonFirstYear >= 2011) {
+                return true;
+            }
+            return false;
+    }
     return false;
 }
