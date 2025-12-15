@@ -740,147 +740,85 @@ class Database():
     def get_skater_stats_for_one_season( self, type, season, team, position ):
         cur = self.conn.cursor()
 
-        if self.nhl_util.is_faceoff_percentage_season( season ) and self.nhl_util.is_time_on_ice_per_game_season( season ):
-            if team != None:
-                data = cur.execute( """ SELECT SKATERID, TEAM, GAMES_PLAYED, GOALS, ASSISTS, POINTS,
-                                               PLUS_MINUS, PENALTY_MINUTES, POWERPLAY_GOALS, 
-                                               POWERPLAY_POINTS, SHORTHANDED_GOALS, 
-                                               SHORTHANDED_POINTS, TIME_ON_ICE_PER_GAME,
-                                               GAME_WINNING_GOALS, OVERTIME_GOALS, SHOTS,
-                                               SHOOTING_PERCENTAGE, FACEOFF_PERCENTAGE
-                                               FROM SkaterSeason
-                                               WHERE TYPE = '%s' AND SEASON = '%s' AND TEAM = '%s' 
-                                               ORDER BY POINTS DESC LIMIT %d; """ 
-                                                % ( type, season, team, self.max_num_results ) )
-            else:
-                data = cur.execute( """ SELECT SKATERID, TEAM, GAMES_PLAYED, GOALS, ASSISTS, POINTS,
-                                               PLUS_MINUS, PENALTY_MINUTES, POWERPLAY_GOALS, 
-                                               POWERPLAY_POINTS, SHORTHANDED_GOALS,
-                                               SHORTHANDED_POINTS, TIME_ON_ICE_PER_GAME,
-                                               GAME_WINNING_GOALS, OVERTIME_GOALS, SHOTS,
-                                               SHOOTING_PERCENTAGE, FACEOFF_PERCENTAGE
-                                               FROM SkaterSeason
-                                               WHERE TYPE = '%s' AND SEASON = '%s'
-                                               ORDER BY POINTS DESC LIMIT %d; """ 
-                                                % ( type, season, self.max_num_results ) )
-        elif self.nhl_util.is_plus_minus_season( season ) and self.nhl_util.is_shots_season( season )\
-                                                          and self.nhl_util.is_shooting_percentage_season( season ):
-            if team != None:
-                data = cur.execute( """ SELECT SKATERID, TEAM, GAMES_PLAYED, GOALS, ASSISTS, POINTS,
-                                               PLUS_MINUS, PENALTY_MINUTES, POWERPLAY_GOALS,
-                                               POWERPLAY_POINTS, SHORTHANDED_GOALS,
-                                               SHORTHANDED_POINTS, GAME_WINNING_GOALS,
-                                               OVERTIME_GOALS, SHOTS, SHOOTING_PERCENTAGE
-                                               FROM SkaterSeason
-                                               WHERE TYPE = '%s' AND SEASON = '%s' AND TEAM = '%s'
-                                               ORDER BY POINTS DESC LIMIT %d; """
-                                                % ( type, season, team, self.max_num_results ) )
-            else:
-                data = cur.execute( """ SELECT SKATERID, TEAM, GAMES_PLAYED, GOALS, ASSISTS, POINTS,
-                                               PLUS_MINUS, PENALTY_MINUTES, POWERPLAY_GOALS,
-                                               POWERPLAY_POINTS, SHORTHANDED_GOALS,
-                                               SHORTHANDED_POINTS, GAME_WINNING_GOALS,
-                                               OVERTIME_GOALS, SHOTS, SHOOTING_PERCENTAGE
-                                               FROM SkaterSeason
-                                               WHERE TYPE = '%s' AND SEASON = '%s'
-                                               ORDER BY POINTS DESC LIMIT %d; """
-                                                % ( type, season, self.max_num_results ) )
-        elif self.nhl_util.is_skater_special_teams_stats_season( season ):
-            if team != None:
-                data = cur.execute( """ SELECT SKATERID, TEAM, GAMES_PLAYED, GOALS, ASSISTS, POINTS,
-                                               PENALTY_MINUTES, POWERPLAY_GOALS, POWERPLAY_POINTS, 
-                                               SHORTHANDED_GOALS, SHORTHANDED_POINTS,
-                                               GAME_WINNING_GOALS, OVERTIME_GOALS
-                                               FROM SkaterSeason
-                                               WHERE TYPE = '%s' AND SEASON = '%s' AND TEAM = '%s'
-                                               ORDER BY POINTS DESC LIMIT %d; """ 
-                                                % ( type, season, team, self.max_num_results ) )
-            else:
-                data = cur.execute( """ SELECT SKATERID, TEAM, GAMES_PLAYED, GOALS, ASSISTS, POINTS,
-                                               PENALTY_MINUTES, POWERPLAY_GOALS, POWERPLAY_POINTS,
-                                               SHORTHANDED_GOALS, SHORTHANDED_POINTS,
-                                               GAME_WINNING_GOALS, OVERTIME_GOALS
-                                               FROM SkaterSeason
-                                               WHERE TYPE = '%s' AND SEASON = '%s'
-                                               ORDER BY POINTS DESC LIMIT %d; """ 
-                                                % ( type, season, self.max_num_results ) )
+        if team != None:
+            data = cur.execute( """ SELECT NAME, POSITION, SkaterSeason.TEAM AS SEASON_TEAM,
+                                           GAMES_PLAYED, GOALS, ASSISTS, POINTS, PLUS_MINUS,
+                                           PENALTY_MINUTES, POWERPLAY_GOALS, POWERPLAY_POINTS, 
+                                           SHORTHANDED_GOALS, SHORTHANDED_POINTS,
+                                           TIME_ON_ICE_PER_GAME, GAME_WINNING_GOALS,
+                                           OVERTIME_GOALS, SHOTS, SHOOTING_PERCENTAGE,
+                                           FACEOFF_PERCENTAGE
+                                           FROM Skater JOIN SkaterSeason ON Skater.SKATERID = SkaterSeason.SKATERID
+                                           WHERE TYPE = '%s' AND SEASON = '%s' AND TEAM = '%s' 
+                                           ORDER BY POINTS DESC LIMIT %d; """ 
+                                            % ( type, season, team, self.max_num_results ) )
         else:
-            if team != None:
-                data = cur.execute( """ SELECT SKATERID, TEAM, GAMES_PLAYED, GOALS, ASSISTS, POINTS,
-                                               PENALTY_MINUTES, GAME_WINNING_GOALS, OVERTIME_GOALS
-                                               FROM SkaterSeason
-                                               WHERE TYPE = '%s' AND SEASON = '%s' AND TEAM = '%s'
-                                               ORDER BY POINTS DESC LIMIT %d; """
-                                                % ( type, season, team, self.max_num_results ) )
-            else:
-                data = cur.execute( """ SELECT SKATERID, TEAM, GAMES_PLAYED, GOALS, ASSISTS, POINTS,
-                                               PENALTY_MINUTES, GAME_WINNING_GOALS, OVERTIME_GOALS
-                                               FROM SkaterSeason
-                                               WHERE TYPE = '%s' AND SEASON = '%s'
-                                               ORDER BY POINTS DESC LIMIT %d; """ 
-                                                % ( type, season, self.max_num_results ) )
+            data = cur.execute( """ SELECT NAME, POSITION, SkaterSeason.TEAM AS SEASON_TYPE,
+                                           GAMES_PLAYED, GOALS,  ASSISTS, POINTS, PLUS_MINUS,
+                                           PENALTY_MINUTES, POWERPLAY_GOALS, POWERPLAY_POINTS,
+                                           SHORTHANDED_GOALS, SHORTHANDED_POINTS,
+                                           TIME_ON_ICE_PER_GAME, GAME_WINNING_GOALS,
+                                           OVERTIME_GOALS, SHOTS, SHOOTING_PERCENTAGE, 
+                                           FACEOFF_PERCENTAGE
+                                           FROM Skater JOIN SkaterSeason ON Skater.SKATERID = SkaterSeason.SKATERID
+                                           WHERE TYPE = '%s' AND SEASON = '%s'
+                                           ORDER BY POINTS DESC LIMIT %d; """ 
+                                            % ( type, season, self.max_num_results ) )
 
         skater_data = data.fetchall()
         
         skater_stats = []
         for skater in skater_data:
-            skater_id = skater[0]
-
-            data = cur.execute( """ SELECT NAME, POSITION FROM Skater
-                                    WHERE SKATERID = %d; """ % skater_id )
-            
-            data = data.fetchall()
-            name = data[0][0]
-            curr_position = data[0][1]
+            curr_position = skater[1]
 
             if position == 'Forward' and (curr_position == 'LW' or curr_position == 'RW' or curr_position == 'C')\
                 or position != None and curr_position == position or position == None:
 
                 if self.nhl_util.is_faceoff_percentage_season( season ) and self.nhl_util.is_time_on_ice_per_game_season( season ):
-                    skater_season = NHL.SkaterSeason( type=type, season=None, team=skater[1], 
-                                                    games_played=skater[2], goals=skater[3], 
-                                                    assists=skater[4], points=skater[5], 
-                                                    plus_minus=skater[6], penalty_minutes=skater[7], 
-                                                    powerplay_goals=skater[8], powerplay_points=skater[9], 
-                                                    shorthanded_goals=skater[10], shorthanded_points=skater[11], 
-                                                    time_on_ice_per_game=skater[12], game_winning_goals=skater[13], 
-                                                    overtime_goals=skater[14], shots=skater[15], 
-                                                    shooting_percentage=skater[16], faceoff_percentage=skater[17], 
-                                                    name=name )
+                    skater_season = NHL.SkaterSeason( type=type, season=None, name=skater[0],
+                                                      team=skater[2], games_played=skater[3],
+                                                      goals=skater[4], assists=skater[5],
+                                                      points=skater[6], plus_minus=skater[7],
+                                                      penalty_minutes=skater[8], powerplay_goals=skater[9],
+                                                      powerplay_points=skater[10], shorthanded_goals=skater[11],
+                                                      shorthanded_points=skater[12], time_on_ice_per_game=skater[13],
+                                                      game_winning_goals=skater[14], overtime_goals=skater[15],
+                                                      shots=skater[16], shooting_percentage=skater[17],
+                                                      faceoff_percentage=skater[18] )
                 elif self.nhl_util.is_plus_minus_season( season ) and self.nhl_util.is_shots_season( season )\
                                                                 and self.nhl_util.is_shooting_percentage_season( season ):
-                    skater_season = NHL.SkaterSeason( type=type, season=None, team=skater[1], 
-                                                    games_played=skater[2], goals=skater[3], 
-                                                    assists=skater[4], points=skater[5], 
-                                                    plus_minus=skater[6], penalty_minutes=skater[7], 
-                                                    powerplay_goals=skater[8], powerplay_points=skater[9], 
-                                                    shorthanded_goals=skater[10], shorthanded_points=skater[11], 
-                                                    time_on_ice_per_game=None, game_winning_goals=skater[12], 
-                                                    overtime_goals=skater[13], shots=skater[14], 
-                                                    shooting_percentage=skater[15], faceoff_percentage=None, 
-                                                    name=name )
+                    skater_season = NHL.SkaterSeason( type=type, season=None, name=skater[0],
+                                                      team=skater[2], games_played=skater[3],
+                                                      goals=skater[4], assists=skater[5],
+                                                      points=skater[6], plus_minus=skater[7],
+                                                      penalty_minutes=skater[8], powerplay_goals=skater[9],
+                                                      powerplay_points=skater[10], shorthanded_goals=skater[11],
+                                                      shorthanded_points=skater[12], time_on_ice_per_game=None,
+                                                      game_winning_goals=skater[14], overtime_goals=skater[15],
+                                                      shots=skater[16], shooting_percentage=skater[17],
+                                                      faceoff_percentage=None )
                 elif self.nhl_util.is_skater_special_teams_stats_season( season ):
-                    skater_season = NHL.SkaterSeason( type=type, season=None, team=skater[1], 
-                                                    games_played=skater[2], goals=skater[3], 
-                                                    assists=skater[4], points=skater[5], 
-                                                    plus_minus=None, penalty_minutes=skater[6], 
-                                                    powerplay_goals=skater[7], powerplay_points=skater[8], 
-                                                    shorthanded_goals=skater[9], shorthanded_points=skater[10], 
-                                                    time_on_ice_per_game=None, game_winning_goals=skater[11], 
-                                                    overtime_goals=skater[12], shots=None, 
-                                                    shooting_percentage=None, faceoff_percentage=None, 
-                                                    name=name )
+                    skater_season = NHL.SkaterSeason( type=type, season=None, name=skater[0],
+                                                      team=skater[2], games_played=skater[3],
+                                                      goals=skater[4], assists=skater[5],
+                                                      points=skater[6], plus_minus=None,
+                                                      penalty_minutes=skater[8], powerplay_goals=skater[9],
+                                                      powerplay_points=skater[10], shorthanded_goals=skater[11],
+                                                      shorthanded_points=skater[12], time_on_ice_per_game=None,
+                                                      game_winning_goals=skater[14], overtime_goals=skater[15],
+                                                      shots=None, shooting_percentage=None,
+                                                      faceoff_percentage=None )
                 else:
-                    skater_season = NHL.SkaterSeason( type=type, season=None, team=skater[1], 
-                                                    games_played=skater[2], goals=skater[3], 
-                                                    assists=skater[4], points=skater[5], 
-                                                    plus_minus=None, penalty_minutes=skater[6], 
-                                                    powerplay_goals=None, powerplay_points=None, 
-                                                    shorthanded_goals=None, shorthanded_points=None, 
-                                                    time_on_ice_per_game=None, game_winning_goals=skater[7], 
-                                                    overtime_goals=skater[8], shots=None, 
-                                                    shooting_percentage=None, faceoff_percentage=None, 
-                                                    name=name )
+                    skater_season = NHL.SkaterSeason( type=type, season=None, name=skater[0],
+                                                      team=skater[2], games_played=skater[3],
+                                                      goals=skater[4], assists=skater[5],
+                                                      points=skater[6], plus_minus=None,
+                                                      penalty_minutes=skater[8], powerplay_goals=None,
+                                                      powerplay_points=None, shorthanded_goals=None,
+                                                      shorthanded_points=None, time_on_ice_per_game=None,
+                                                      game_winning_goals=skater[14], overtime_goals=skater[15],
+                                                      shots=None, shooting_percentage=None,
+                                                      faceoff_percentage=None )
                 skater_stats.append( skater_season )
 
         return skater_stats
@@ -955,100 +893,95 @@ class Database():
         always_include_shooting_percentage = self.nhl_util.is_shooting_percentage_season( last_season )
         always_include_special_teams_stats = self.nhl_util.is_skater_special_teams_stats_season( last_season )
 
-        skater_stats = []
         if team != None:
-            data = cur.execute( """ SELECT SKATERID, SEASON, TEAM, GAMES_PLAYED, GOALS,
-                                            ASSISTS, POINTS, PLUS_MINUS, PENALTY_MINUTES,
-                                            POWERPLAY_GOALS, POWERPLAY_POINTS,
-                                            SHORTHANDED_GOALS, SHORTHANDED_POINTS,
-                                            TIME_ON_ICE_PER_GAME, GAME_WINNING_GOALS,
-                                            OVERTIME_GOALS, SHOTS, SHOOTING_PERCENTAGE,
-                                            FACEOFF_PERCENTAGE
-                                            FROM SkaterSeason
-                                            WHERE TYPE = '%s' AND TEAM = '%s'
-                                            AND SEASON >= '%s' AND SEASON <= '%s'
-                                            ORDER BY POINTS DESC LIMIT %d; """
+            data = cur.execute( """ SELECT NAME, POSITION, SEASON, SkaterSeason.TEAM AS SEASON_TEAM,
+                                           GAMES_PLAYED, GOALS, ASSISTS, POINTS, PLUS_MINUS, 
+                                           PENALTY_MINUTES, POWERPLAY_GOALS, POWERPLAY_POINTS,
+                                           SHORTHANDED_GOALS, SHORTHANDED_POINTS,
+                                           TIME_ON_ICE_PER_GAME, GAME_WINNING_GOALS,
+                                           OVERTIME_GOALS, SHOTS, SHOOTING_PERCENTAGE,
+                                           FACEOFF_PERCENTAGE
+                                           FROM Skater JOIN SkaterSeason ON Skater.SKATERID = SkaterSeason.SKATERID 
+                                           WHERE TYPE = '%s' AND TEAM = '%s'
+                                           AND SEASON >= '%s' AND SEASON <= '%s'
+                                           ORDER BY POINTS DESC LIMIT %d; """
                                             % ( type, team, first_season, last_season, self.max_num_results ) )
         else:
-            data = cur.execute( """ SELECT SKATERID, SEASON, TEAM, GAMES_PLAYED, GOALS,
-                                            ASSISTS, POINTS, PLUS_MINUS, PENALTY_MINUTES,
-                                            POWERPLAY_GOALS, POWERPLAY_POINTS,
-                                            SHORTHANDED_GOALS, SHORTHANDED_POINTS,
-                                            TIME_ON_ICE_PER_GAME, GAME_WINNING_GOALS,
-                                            OVERTIME_GOALS, SHOTS, SHOOTING_PERCENTAGE,
-                                            FACEOFF_PERCENTAGE
-                                            FROM SkaterSeason
-                                            WHERE TYPE = '%s' AND SEASON >= '%s' AND SEASON <= '%s'
-                                            ORDER BY POINTS DESC LIMIT %d; """
+            data = cur.execute( """ SELECT NAME, POSITION, SEASON, SkaterSeason.TEAM AS SEASON_TEAM,
+                                           GAMES_PLAYED, GOALS, ASSISTS, POINTS, PLUS_MINUS,
+                                           PENALTY_MINUTES, POWERPLAY_GOALS, POWERPLAY_POINTS,
+                                           SHORTHANDED_GOALS, SHORTHANDED_POINTS,
+                                           TIME_ON_ICE_PER_GAME, GAME_WINNING_GOALS,
+                                           OVERTIME_GOALS, SHOTS, SHOOTING_PERCENTAGE,
+                                           FACEOFF_PERCENTAGE
+                                           FROM Skater JOIN SkaterSeason ON Skater.SKATERID = SkaterSeason.SKATERID 
+                                           WHERE TYPE = '%s' AND SEASON >= '%s' AND SEASON <= '%s'
+                                           ORDER BY POINTS DESC LIMIT %d; """
                                             % ( type, first_season, last_season, self.max_num_results ) )
-        skater_data = data.fetchall()
             
-        for skater_season in skater_data:
-            skater_id = skater_season[0]
-            season = skater_season[1]
+        skater_data = data.fetchall()
+        skater_stats = []
 
-            data = cur.execute( """ SELECT NAME, POSITION FROM Skater
-                                    WHERE SKATERID = %d; """ % skater_id )
-            data = data.fetchall()
-            name = data[0][0]
-            curr_position = data[0][1]
+        for skater_season in skater_data:
+            curr_position = skater_season[1]
+            season = skater_season[2]
 
             if position == 'Forward' and (curr_position == 'LW' or curr_position == 'RW' or curr_position == 'C')\
                 or position != None and curr_position == position or position == None:
                 if self.nhl_util.is_faceoff_percentage_season( season ) and self.nhl_util.is_time_on_ice_per_game_season( season ):
-                    skater_season = NHL.SkaterSeason( type=type, season=season, team=skater_season[2], 
-                                                        games_played=skater_season[3], goals=skater_season[4], 
-                                                        assists=skater_season[5], points=skater_season[6], 
-                                                        plus_minus=skater_season[7], penalty_minutes=skater_season[8], 
-                                                        powerplay_goals=skater_season[9], powerplay_points=skater_season[10], 
-                                                        shorthanded_goals=skater_season[11], shorthanded_points=skater_season[12], 
-                                                        time_on_ice_per_game=skater_season[13], game_winning_goals=skater_season[14], 
-                                                        overtime_goals=skater_season[15], shots=skater_season[16], 
-                                                        shooting_percentage=skater_season[17], faceoff_percentage=skater_season[18], 
-                                                        name=name )
+                    skater_season = NHL.SkaterSeason( type=type, name=skater_season[0], season=season,
+                                                      team=skater_season[3], games_played=skater_season[4],
+                                                      goals=skater_season[5], assists=skater_season[6],
+                                                      points=skater_season[7], plus_minus=skater_season[8],
+                                                      penalty_minutes=skater_season[9], powerplay_goals=skater_season[10],
+                                                      powerplay_points=skater_season[11], shorthanded_goals=skater_season[12],
+                                                      shorthanded_points=skater_season[13], time_on_ice_per_game=skater_season[14],
+                                                      game_winning_goals=skater_season[15], overtime_goals=skater_season[16],
+                                                      shots=skater_season[17], shooting_percentage=skater_season[18],
+                                                      faceoff_percentage=skater_season[19] )
                 elif self.nhl_util.is_plus_minus_season( season ) and self.nhl_util.is_shots_season( season )\
                                                                     and self.nhl_util.is_shooting_percentage_season( season ):
-                    skater_season = NHL.SkaterSeason( type=type, season=season, team=skater_season[2], 
-                                                        games_played=skater_season[3], goals=skater_season[4], 
-                                                        assists=skater_season[5], points=skater_season[6],
-                                                        plus_minus=skater_season[7], penalty_minutes=skater_season[8],
-                                                        powerplay_goals=skater_season[9], powerplay_points=skater_season[10],
-                                                        shorthanded_goals=skater_season[11], shorthanded_points=skater_season[12],
-                                                        time_on_ice_per_game='--' if always_include_time_on_ice_per_game else None,
-                                                        game_winning_goals=skater_season[13], overtime_goals=skater_season[14],
-                                                        shots=skater_season[15], shooting_percentage=skater_season[16], 
-                                                        faceoff_percentage='--' if always_include_faceoff_percentage else None, 
-                                                        name=name )
+                    skater_season = NHL.SkaterSeason( type=type, name=skater_season[0], season=season,
+                                                      team=skater_season[3], games_played=skater_season[4],
+                                                      goals=skater_season[5], assists=skater_season[6],
+                                                      points=skater_season[7], plus_minus=skater_season[8],
+                                                      penalty_minutes=skater_season[9], powerplay_goals=skater_season[10],
+                                                      powerplay_points=skater_season[11], shorthanded_goals=skater_season[12],
+                                                      shorthanded_points=skater_season[13],
+                                                      time_on_ice_per_game='--' if always_include_time_on_ice_per_game else None,
+                                                      game_winning_goals=skater_season[15], overtime_goals=skater_season[16],
+                                                      shots=skater_season[17], shooting_percentage=skater_season[18],
+                                                      faceoff_percentage='--' if always_include_faceoff_percentage else None )
                 elif self.nhl_util.is_skater_special_teams_stats_season( season ):
-                    skater_season = NHL.SkaterSeason( type=type, season=season, team=skater_season[2], 
-                                                        games_played=skater_season[3], goals=skater_season[4], 
-                                                        assists=skater_season[5], points=skater_season[6], 
-                                                        plus_minus='--' if always_include_plus_minus else None,
-                                                        penalty_minutes=skater_season[7], powerplay_goals=skater_season[8],
-                                                        powerplay_points=skater_season[9], shorthanded_goals=skater_season[10],
-                                                        shorthanded_points=skater_season[11], time_on_ice_per_game='--'
-                                                        if always_include_time_on_ice_per_game else None,
-                                                        game_winning_goals=skater_season[12], overtime_goals=skater_season[13],
-                                                        shots='--' if always_include_shots else None, 
-                                                        shooting_percentage='--' if always_include_shooting_percentage else None, 
-                                                        faceoff_percentage='--' if always_include_faceoff_percentage else None, 
-                                                        name=name )
+                    skater_season = NHL.SkaterSeason( type=type, name=skater_season[0], season=season,
+                                                      team=skater_season[3], games_played=skater_season[4],
+                                                      goals=skater_season[5], assists=skater_season[6],
+                                                      points=skater_season[7],
+                                                      plus_minus='--' if always_include_plus_minus else None,
+                                                      penalty_minutes=skater_season[9], powerplay_goals=skater_season[10],
+                                                      powerplay_points=skater_season[11], shorthanded_goals=skater_season[12],
+                                                      shorthanded_points=skater_season[13],
+                                                      time_on_ice_per_game='--' if always_include_time_on_ice_per_game else None,
+                                                      game_winning_goals=skater_season[15], overtime_goals=skater_season[16],
+                                                      shots='--'if always_include_shots else None,
+                                                      shooting_percentage='--' if always_include_shooting_percentage else None,
+                                                      faceoff_percentage='--' if always_include_faceoff_percentage else None )
                 else:
-                    skater_season = NHL.SkaterSeason( type=type, season=season, team=skater_season[2], 
-                                                        games_played=skater_season[3], goals=skater_season[4], 
-                                                        assists=skater_season[5], points=skater_season[6], 
-                                                        plus_minus='--' if always_include_plus_minus else None,
-                                                        penalty_minutes=skater_season[7],
-                                                        powerplay_goals='--' if always_include_special_teams_stats else None,
-                                                        powerplay_points='--' if always_include_special_teams_stats else None,
-                                                        shorthanded_goals='--' if always_include_shooting_percentage else None,
-                                                        shorthanded_points='--' if always_include_shooting_percentage else None,
-                                                        time_on_ice_per_game='--' if always_include_time_on_ice_per_game else None,
-                                                        game_winning_goals=skater_season[12], overtime_goals=skater_season[13],
-                                                        shots='--' if always_include_shots else None, 
-                                                        shooting_percentage='--' if always_include_shooting_percentage else None, 
-                                                        faceoff_percentage='--' if always_include_faceoff_percentage else None, 
-                                                        name=name )
+                    skater_season = NHL.SkaterSeason( type=type, name=skater_season[0], season=season,
+                                                      team=skater_season[3], games_played=skater_season[4],
+                                                      goals=skater_season[5], assists=skater_season[6],
+                                                      points=skater_season[7],
+                                                      plus_minus='--' if always_include_plus_minus else None,
+                                                      penalty_minutes=skater_season[9],
+                                                      powerplay_goals='--' if always_include_special_teams_stats else None,
+                                                      powerplay_points='--' if always_include_special_teams_stats else None,
+                                                      shorthanded_goals='--' if always_include_special_teams_stats else None,
+                                                      shorthanded_points='--' if always_include_special_teams_stats else None,
+                                                      time_on_ice_per_game='--' if always_include_time_on_ice_per_game else None,
+                                                      game_winning_goals=skater_season[15], overtime_goals=skater_season[16],
+                                                      shots='--'if always_include_shots else None,
+                                                      shooting_percentage='--' if always_include_shooting_percentage else None,
+                                                      faceoff_percentage='--' if always_include_faceoff_percentage else None )
 
                 skater_stats.append( skater_season )
             
@@ -1062,98 +995,60 @@ class Database():
         
         self.conn.commit()
 
-        if type == 'Regular Season':
-            if self.nhl_util.is_overtime_losses_season( type, season ):
-                if team != None:
-                    data = cur.execute( """ SELECT GOALIEID, TEAM, GAMES_PLAYED, GAMES_STARTED,
-                                                   WINS, LOSSES, OVERTIME_LOSSES, SHOTS_AGAINST,
-                                                   GOALS_AGAINST_AVERAGE, SAVE_PERCENTAGE,
-                                                   SHUTOUTS, GOALS, ASSISTS, PENALTY_MINUTES,
-                                                   TIME_ON_ICE
-                                                   FROM GoalieSeason
-                                                   WHERE TYPE = '%s' AND SEASON = '%s' AND TEAM = '%s'; """ % ( type, season, team ) )
-                else:
-                    data = cur.execute( """ SELECT GOALIEID, TEAM, GAMES_PLAYED, GAMES_STARTED,
-                                                   WINS, LOSSES, OVERTIME_LOSSES, SHOTS_AGAINST,
-                                                   GOALS_AGAINST_AVERAGE, SAVE_PERCENTAGE,
-                                                   SHUTOUTS, GOALS, ASSISTS, PENALTY_MINUTES,
-                                                   TIME_ON_ICE
-                                                   FROM GoalieSeason
-                                                   WHERE TYPE = '%s' AND SEASON = '%s'; """ % ( type, season ) )
-            else:
-                if team != None:
-                    data = cur.execute( """ SELECT GOALIEID, TEAM, GAMES_PLAYED, GAMES_STARTED,
-                                                   WINS, LOSSES, TIES, SHOTS_AGAINST,
-                                                   GOALS_AGAINST_AVERAGE, SAVE_PERCENTAGE,
-                                                   SHUTOUTS, GOALS, ASSISTS, PENALTY_MINUTES,
-                                                   TIME_ON_ICE
-                                                   FROM GoalieSeason
-                                                   WHERE TYPE = '%s' AND SEASON = '%s' AND TEAM = '%s'; """ % ( type, season, team ) )
-                else:
-                    data = cur.execute( """ SELECT GOALIEID, TEAM, GAMES_PLAYED, GAMES_STARTED,
-                                                   WINS, LOSSES, TIES, SHOTS_AGAINST,
-                                                   GOALS_AGAINST_AVERAGE, SAVE_PERCENTAGE,
-                                                   SHUTOUTS, GOALS, ASSISTS, PENALTY_MINUTES,
-                                                   TIME_ON_ICE
-                                                   FROM GoalieSeason
-                                                   WHERE TYPE = '%s' AND SEASON = '%s'; """ % ( type, season ) )
+        if team != None:
+            data = cur.execute( """ SELECT NAME, GoalieSeason.TEAM AS SEASON_TEAM,
+                                           GAMES_PLAYED, GAMES_STARTED, WINS, LOSSES, TIES,
+                                           OVERTIME_LOSSES, SHOTS_AGAINST,
+                                           GOALS_AGAINST_AVERAGE, SAVE_PERCENTAGE, SHUTOUTS,
+                                           GOALS, ASSISTS, PENALTY_MINUTES, TIME_ON_ICE
+                                           FROM Goalie JOIN GoalieSeason ON Goalie.GOALIEID = GoalieSeason.GOALIEID
+                                           WHERE TYPE = '%s' AND SEASON = '%s' AND TEAM = '%s'
+                                           ORDER BY WINS DESC LIMIT %d; """
+                                            % ( type, season, team, self.max_num_results ) )
         else:
-            if team != None:
-                data = cur.execute( """ SELECT GOALIEID, TEAM, GAMES_PLAYED, GAMES_STARTED, WINS,
-                                               LOSSES, SHOTS_AGAINST, GOALS_AGAINST_AVERAGE,
-                                               SAVE_PERCENTAGE, SHUTOUTS, GOALS, ASSISTS,
-                                               PENALTY_MINUTES, TIME_ON_ICE
-                                               FROM GoalieSeason
-                                               WHERE TYPE = '%s' AND SEASON = '%s' AND TEAM = '%s'; """ % ( type, season, team ) )
-            else:
-                data = cur.execute( """ SELECT GOALIEID, TEAM, GAMES_PLAYED, GAMES_STARTED, WINS,
-                                               LOSSES, SHOTS_AGAINST, GOALS_AGAINST_AVERAGE,
-                                               SAVE_PERCENTAGE, SHUTOUTS, GOALS, ASSISTS,
-                                               PENALTY_MINUTES, TIME_ON_ICE
-                                               FROM GoalieSeason
-                                               WHERE TYPE = '%s' AND SEASON = '%s'; """ % ( type, season ) )
+            data = cur.execute( """ SELECT NAME, GoalieSeason.TEAM AS SEASON_TEAM,
+                                           GAMES_PLAYED, GAMES_STARTED, WINS, LOSSES, TIES,
+                                           OVERTIME_LOSSES, SHOTS_AGAINST,
+                                           GOALS_AGAINST_AVERAGE, SAVE_PERCENTAGE, SHUTOUTS,
+                                           GOALS, ASSISTS, PENALTY_MINUTES, TIME_ON_ICE
+                                           FROM Goalie JOIN GoalieSeason ON Goalie.GOALIEID = GoalieSeason.GOALIEID
+                                           WHERE TYPE = '%s' AND SEASON = '%s'
+                                           ORDER BY WINS DESC LIMIT %s; """
+                                            % ( type, season, self.max_num_results ) )
 
         goalie_data = data.fetchall()
         
         goalies_stats = []
         for goalie in goalie_data:
-            goalie_id = goalie[0]
-
-            data = cur.execute( """ SELECT NAME FROM Goalie
-                                    WHERE GOALIEID = %d; """ % goalie_id )
-            
-            data = data.fetchall()
-            name = data[0][0]
-        
             if type == 'Regular Season':
                 if self.nhl_util.is_overtime_losses_season( type, season ):
-                    goalie_season = NHL.GoalieSeason( type=type, season=None, team=goalie[1],
-                                                      games_played=goalie[2], games_started=goalie[3],
-                                                      wins=goalie[4], losses=goalie[5], ties=None,
-                                                      overtime_losses=goalie[6], shots_against=goalie[7],
-                                                      goals_against_average=goalie[8], save_percentage=goalie[9],
-                                                      shutouts=goalie[10], goals=goalie[11],
-                                                      assists=goalie[12], penalty_minutes=goalie[13],
-                                                      time_on_ice=goalie[14], name=name )
+                    goalie_season = NHL.GoalieSeason( type=type, season=None, name=goalie[0],
+                                                      team=goalie[1], games_played=goalie[2],
+                                                      games_started=goalie[3], wins=goalie[4],
+                                                      losses=goalie[5], ties=None,
+                                                      overtime_losses=goalie[7], shots_against=goalie[8],
+                                                      goals_against_average=goalie[9], save_percentage=goalie[10],
+                                                      shutouts=goalie[11], goals=goalie[12],
+                                                      assists=goalie[13], penalty_minutes=goalie[14],
+                                                      time_on_ice=goalie[15] )
                 else:
-                    goalie_season = NHL.GoalieSeason( type=type, season=None, team=goalie[1],
-                                                      games_played=goalie[2], games_started=goalie[3],
-                                                      wins=goalie[4], losses=goalie[5], 
-                                                      ties=goalie[6], overtime_losses=None,
-                                                      shots_against=goalie[7], goals_against_average=goalie[8],
-                                                      save_percentage=goalie[9], shutouts=goalie[10],
-                                                      goals=goalie[11], assists=goalie[12],
-                                                      penalty_minutes=goalie[13], time_on_ice=goalie[14],
-                                                      name=name )
+                    goalie_season = NHL.GoalieSeason( type=type, season=None, name=goalie[0],
+                                                      team=goalie[1], games_played=goalie[2],
+                                                      games_started=goalie[3], wins=goalie[4],
+                                                      losses=goalie[5], ties=goalie[6], overtime_losses=None,
+                                                      shots_against=goalie[8], goals_against_average=goalie[9],
+                                                      save_percentage=goalie[10], shutouts=goalie[11],
+                                                      goals=goalie[12], assists=goalie[13],
+                                                      penalty_minutes=goalie[14], time_on_ice=goalie[15] )
             else:
-                goalie_season = NHL.GoalieSeason( type=type, season=None, team=goalie[1],
-                                                  games_played=goalie[2], games_started=goalie[3],
-                                                  wins=goalie[4], losses=goalie[5], ties=None,
-                                                  overtime_losses=None, shots_against=goalie[6],
-                                                  goals_against_average=goalie[7], save_percentage=goalie[8],
-                                                  shutouts=goalie[9], goals=goalie[10],
-                                                  assists=goalie[11], penalty_minutes=goalie[12],
-                                                  time_on_ice=goalie[13], name=name )
+                goalie_season = NHL.GoalieSeason( type=type, season=None, name=goalie[0],
+                                                  team=goalie[1], games_played=goalie[2],
+                                                  games_started=goalie[3], wins=goalie[4],
+                                                  losses=goalie[5], ties=None, overtime_losses=None,
+                                                  shots_against=goalie[8], goals_against_average=goalie[9],
+                                                  save_percentage=goalie[10], shutouts=goalie[11],
+                                                  goals=goalie[12], assists=goalie[13],
+                                                  penalty_minutes=goalie[14], time_on_ice=goalie[15] )
     
             goalies_stats.append( goalie_season )
 
@@ -1221,111 +1116,69 @@ class Database():
             always_include_overtime_losses = self.nhl_util.is_overtime_losses_season( type, last_season )
             always_include_ties = not self.nhl_util.is_overtime_losses_season( type, first_season )
 
-        first_season_first_year = self.nhl_util.get_first_year( first_season )
-        last_season_first_year = self.nhl_util.get_first_year( last_season )
 
+        if team != None:
+            data = cur.execute( """ SELECT NAME, SEASON, GoalieSeason.TEAM AS SEASON_TEAM,
+                                           GAMES_PLAYED, GAMES_STARTED, WINS, LOSSES,
+                                           OVERTIME_LOSSES, SHOTS_AGAINST, GOALS_AGAINST_AVERAGE,
+                                           SAVE_PERCENTAGE, SHUTOUTS, GOALS, ASSISTS, 
+                                           PENALTY_MINUTES, TIME_ON_ICE
+                                           FROM Goalie JOIN GoalieSeason ON Goalie.GOALIEID = GoalieSeason.GOALIEID
+                                           WHERE TYPE = '%s' AND TEAM = '%s'
+                                           AND SEASON >= '%s' and SEASON <= '%s'
+                                           ORDERY BY WINS DESC LIMIT %d; """
+                                            % ( type, team, first_season, last_season, self.max_num_results ) )
+        else:
+            data = cur.execute( """ SELECT NAME, SEASON, GoalieSeason.TEAM AS SEASON_TEAM,
+                                           GAMES_PLAYED, GAMES_STARTED, WINS, LOSSES,
+                                           OVERTIME_LOSSES, SHOTS_AGAINST, GOALS_AGAINST_AVERAGE,
+                                           SAVE_PERCENTAGE, SHUTOUTS, GOALS, ASSISTS,
+                                           PENALTY_MINUTES, TIME_ON_ICE
+                                           FROM Goalie JOIN GoalieSeason ON Goalie.GOALIEID = GoaliseSeason. GOALIEID
+                                           WHERE TYPE = '%s' AND SEASON >= '%s' and SEASON <= '%s'
+                                           ORDERY BY WINS DESC LIMIT %d; """
+                                            % ( type, first_season, last_season, self.max_num_results ) )
+        
+        goalie_data = data.fetchall()
         goalie_stats = []
-        for i in range( first_season_first_year, last_season_first_year + 1 ):
-            curr_season = str( i ) + '-' + str( i + 1 )
+    
+        for goalie in goalie_data:
+            season = goalie[2]
 
             if type == 'Regular Season':
-                if self.nhl_util.is_overtime_losses_season( type, curr_season ):
-                    if team != None:
-                        data = cur.execute( """ SELECT GOALIEID, TEAM, GAMES_PLAYED, GAMES_STARTED,
-                                                       WINS, LOSSES, OVERTIME_LOSSES,
-                                                       SHOTS_AGAINST, GOALS_AGAINST_AVERAGE,
-                                                       SAVE_PERCENTAGE, SHUTOUTS, GOALS, ASSISTS,
-                                                       PENALTY_MINUTES, TIME_ON_ICE
-                                                       FROM GoalieSeason
-                                                       WHERE TYPE = '%s' AND SEASON = '%s' AND TEAM = '%s'; """ % ( type, curr_season, team ) )
-                    else:
-                        data = cur.execute( """ SELECT GOALIEID, TEAM, GAMES_PLAYED, GAMES_STARTED,
-                                                       WINS, LOSSES, OVERTIME_LOSSES,
-                                                       SHOTS_AGAINST, GOALS_AGAINST_AVERAGE,
-                                                       SAVE_PERCENTAGE, SHUTOUTS, GOALS, ASSISTS,
-                                                       PENALTY_MINUTES, TIME_ON_ICE
-                                                       FROM GoalieSeason
-                                                       WHERE TYPE = '%s' AND SEASON = '%s'; """ % ( type, curr_season ) )
+                if self.nhl_util.is_overtime_losses_season( type, season ):
+                    goalie_season = NHL.GoalieSeason( type=type, name=goalie[0], season=season,
+                                                      team=goalie[2], games_played=goalie[3], 
+                                                      games_started=goalie[4], wins=goalie[5],
+                                                      losses=goalie[6], overtime_losses=goalie[7],
+                                                      ties='--' if always_include_ties else None,
+                                                      shots_against=goalie[9], goals_against_average=goalie[10],
+                                                      save_percentage=goalie[11], shutouts=goalie[12],
+                                                      goals=goalie[13], assists=goalie[14],
+                                                      penalty_minutes=goalie[15], time_on_ice=goalie[16] )
                 else:
-                    if team != None:
-                        data = cur.execute( """ SELECT GOALIEID, TEAM, GAMES_PLAYED, GAMES_STARTED,
-                                                       WINS, LOSSES, TIES, SHOTS_AGAINST,
-                                                       GOALS_AGAINST_AVERAGE, SAVE_PERCENTAGE,
-                                                       SHUTOUTS, GOALS, ASSISTS, PENALTY_MINUTES,
-                                                       TIME_ON_ICE
-                                                       FROM GoalieSeason
-                                                       WHERE TYPE = '%s' AND SEASON = '%s' AND TEAM = '%s'; """ % ( type, curr_season, team ) )
-                    else:
-                        data = cur.execute( """ SELECT GOALIEID, TEAM, GAMES_PLAYED, GAMES_STARTED,
-                                                       WINS, LOSSES, TIES, SHOTS_AGAINST,
-                                                       GOALS_AGAINST_AVERAGE, SAVE_PERCENTAGE,
-                                                       SHUTOUTS, GOALS, ASSISTS, PENALTY_MINUTES,
-                                                       TIME_ON_ICE
-                                                       FROM GoalieSeason
-                                                       WHERE TYPE = '%s' AND SEASON = '%s'; """ % ( type, curr_season ) )
+                    goalie_season = NHL.GoalieSeason( type=type, name=goalie[0], season=season, 
+                                                      team=goalie[2], games_played=goalie[3], 
+                                                      games_started=goalie[4], wins=goalie[5],
+                                                      losses=goalie[6], overtime_losses='--'
+                                                      if always_include_overtime_losses else None,
+                                                      ties=goalie[8], shots_against=goalie[9],
+                                                      goals_against_average=goalie[10], save_percentage=goalie[11],
+                                                      shutouts=goalie[12], goals=goalie[14],
+                                                      assists=goalie[14], penalty_minutes=goalie[15],
+                                                      time_on_ice=goalie[16] )
             else:
-                if team != None:
-                    data = cur.execute( """ SELECT GOALIEID, TEAM, GAMES_PLAYED, GAMES_STARTED,
-                                                   WINS, LOSSES, SHOTS_AGAINST, 
-                                                   GOALS_AGAINST_AVERAGE, SAVE_PERCENTAGE,
-                                                   SHUTOUTS, GOALS, ASSISTS, PENALTY_MINUTES,
-                                                   TIME_ON_ICE
-                                                   FROM GoalieSeason
-                                                   WHERE TYPE = '%s' AND SEASON = '%s' AND TEAM = '%s'; """ % ( type, curr_season, team ) )
-                else:
-                    data = cur.execute( """ SELECT GOALIEID, TEAM, GAMES_PLAYED, GAMES_STARTED,
-                                                   WINS, LOSSES, SHOTS_AGAINST, 
-                                                   GOALS_AGAINST_AVERAGE, SAVE_PERCENTAGE,
-                                                   SHUTOUTS, GOALS, ASSISTS, PENALTY_MINUTES,
-                                                   TIME_ON_ICE
-                                                   FROM GoalieSeason
-                                                   WHERE TYPE = '%s' AND SEASON = '%s' AND TEAM = '%s'; """ % ( type, curr_season, team ) )
-        
-            goalie_data = data.fetchall()
-            
-            for goalie in goalie_data:
-                goalie_id = goalie[0]
+                goalie_season = NHL.GoalieSeason( type=type, name=goalie[0], season=season,
+                                                  team=goalie[2], games_played=goalie[3],
+                                                  games_started=goalie[4], wins=goalie[5],
+                                                  losses=goalie[6], overtime_losses=None,
+                                                  ties=None, shots_against=goalie[9],
+                                                  goals_against_average=goalie[10],
+                                                  save_percentage=goalie[11], shutouts=goalie[12],
+                                                  goals=goalie[13], assists=goalie[14],
+                                                  penalty_minutes=goalie[15], time_on_ice=goalie[16] )
 
-                data = cur.execute( """ SELECT NAME FROM Goalie
-                                        WHERE GOALIEID = %d; """ % goalie_id )
-                data = data.fetchall()
-                name = data[0][0]
-
-                if type == 'Regular Season':
-                    if self.nhl_util.is_overtime_losses_season( type, curr_season ):
-                        goalie_season = NHL.GoalieSeason( type=type, season=curr_season, 
-                                                          team=goalie[1], games_played=goalie[2], 
-                                                          games_started=goalie[3], wins=goalie[4],
-                                                          losses=goalie[5], overtime_losses=goalie[6],
-                                                          ties='--' if always_include_ties else None,
-                                                          shots_against=goalie[7], goals_against_average=goalie[8],
-                                                          save_percentage=goalie[9], shutouts=goalie[10],
-                                                          goals=goalie[11], assists=goalie[12],
-                                                          penalty_minutes=goalie[13], time_on_ice=goalie[14],
-                                                          name=name )
-                    else:
-                        goalie_season = NHL.GoalieSeason( type=type, season=curr_season, 
-                                                          team=goalie[1], games_played=goalie[2], 
-                                                          games_started=goalie[3], wins=goalie[4],
-                                                          losses=goalie[5], overtime_losses='--'
-                                                          if always_include_overtime_losses else None,
-                                                          ties=goalie[6], shots_against=goalie[7],
-                                                          goals_against_average=goalie[8], save_percentage=goalie[9],
-                                                          shutouts=goalie[10], goals=goalie[11],
-                                                          assists=goalie[12], penalty_minutes=goalie[13],
-                                                          time_on_ice=goalie[14], name=name )
-                else:
-                    goalie_season = NHL.GoalieSeason( type=type, season=curr_season, team=goalie[1],
-                                                      games_played=goalie[2], games_started=goalie[3],
-                                                      wins=goalie[4], losses=goalie[5],
-                                                      overtime_losses=None, ties=None,
-                                                      shots_against=goalie[6], goals_against_average=goalie[7],
-                                                      save_percentage=goalie[8], shutouts=goalie[9],
-                                                      goals=goalie[10], assists=goalie[11],
-                                                      penalty_minutes=goalie[12], time_on_ice=goalie[13],
-                                                      name=name )
-
-                goalie_stats.append( goalie_season )
+            goalie_stats.append( goalie_season )
             
         return goalie_stats
 

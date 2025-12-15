@@ -3623,7 +3623,8 @@ table {
 th, td {
     padding: 8px;
     text-align: center;
-    border: 1px solid lightgray;
+    border-left: none;
+    border-right: none;
 }
 
 th {
@@ -4181,63 +4182,63 @@ th.name-field, td.name-field, th.team-field, td.team-field {
 
 
 /* Skater stats table with special teams stats */
-.skater-stats-table-special-teams-stats {
+.skater-stats-table-special-teams-stats-season {
     font-size: 18px;
 }
 
-.skater-stats-table-special-teams-stats th:nth-child(1),
-.skater-stats-table-special-teams-stats td:nth-child(1) {
+.skater-stats-table-special-teams-stats-season th:nth-child(1),
+.skater-stats-table-special-teams-stats-season td:nth-child(1) {
     width: 20.75%;
 }
 
-.skater-stats-table-special-teams-stats th:nth-child(2),
-.skater-stats-table-special-teams-stats td:nth-child(2) {
+.skater-stats-table-special-teams-stats-season th:nth-child(2),
+.skater-stats-table-special-teams-stats-season td:nth-child(2) {
     width: 21.75%;
 }
 
-.skater-stats-table-special-teams-stats th:nth-child(3),
-.skater-stats-table-special-teams-stats td:nth-child(3),
-.skater-stats-table-special-teams-stats th:nth-child(4),
-.skater-stats-table-special-teams-stats td:nth-child(4),
-.skater-stats-table-special-teams-stats th:nth-child(5),
-.skater-stats-table-special-teams-stats td:nth-child(5) {
+.skater-stats-table-special-teams-stats-season th:nth-child(3),
+.skater-stats-table-special-teams-stats-season td:nth-child(3),
+.skater-stats-table-special-teams-stats-season th:nth-child(4),
+.skater-stats-table-special-teams-stats-season td:nth-child(4),
+.skater-stats-table-special-teams-stats-season th:nth-child(5),
+.skater-stats-table-special-teams-stats-season td:nth-child(5) {
     width: 5%;
 }
 
-.skater-stats-table-special-teams-stats th:nth-child(6),
-.skater-stats-table-special-teams-stats td:nth-child(6) {
+.skater-stats-table-special-teams-stats-season th:nth-child(6),
+.skater-stats-table-special-teams-stats-season td:nth-child(6) {
     width: 5.25%;
 }
 
-.skater-stats-table-special-teams-stats th:nth-child(7),
-.skater-stats-table-special-teams-stats td:nth-child(7) {
+.skater-stats-table-special-teams-stats-season th:nth-child(7),
+.skater-stats-table-special-teams-stats-season td:nth-child(7) {
     width: 5.5%;
 }
 
-.skater-stats-table-special-teams-stats th:nth-child(8),
-.skater-stats-table-special-teams-stats td:nth-child(8) {
+.skater-stats-table-special-teams-stats-season th:nth-child(8),
+.skater-stats-table-special-teams-stats-season td:nth-child(8) {
     width: 5.25%;
 }
 
-.skater-stats-table-special-teams-stats th:nth-child(9),
-.skater-stats-table-special-teams-stats td:nth-child(9) {
+.skater-stats-table-special-teams-stats-season th:nth-child(9),
+.skater-stats-table-special-teams-stats-season td:nth-child(9) {
     width: 5%;
 }
 
-.skater-stats-table-special-teams-stats th:nth-child(10),
-.skater-stats-table-special-teams-stats td:nth-child(10),
-.skater-stats-table-special-teams-stats th:nth-child(11),
-.skater-stats-table-special-teams-stats td:nth-child(11) {
+.skater-stats-table-special-teams-stats-season th:nth-child(10),
+.skater-stats-table-special-teams-stats-season td:nth-child(10),
+.skater-stats-table-special-teams-stats-season th:nth-child(11),
+.skater-stats-table-special-teams-stats-season td:nth-child(11) {
     width: 5.25%;
 }
 
-.skater-stats-table-special-teams-stats th:nth-child(12),
-.skater-stats-table-special-teams-stats td:nth-child(12) {
+.skater-stats-table-special-teams-stats-season th:nth-child(12),
+.skater-stats-table-special-teams-stats-season td:nth-child(12) {
     width: 5.5%;
 }
 
-.skater-stats-table-special-teams-stats th:nth-child(13),
-.skater-stats-table-special-teams-stats td:nth-child(13) {
+.skater-stats-table-special-teams-stats-season th:nth-child(13),
+.skater-stats-table-special-teams-stats-season td:nth-child(13) {
     width: 5.5%;
 }
 
@@ -4280,28 +4281,31 @@ th.name-field, td.name-field, th.team-field, td.team-field {
 
 /* Skater stats table time on ice/game and faceoff percentage season with seasons */
 .skater-stats-table-time-on-ice-per-game-and-faceoff-percentage-season-with-seasons {
-    font-size: 14.5px;
+    font-size: 13px;
 }
 
 .skater-stats-table-time-on-ice-per-game-and-faceoff-percentage-season-with-seasons th:nth-child(1),
 .skater-stats-table-time-on-ice-per-game-and-faceoff-percentage-season-with-seasons td:nth-child(1) {
-    width: 15.5%;
+    width: 16.375%;
 }
 
 .skater-stats-table-time-on-ice-per-game-and-faceoff-percentage-season-with-seasons th:nth-child(2),
 .skater-stats-table-time-on-ice-per-game-and-faceoff-percentage-season-with-seasons td:nth-child(2) {
-    width: 8%;
+    width: 7.5%;
 }
 
 .skater-stats-table-time-on-ice-per-game-and-faceoff-percentage-season-with-seasons th:nth-child(3),
 .skater-stats-table-time-on-ice-per-game-and-faceoff-percentage-season-with-seasons td:nth-child(3) {
-    width: 16.625%;
+    width: 16.5%;
 }
 
 .skater-stats-table-time-on-ice-per-game-and-faceoff-percentage-season-with-seasons th:nth-child(4),
 .skater-stats-table-time-on-ice-per-game-and-faceoff-percentage-season-with-seasons td:nth-child(4),
 .skater-stats-table-time-on-ice-per-game-and-faceoff-percentage-season-with-seasons th:nth-child(5),
-.skater-stats-table-time-on-ice-per-game-and-faceoff-percentage-season-with-seasons td:nth-child(5),
+.skater-stats-table-time-on-ice-per-game-and-faceoff-percentage-season-with-seasons td:nth-child(5) {
+    width: 3.25%;
+}
+
 .skater-stats-table-time-on-ice-per-game-and-faceoff-percentage-season-with-seasons th:nth-child(6),
 .skater-stats-table-time-on-ice-per-game-and-faceoff-percentage-season-with-seasons td:nth-child(6) {
     width: 3.5%;
@@ -4327,19 +4331,25 @@ th.name-field, td.name-field, th.team-field, td.team-field {
 .skater-stats-table-time-on-ice-per-game-and-faceoff-percentage-season-with-seasons th:nth-child(11),
 .skater-stats-table-time-on-ice-per-game-and-faceoff-percentage-season-with-seasons td:nth-child(11),
 .skater-stats-table-time-on-ice-per-game-and-faceoff-percentage-season-with-seasons th:nth-child(12),
-.skater-stats-table-time-on-ice-per-game-and-faceoff-percentage-season-with-seasons td:nth-child(12),
+.skater-stats-table-time-on-ice-per-game-and-faceoff-percentage-season-with-seasons td:nth-child(12) {
+    width: 3.75%
+}
+
 .skater-stats-table-time-on-ice-per-game-and-faceoff-percentage-season-with-seasons th:nth-child(13),
 .skater-stats-table-time-on-ice-per-game-and-faceoff-percentage-season-with-seasons td:nth-child(13) {
-    width: 3.75%;
+    width: 3.5%;
 }
 
 .skater-stats-table-time-on-ice-per-game-and-faceoff-percentage-season-with-seasons th:nth-child(14),
 .skater-stats-table-time-on-ice-per-game-and-faceoff-percentage-season-with-seasons td:nth-child(14) {
-    width: 4.875%;
+    width: 4.625%;
 }
 
 .skater-stats-table-time-on-ice-per-game-and-faceoff-percentage-season-with-seasons th:nth-child(15),
-.skater-stats-table-time-on-ice-per-game-and-faceoff-percentage-season-with-seasons td:nth-child(15),
+.skater-stats-table-time-on-ice-per-game-and-faceoff-percentage-season-with-seasons td:nth-child(15) {
+    width: 3.75%
+}
+
 .skater-stats-table-time-on-ice-per-game-and-faceoff-percentage-season-with-seasons th:nth-child(16),
 .skater-stats-table-time-on-ice-per-game-and-faceoff-percentage-season-with-seasons td:nth-child(16) {
     width: 4%;
@@ -4360,22 +4370,22 @@ th.name-field, td.name-field, th.team-field, td.team-field {
 
 /* Skater stats table plus minus, shots and shooting percentage season with season */
 .skater-stats-table-plus-minus-and-shots-and-shooting-percentage-season-with-seasons {
-    font-size: 15px;
+    font-size: 14px;
 }
 
 .skater-stats-table-plus-minus-and-shots-and-shooting-percentage-season-with-seasons th:nth-child(1),
 .skater-stats-table-plus-minus-and-shots-and-shooting-percentage-season-with-seasons td:nth-child(1) {
-    width: 15.5%;
+    width: 18.25%;
 }
 
 .skater-stats-table-plus-minus-and-shots-and-shooting-percentage-season-with-seasons th:nth-child(2),
 .skater-stats-table-plus-minus-and-shots-and-shooting-percentage-season-with-seasons td:nth-child(2) {
-    width: 9.5%;
+    width: 8.5%;
 }
 
 .skater-stats-table-plus-minus-and-shots-and-shooting-percentage-season-with-seasons th:nth-child(3),
 .skater-stats-table-plus-minus-and-shots-and-shooting-percentage-season-with-seasons td:nth-child(3) {
-    width: 18.5%;
+    width: 17.5%;
 }
 
 .skater-stats-table-plus-minus-and-shots-and-shooting-percentage-season-with-seasons th:nth-child(4),
@@ -4383,7 +4393,10 @@ th.name-field, td.name-field, th.team-field, td.team-field {
 .skater-stats-table-plus-minus-and-shots-and-shooting-percentage-season-with-seasons th:nth-child(5),
 .skater-stats-table-plus-minus-and-shots-and-shooting-percentage-season-with-seasons td:nth-child(5),
 .skater-stats-table-plus-minus-and-shots-and-shooting-percentage-season-with-seasons th:nth-child(6),
-.skater-stats-table-plus-minus-and-shots-and-shooting-percentage-season-with-seasons td:nth-child(6),
+.skater-stats-table-plus-minus-and-shots-and-shooting-percentage-season-with-seasons td:nth-child(6) {
+    width: 3.75%
+}
+
 .skater-stats-table-plus-minus-and-shots-and-shooting-percentage-season-with-seasons th:nth-child(7),
 .skater-stats-table-plus-minus-and-shots-and-shooting-percentage-season-with-seasons td:nth-child(7),
 .skater-stats-table-plus-minus-and-shots-and-shooting-percentage-season-with-seasons th:nth-child(8),
@@ -4416,68 +4429,107 @@ th.name-field, td.name-field, th.team-field, td.team-field {
 }
 
 
-/* Skater stats table */
+/* Skater stats table special teams stats season with seasons */
+.skater-stats-table-special-teams-stats-season-with-seasons {
+    font-size: 16.5px;
+}
+
+.skater-stats-table-special-teams-stats-season-with-seasons th:nth-child(1),
+.skater-stats-table-special-teams-stats-season-with-seasons td:nth-child(1) {
+    width: 18.75%;
+}
+
+.skater-stats-table-special-teams-stats-season-with-seasons th:nth-child(2),
+.skater-stats-table-special-teams-stats-season-with-seasons td:nth-child(2) {
+    width: 9.5%;
+}
+
+.skater-stats-table-special-teams-stats-season-with-seasons th:nth-child(3),
+.skater-stats-table-special-teams-stats-season-with-seasons td:nth-child(3) {
+    width: 20%;
+}
+
+.skater-stats-table-special-teams-stats-season-with-seasons th:nth-child(4),
+.skater-stats-table-special-teams-stats-season-with-seasons td:nth-child(4) {
+    width: 4.5%;
+}
+
+.skater-stats-table-special-teams-stats-season-with-seasons th:nth-child(5),
+.skater-stats-table-special-teams-stats-season-with-seasons td:nth-child(5),
+.skater-stats-table-special-teams-stats-season-with-seasons th:nth-child(6),
+.skater-stats-table-special-teams-stats-season-with-seasons td:nth-child(6) {
+    width: 4.25%;
+}
+
+.skater-stats-table-special-teams-stats-season-with-seasons th:nth-child(7),
+.skater-stats-table-special-teams-stats-season-with-seasons td:nth-child(7) {
+    width: 4.75%;
+}
+
+.skater-stats-table-special-teams-stats-season-with-seasons th:nth-child(8),
+.skater-stats-table-special-teams-stats-season-with-seasons td:nth-child(8),
+.skater-stats-table-special-teams-stats-season-with-seasons th:nth-child(9),
+.skater-stats-table-special-teams-stats-season-with-seasons td:nth-child(9),
+.skater-stats-table-special-teams-stats-season-with-seasons th:nth-child(10),
+.skater-stats-table-special-teams-stats-season-with-seasons td:nth-child(10) {
+    width: 5%;
+}
+
+.skater-stats-table-special-teams-stats-season-with-seasons th:nth-child(11),
+.skater-stats-table-special-teams-stats-season-with-seasons td:nth-child(11),
+.skater-stats-table-special-teams-stats-season-with-seasons th:nth-child(12),
+.skater-stats-table-special-teams-stats-season-with-seasons td:nth-child(12) {
+    width: 4.75%
+}
+
+.skater-stats-table-special-teams-stats-season-with-seasons th:nth-child(13),
+.skater-stats-table-special-teams-stats-season-with-seasons td:nth-child(13) {
+    width: 4.625%
+}
+
+.skater-stats-table-special-teams-stats-season-with-seasons th:nth-child(14),
+.skater-stats-table-special-teams-stats-season-with-seasons td:nth-child(14) {
+    width: 4.875%;
+}
+
+
+/* Skater stats table with seasons */
 .skater-stats-table-with-seasons {
-    font-size: 18px;
+    font-size: 19px;
 }
 
 .skater-stats-table-with-seasons th:nth-child(1),
 .skater-stats-table-with-seasons td:nth-child(1) {
-    width: 17%;
+    width: 23%;
 }
 
 .skater-stats-table-with-seasons th:nth-child(2),
 .skater-stats-table-with-seasons td:nth-child(2) {
-    width: 10.25%;
+    width: 12%;
 }
 
 .skater-stats-table-with-seasons th:nth-child(3),
 .skater-stats-table-with-seasons td:nth-child(3) {
-    width: 21%;
+    width: 23%;
 }
 
 .skater-stats-table-with-seasons th:nth-child(4),
-.skater-stats-table-with-seasons td:nth-child(4) {
-    width: 4.5%;
-}
-
+.skater-stats-table-with-seasons td:nth-child(4),
 .skater-stats-table-with-seasons th:nth-child(5),
 .skater-stats-table-with-seasons td:nth-child(5),
 .skater-stats-table-with-seasons th:nth-child(6),
-.skater-stats-table-with-seasons td:nth-child(6) {
-    width: 4.25%;
-}
-
+.skater-stats-table-with-seasons td:nth-child(6),
 .skater-stats-table-with-seasons th:nth-child(7),
-.skater-stats-table-with-seasons td:nth-child(7) {
-    width: 4.75%;
-}
-
+.skater-stats-table-with-seasons td:nth-child(7),
 .skater-stats-table-with-seasons th:nth-child(8),
 .skater-stats-table-with-seasons td:nth-child(8),
 .skater-stats-table-with-seasons th:nth-child(9),
 .skater-stats-table-with-seasons td:nth-child(9),
 .skater-stats-table-with-seasons th:nth-child(10),
 .skater-stats-table-with-seasons td:nth-child(10) {
-    width: 5%;
+    width: 6%;
 }
 
-.skater-stats-table-with-seasons th:nth-child(11),
-.skater-stats-table-with-seasons td:nth-child(11),
-.skater-stats-table-with-seasons th:nth-child(12),
-.skater-stats-table-with-seasons td:nth-child(12) {
-    width: 4.75%
-}
-
-.skater-stats-table-with-seasons th:nth-child(13),
-.skater-stats-table-with-seasons td:nth-child(13) {
-    width: 4.625%
-}
-
-.skater-stats-table-with-seasons th:nth-child(14),
-.skater-stats-table-with-seasons td:nth-child(14) {
-    width: 4.875%;
-}
 
 .skater-stats-table-time-on-ice-per-game-and-faceoff-percentage-season .team-logo,
 .skater-stats-table-plus-minus-and-shots-and-shooting-percentage-season .team-logo,
@@ -4489,9 +4541,9 @@ th.name-field, td.name-field, th.team-field, td.team-field {
     top: 2px;
 }
 
-.skater-stats-table-special-teams-stats .team-logo,
+.skater-stats-table-special-teams-stats-season .team-logo,
 .skater-stats-table .team-logo,
-.skater-stats-table-special-teams-stats-with-seasons .team-logo,
+.skater-stats-table-special-teams-stats-season-with-seasons .team-logo,
 .skater-stats-table-with-seasons .team-logo {
     max-width: 22px;
     max-height: 22px;
@@ -5360,8 +5412,8 @@ th.name-field, td.name-field, th.team-field, td.team-field {
     top: 2px;
 }
 
-.skater-stats-table-special-teams-stats .team-logo,
-.skater-stats-table-with-seasons .team-logo {
+.skater-stats-table-special-teams-stats-season .team-logo,
+.skater-stats-table-special-teams-stats-season-with-seasons .team-logo {
     max-width: 22px;
     max-height: 22px;
     margin-right: 10px;

@@ -155,7 +155,7 @@ function displayTeams() {
     });
 }
 
-function fetchSkaterStats() {
+function fetchSkaterStats(stat, multiplier) {
     if (pageName == 'skater-season-stats') {
         var type = 'Regular Season';
     }
@@ -227,16 +227,13 @@ function fetchSkaterStats() {
             var statSortingButtons = document.querySelectorAll('.stat-sorting-button');
 
             statSortingButtons.forEach(function(button) {
-                // To-DO: Add skater stat sorting
+                //var sortedByStatButton .sorted-by-stat-button
                 
-                /*
-                button.addEventListener('click', function() {
-                    var stat = getStatNameFromAbbreviation(button.textContent);
-                    multiplier *= -1; // toggles between 1 and -1
-                    sortSkaterStats(response.skater_stats, stat, multiplier);
-                    displaySkaterStats(response);
-                });
-                */
+                //button.addEventListener('click', function() {
+                //    var stat = getStatNameFromAbbreviation(button.textContent);
+                //    multiplier *= -1; // toggles between 1 and -1
+                //    fetchSkaterStats(response);
+                //});
             });
         },
         error: function() {
@@ -4294,7 +4291,7 @@ function displaySkaterStats(response) {
                         table.classList.add('skater-stats-table-plus-minus-and-shots-and-shooting-percentage-season');
                     }
                     else if (isSkaterSpecialTeamsStatsSeason(season)) {
-                        table.classList.add('skater-stats-table-special-teams-stats');
+                        table.classList.add('skater-stats-table-special-teams-stats-season');
                     }
                     else {
                         table.classList.add('skater-stats-table');
@@ -4308,6 +4305,9 @@ function displaySkaterStats(response) {
                     }
                     else if (isPlusMinusSeason(lastSeason) && isShotsSeason(lastSeason) && isShootingPercentageSeason(lastSeason)) {
                         table.classList.add('skater-stats-table-plus-minus-and-shots-and-shooting-percentage-season-with-seasons');
+                    }
+                    else if (isSkaterSpecialTeamsStatsSeason(lastSeason)) {
+                        table.classList.add('skater-stats-table-special-teams-stats-season-with-seasons');
                     }
                     else {
                         table.classList.add('skater-stats-table-with-seasons');
@@ -4411,16 +4411,11 @@ function displaySkaterStats(response) {
                     td.appendChild(textSpan);
                 }
                 else {
-                    if (skaterStats[i][field] == 'null') {
-                        td.textContent = '--';
+                    if (field == 'shooting_percentage' || field == 'faceoff_percentage' && skaterStats[i][field] != '--') {
+                        td.textContent = round(parseFloat(skaterStats[i][field]), 3).toFixed(1);
                     }
-                    else{
-                        if (field == 'shooting-percentage' || field == 'faceoff-percentage') {
-                            td.textContent = round(parseFloat(skaterStats[i][field]), 3).toFixed(1);
-                        }
-                        else {
-                            td.textContent = skaterStats[i][field];
-                        }
+                    else {
+                        td.textContent = skaterStats[i][field];
                     }
                 }
 
