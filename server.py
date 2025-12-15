@@ -617,6 +617,7 @@ class MyHandler( BaseHTTPRequestHandler ):
             type = data.get( 'type' )
             first_season = data.get( 'first_season' )
             last_season = data.get( 'last_season' )
+            position = data.get( 'position' )
             team = data.get( 'team' )
             stat = data.get( 'stat' )
             multiplier = data.get( 'multiplier' )
@@ -626,13 +627,7 @@ class MyHandler( BaseHTTPRequestHandler ):
                 skaters = [skater.to_dict() for skater in skaters]
 
             else:
-                position = data.get( 'position' )
-
-                if first_season == last_season:
-                    season = first_season
-                    skater_stats = self.database.get_skater_stats_for_one_season( type, season, team, position, stat, multiplier )
-                else:
-                    skater_stats = self.database.get_skater_stats( type, first_season, last_season, team, position, stat, multiplier )
+                skater_stats = self.database.get_skater_stats( type, first_season, last_season, team, position, stat, multiplier )
 
                 logos = []
                 if isinstance( skater_stats, list ):
@@ -640,7 +635,7 @@ class MyHandler( BaseHTTPRequestHandler ):
                         team_name = skater_stats[i].team
 
                         if first_season == last_season:
-                            team_logo_path = self.nhl_util.get_team_logo_path( team_name, season )
+                            team_logo_path = self.nhl_util.get_team_logo_path( team_name, first_season )
                         else:
                             #print( team_name, skater_stats[i].season )
                             team_logo_path = self.nhl_util.get_team_logo_path( team_name, skater_stats[i].season )

@@ -893,31 +893,36 @@ class Database():
         always_include_shooting_percentage = self.nhl_util.is_shooting_percentage_season( last_season )
         always_include_special_teams_stats = self.nhl_util.is_skater_special_teams_stats_season( last_season )
 
-        if team != None:
-            data = cur.execute( """ SELECT NAME, POSITION, SEASON, SkaterSeason.TEAM AS SEASON_TEAM,
-                                           GAMES_PLAYED, GOALS, ASSISTS, POINTS, PLUS_MINUS, 
-                                           PENALTY_MINUTES, POWERPLAY_GOALS, POWERPLAY_POINTS,
-                                           SHORTHANDED_GOALS, SHORTHANDED_POINTS,
-                                           TIME_ON_ICE_PER_GAME, GAME_WINNING_GOALS,
-                                           OVERTIME_GOALS, SHOTS, SHOOTING_PERCENTAGE,
-                                           FACEOFF_PERCENTAGE
-                                           FROM Skater JOIN SkaterSeason ON Skater.SKATERID = SkaterSeason.SKATERID 
-                                           WHERE TYPE = '%s' AND TEAM = '%s'
-                                           AND SEASON >= '%s' AND SEASON <= '%s'
-                                           ORDER BY POINTS DESC LIMIT %d; """
-                                            % ( type, team, first_season, last_season, self.max_num_results ) )
+        if stat == None:
+            stat = 'points'
+        stat = stat.replace( '-', '_' )
+
+        if multiplier == 1 or multiplier == None:
+            order_direction = 'DESC'
         else:
-            data = cur.execute( """ SELECT NAME, POSITION, SEASON, SkaterSeason.TEAM AS SEASON_TEAM,
-                                           GAMES_PLAYED, GOALS, ASSISTS, POINTS, PLUS_MINUS,
-                                           PENALTY_MINUTES, POWERPLAY_GOALS, POWERPLAY_POINTS,
-                                           SHORTHANDED_GOALS, SHORTHANDED_POINTS,
-                                           TIME_ON_ICE_PER_GAME, GAME_WINNING_GOALS,
-                                           OVERTIME_GOALS, SHOTS, SHOOTING_PERCENTAGE,
-                                           FACEOFF_PERCENTAGE
-                                           FROM Skater JOIN SkaterSeason ON Skater.SKATERID = SkaterSeason.SKATERID 
-                                           WHERE TYPE = '%s' AND SEASON >= '%s' AND SEASON <= '%s'
-                                           ORDER BY POINTS DESC LIMIT %d; """
-                                            % ( type, first_season, last_season, self.max_num_results ) )
+            order_direction = 'ASC'
+
+        data = cur.execute(
+            f""" SELECT
+                    NAME, POSITION, SEASON, SkaterSeason.TEAM AS SEASON_TEAM, GAMES_PLAYED,
+                    GOALS, ASSISTS, POINTS, PLUS_MINUS, PENALTY_MINUTES, POWERPLAY_GOALS,
+                    POWERPLAY_POINTS, SHORTHANDED_GOALS, SHORTHANDED_POINTS, TIME_ON_ICE_PER_GAME,
+                    GAME_WINNING_GOALS, OVERTIME_GOALS, SHOTS, SHOOTING_PERCENTAGE, FACEOFF_PERCENTAGE
+                FROM
+                    Skater JOIN SkaterSeason ON Skater.SKATERID = SkaterSeason.SKATERID 
+                WHERE
+                    TYPE = ?
+                    AND (? IS NULL OR SkaterSeason.TEAM = ?)
+                    AND SEASON >= ? AND SEASON <= ?
+                ORDER BY
+                    {stat} {order_direction}
+                LIMIT ?; """
+                ,( 
+                    type,
+                    team, team,
+                    first_season, last_season,
+                    self.max_num_results ) 
+            )
             
         skater_data = data.fetchall()
         skater_stats = []
@@ -929,7 +934,8 @@ class Database():
             if position == 'Forward' and (curr_position == 'LW' or curr_position == 'RW' or curr_position == 'C')\
                 or position != None and curr_position == position or position == None:
                 if self.nhl_util.is_faceoff_percentage_season( season ) and self.nhl_util.is_time_on_ice_per_game_season( season ):
-                    skater_season = NHL.SkaterSeason( type=type, name=skater_season[0], season=season,
+                    skater_season = NHL.SkaterSeason( type=type, name=skater_season[0],
+                                                      season=season if first_season!=last_season else None,
                                                       team=skater_season[3], games_played=skater_season[4],
                                                       goals=skater_season[5], assists=skater_season[6],
                                                       points=skater_season[7], plus_minus=skater_season[8],
@@ -941,7 +947,8 @@ class Database():
                                                       faceoff_percentage=skater_season[19] )
                 elif self.nhl_util.is_plus_minus_season( season ) and self.nhl_util.is_shots_season( season )\
                                                                     and self.nhl_util.is_shooting_percentage_season( season ):
-                    skater_season = NHL.SkaterSeason( type=type, name=skater_season[0], season=season,
+                    skater_season = NHL.SkaterSeason( type=type, name=skater_season[0],
+                                                      season=season if first_season!=last_season else None,
                                                       team=skater_season[3], games_played=skater_season[4],
                                                       goals=skater_season[5], assists=skater_season[6],
                                                       points=skater_season[7], plus_minus=skater_season[8],
@@ -953,7 +960,8 @@ class Database():
                                                       shots=skater_season[17], shooting_percentage=skater_season[18],
                                                       faceoff_percentage='--' if always_include_faceoff_percentage else None )
                 elif self.nhl_util.is_skater_special_teams_stats_season( season ):
-                    skater_season = NHL.SkaterSeason( type=type, name=skater_season[0], season=season,
+                    skater_season = NHL.SkaterSeason( type=type, name=skater_season[0],
+                                                      season=season if first_season!=last_season else None,
                                                       team=skater_season[3], games_played=skater_season[4],
                                                       goals=skater_season[5], assists=skater_season[6],
                                                       points=skater_season[7],
@@ -967,7 +975,8 @@ class Database():
                                                       shooting_percentage='--' if always_include_shooting_percentage else None,
                                                       faceoff_percentage='--' if always_include_faceoff_percentage else None )
                 else:
-                    skater_season = NHL.SkaterSeason( type=type, name=skater_season[0], season=season,
+                    skater_season = NHL.SkaterSeason( type=type, name=skater_season[0],
+                                                      season=season if first_season!=last_season else None,
                                                       team=skater_season[3], games_played=skater_season[4],
                                                       goals=skater_season[5], assists=skater_season[6],
                                                       points=skater_season[7],

@@ -252,13 +252,16 @@ function fetchSkaterStats(stat, multiplier) {
 
             statSortingButtons.forEach(function(button) {                
                 button.addEventListener('click', function() {
-                    var sortedByStatButton = document.querySelector('.sorted-by-stat-button');
+                    var sortedByStatButton = document.querySelector('button.sorted-by-stat');
 
+                    console.log( sortedByStatButton );
+                    console.log( button );
+                    console.log( sortedByStatButton == button );
                     if (sortedByStatButton == button) {
-                        var multiplier = -1;
+                        multiplier *= -1;
                     }
                     else {
-                        var multiplier = 1;
+                        multiplier = 1;
                     }
 
                     var stat = getStatNameFromAbbreviation(button.textContent);                    

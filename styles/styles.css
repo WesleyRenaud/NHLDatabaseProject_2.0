@@ -4012,6 +4012,10 @@ th.name-field, td.name-field, th.team-field, td.team-field {
 }
 
 /* Skater stats table time on ice/game and faceoff percentage season */
+.skater-stats-table-time-on-ice-per-game-and-faceoff-percentage-season tr {
+    height: 45px;
+}
+
 .skater-stats-table-time-on-ice-per-game-and-faceoff-percentage-season {
     font-size: 15px;
 }
@@ -4102,6 +4106,10 @@ th.name-field, td.name-field, th.team-field, td.team-field {
 
 
 /* Skater stats table plus minus, shots and shooting percentage season */
+.skater-stats-table-plus-minus-and-shots-and-shooting-percentage-season tr {
+    height: 45px;
+}
+
 .skater-stats-table-plus-minus-and-shots-and-shooting-percentage-season {
     font-size: 16px;
 }
@@ -4182,6 +4190,10 @@ th.name-field, td.name-field, th.team-field, td.team-field {
 
 
 /* Skater stats table with special teams stats */
+.skater-stats-table-special-teams-stats-season tr {
+    height: 50px;
+}
+
 .skater-stats-table-special-teams-stats-season {
     font-size: 18px;
 }
@@ -4244,6 +4256,10 @@ th.name-field, td.name-field, th.team-field, td.team-field {
 
 
 /* Skater stats table */
+.skater-stats-table tr {
+    height: 60px;
+}
+
 .skater-stats-table {
     font-size: 22px;
 }
@@ -4280,6 +4296,10 @@ th.name-field, td.name-field, th.team-field, td.team-field {
 
 
 /* Skater stats table time on ice/game and faceoff percentage season with seasons */
+.skater-stats-table-time-on-ice-per-game-and-faceoff-percentage-season-with-seasons tr {
+    height: 45px;
+}
+
 .skater-stats-table-time-on-ice-per-game-and-faceoff-percentage-season-with-seasons {
     font-size: 13px;
 }
@@ -4369,6 +4389,10 @@ th.name-field, td.name-field, th.team-field, td.team-field {
 
 
 /* Skater stats table plus minus, shots and shooting percentage season with season */
+.skater-stats-table-plus-minus-and-shots-and-shooting-percentage-season-with-seasons tr {
+    height: 45px;
+}
+
 .skater-stats-table-plus-minus-and-shots-and-shooting-percentage-season-with-seasons {
     font-size: 14px;
 }
@@ -4430,6 +4454,10 @@ th.name-field, td.name-field, th.team-field, td.team-field {
 
 
 /* Skater stats table special teams stats season with seasons */
+.skater-stats-table-special-teams-stats-season-with-seasons tr {
+    height: 50px;
+}
+
 .skater-stats-table-special-teams-stats-season-with-seasons {
     font-size: 16.5px;
 }
@@ -4494,6 +4522,10 @@ th.name-field, td.name-field, th.team-field, td.team-field {
 
 
 /* Skater stats table with seasons */
+.skater-stats-table-with-seasons tr {
+    height: 60px;
+}
+
 .skater-stats-table-with-seasons {
     font-size: 19px;
 }
