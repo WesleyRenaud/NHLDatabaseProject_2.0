@@ -4585,6 +4585,10 @@ th.name-field, td.name-field, th.team-field, td.team-field {
 
 
 /* Goalie stats table overtime losses season */
+.goalie-stats-table-overtime-losses-season tr {
+    height: 45px;
+}
+
 .goalie-stats-table-overtime-losses-season {
     font-size: 18px;
 }
@@ -4654,6 +4658,10 @@ th.name-field, td.name-field, th.team-field, td.team-field {
 
 
 /* Goalie stats table */
+.goalie-stats-table tr {
+    height: 45px;
+}
+
 .goalie-stats-table {
     font-size: 18px;
 }
@@ -4723,6 +4731,10 @@ th.name-field, td.name-field, th.team-field, td.team-field {
 
 
 /* Goalie playoff stats table */
+.goalie-playoff-stats-table tr {
+    height: 45px;
+}
+
 .goalie-playoff-stats-table {
     font-size: 18px;
 }
@@ -4799,6 +4811,10 @@ th.name-field, td.name-field, th.team-field, td.team-field {
 
 
 /* Goalie stats table overtime losses season with seasons */
+.goalie-stats-table-overtime-losses-season-with-seasons tr {
+    height: 45px;
+}
+
 .goalie-stats-table-overtime-losses-season-with-seasons {
     font-size: 17px;
 }
@@ -4873,6 +4889,10 @@ th.name-field, td.name-field, th.team-field, td.team-field {
 
 
 /* Goalie stats table overtime losses and ties season with seasons */
+.goalie-stats-table-overtime-losses-and-ties-season-with-seasons tr {
+    height: 45px;
+}
+
 .goalie-stats-table-overtime-losses-and-ties-season-with-seasons {
     font-size: 16px;
 }
@@ -4949,6 +4969,10 @@ th.name-field, td.name-field, th.team-field, td.team-field {
 
 
 /* Goalie stats table with seasons */
+.goalie-stats-table-with-seasons tr {
+    height: 45px;
+}
+
 .goalie-stats-table-with-seasons {
     font-size: 17px;
 }
@@ -5026,6 +5050,10 @@ th.name-field, td.name-field, th.team-field, td.team-field {
 
 
 /* Goalie playoff stats table with seasons */
+.goalie-playoff-stats-table-with-seasons tr {
+    font-size: 45px;
+}
+
 .goalie-playoff-stats-table-with-seasons {
     font-size: 17px;
 }

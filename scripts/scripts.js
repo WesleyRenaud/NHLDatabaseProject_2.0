@@ -254,9 +254,6 @@ function fetchSkaterStats(stat, multiplier) {
                 button.addEventListener('click', function() {
                     var sortedByStatButton = document.querySelector('button.sorted-by-stat');
 
-                    console.log( sortedByStatButton );
-                    console.log( button );
-                    console.log( sortedByStatButton == button );
                     if (sortedByStatButton == button) {
                         multiplier *= -1;
                     }
@@ -275,7 +272,7 @@ function fetchSkaterStats(stat, multiplier) {
     });
 }
 
-function fetchGoalieStats() {
+function fetchGoalieStats(stat, multiplier) {
     if (pageName == 'goalie-season-stats') {
         var type = 'Regular Season';
     }
@@ -326,6 +323,8 @@ function fetchGoalieStats() {
             team: team,
             first_season: firstSeason,
             last_season: lastSeason,
+            stat,
+            multiplier
         }),
         contentType: 'application/json',
         success: function(response) {   
@@ -360,17 +359,17 @@ function fetchGoalieStats() {
 
             statSortingButtons.forEach(function(button) {                
                 button.addEventListener('click', function() {
-                    var sortedByStatButton = document.querySelector('.sorted-by-stat-button');
+                    var sortedByStatButton = document.querySelector('button.sorted-by-stat');
 
                     if (sortedByStatButton == button) {
-                        var multiplier = -1;
+                        multiplier *= -1;
                     }
                     else {
-                        var multiplier = 1;
+                        multiplier = 1;
                     }
 
                     var stat = getStatNameFromAbbreviation(button.textContent);                    
-                    fetchSkaterStats(stat, multiplier);
+                    fetchGoalieStats(stat, multiplier);
                 });
             });
         },
@@ -4695,16 +4694,11 @@ function displayGoalieStats(response, type) {
                     td.appendChild(textSpan);
                 }
                 else {
-                    if (goalieStats[i][field] == 'null') {
-                        td.textContent = '--';
+                    if (field == 'goals_against_average' || field == 'save_percentage') {
+                        td.textContent = round(parseFloat(goalieStats[i][field]), 3).toFixed(3);
                     }
-                    else{
-                        if (field == 'save-percentage') {
-                            td.textContent = round(parseFloat(goalieStats[i][field]), 3).toFixed(3);
-                        }
-                        else {
-                            td.textContent = goalieStats[i][field];
-                        }
+                    else {
+                        td.textContent = goalieStats[i][field];
                     }
                 }
 

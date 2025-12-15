@@ -997,73 +997,6 @@ class Database():
         return skater_stats
     
 
-    # This method returns a list of GoalieSeason objects with all of the stats for all of the goalies
-    # for the given season and team, if 'team' is defined and for all teams otherwise.
-    def get_goalie_stats_for_one_season( self, type, season, team ):
-        cur = self.conn.cursor()
-        
-        self.conn.commit()
-
-        if team != None:
-            data = cur.execute( """ SELECT NAME, GoalieSeason.TEAM AS SEASON_TEAM,
-                                           GAMES_PLAYED, GAMES_STARTED, WINS, LOSSES, TIES,
-                                           OVERTIME_LOSSES, SHOTS_AGAINST,
-                                           GOALS_AGAINST_AVERAGE, SAVE_PERCENTAGE, SHUTOUTS,
-                                           GOALS, ASSISTS, PENALTY_MINUTES, TIME_ON_ICE
-                                           FROM Goalie JOIN GoalieSeason ON Goalie.GOALIEID = GoalieSeason.GOALIEID
-                                           WHERE TYPE = '%s' AND SEASON = '%s' AND TEAM = '%s'
-                                           ORDER BY WINS DESC LIMIT %d; """
-                                            % ( type, season, team, self.max_num_results ) )
-        else:
-            data = cur.execute( """ SELECT NAME, GoalieSeason.TEAM AS SEASON_TEAM,
-                                           GAMES_PLAYED, GAMES_STARTED, WINS, LOSSES, TIES,
-                                           OVERTIME_LOSSES, SHOTS_AGAINST,
-                                           GOALS_AGAINST_AVERAGE, SAVE_PERCENTAGE, SHUTOUTS,
-                                           GOALS, ASSISTS, PENALTY_MINUTES, TIME_ON_ICE
-                                           FROM Goalie JOIN GoalieSeason ON Goalie.GOALIEID = GoalieSeason.GOALIEID
-                                           WHERE TYPE = '%s' AND SEASON = '%s'
-                                           ORDER BY WINS DESC LIMIT %s; """
-                                            % ( type, season, self.max_num_results ) )
-
-        goalie_data = data.fetchall()
-        
-        goalies_stats = []
-        for goalie in goalie_data:
-            if type == 'Regular Season':
-                if self.nhl_util.is_overtime_losses_season( type, season ):
-                    goalie_season = NHL.GoalieSeason( type=type, season=None, name=goalie[0],
-                                                      team=goalie[1], games_played=goalie[2],
-                                                      games_started=goalie[3], wins=goalie[4],
-                                                      losses=goalie[5], ties=None,
-                                                      overtime_losses=goalie[7], shots_against=goalie[8],
-                                                      goals_against_average=goalie[9], save_percentage=goalie[10],
-                                                      shutouts=goalie[11], goals=goalie[12],
-                                                      assists=goalie[13], penalty_minutes=goalie[14],
-                                                      time_on_ice=goalie[15] )
-                else:
-                    goalie_season = NHL.GoalieSeason( type=type, season=None, name=goalie[0],
-                                                      team=goalie[1], games_played=goalie[2],
-                                                      games_started=goalie[3], wins=goalie[4],
-                                                      losses=goalie[5], ties=goalie[6], overtime_losses=None,
-                                                      shots_against=goalie[8], goals_against_average=goalie[9],
-                                                      save_percentage=goalie[10], shutouts=goalie[11],
-                                                      goals=goalie[12], assists=goalie[13],
-                                                      penalty_minutes=goalie[14], time_on_ice=goalie[15] )
-            else:
-                goalie_season = NHL.GoalieSeason( type=type, season=None, name=goalie[0],
-                                                  team=goalie[1], games_played=goalie[2],
-                                                  games_started=goalie[3], wins=goalie[4],
-                                                  losses=goalie[5], ties=None, overtime_losses=None,
-                                                  shots_against=goalie[8], goals_against_average=goalie[9],
-                                                  save_percentage=goalie[10], shutouts=goalie[11],
-                                                  goals=goalie[12], assists=goalie[13],
-                                                  penalty_minutes=goalie[14], time_on_ice=goalie[15] )
-    
-            goalies_stats.append( goalie_season )
-
-        return goalies_stats
-    
-
     # This method returns a list of Goalie objects with all of the stats of the goalies with the
     # given name.
     def get_goalie_stats_for_one_player( self, name ): 
@@ -1118,66 +1051,75 @@ class Database():
     # This method returns a list of GoalieSeason objects with all of the stats for all of the goalies
     # from the given first season up until the ast season and team, if 'team' is defined and for all
     # teams otherwise.
-    def get_goalie_stats( self, type, first_season, last_season, team ):
+    def get_goalie_stats( self, type, first_season, last_season, team, stat, multiplier ):
         cur = self.conn.cursor()
 
         if type == 'Regular Season':
             always_include_overtime_losses = self.nhl_util.is_overtime_losses_season( type, last_season )
             always_include_ties = not self.nhl_util.is_overtime_losses_season( type, first_season )
 
+        if stat == None:
+            stat = 'wins'
+        stat = stat.replace( '-', '_' )
 
-        if team != None:
-            data = cur.execute( """ SELECT NAME, SEASON, GoalieSeason.TEAM AS SEASON_TEAM,
-                                           GAMES_PLAYED, GAMES_STARTED, WINS, LOSSES,
-                                           OVERTIME_LOSSES, SHOTS_AGAINST, GOALS_AGAINST_AVERAGE,
-                                           SAVE_PERCENTAGE, SHUTOUTS, GOALS, ASSISTS, 
-                                           PENALTY_MINUTES, TIME_ON_ICE
-                                           FROM Goalie JOIN GoalieSeason ON Goalie.GOALIEID = GoalieSeason.GOALIEID
-                                           WHERE TYPE = '%s' AND TEAM = '%s'
-                                           AND SEASON >= '%s' and SEASON <= '%s'
-                                           ORDERY BY WINS DESC LIMIT %d; """
-                                            % ( type, team, first_season, last_season, self.max_num_results ) )
+        if multiplier == 1 or multiplier == None:
+            order_direction = 'DESC'
         else:
-            data = cur.execute( """ SELECT NAME, SEASON, GoalieSeason.TEAM AS SEASON_TEAM,
-                                           GAMES_PLAYED, GAMES_STARTED, WINS, LOSSES,
-                                           OVERTIME_LOSSES, SHOTS_AGAINST, GOALS_AGAINST_AVERAGE,
-                                           SAVE_PERCENTAGE, SHUTOUTS, GOALS, ASSISTS,
-                                           PENALTY_MINUTES, TIME_ON_ICE
-                                           FROM Goalie JOIN GoalieSeason ON Goalie.GOALIEID = GoaliseSeason. GOALIEID
-                                           WHERE TYPE = '%s' AND SEASON >= '%s' and SEASON <= '%s'
-                                           ORDERY BY WINS DESC LIMIT %d; """
-                                            % ( type, first_season, last_season, self.max_num_results ) )
-        
+            order_direction = 'ASC'
+
+        data = cur.execute(
+            f""" SELECT
+                    NAME, SEASON, GoalieSeason.TEAM AS SEASON_TEAM, GAMES_PLAYED, GAMES_STARTED,
+                    WINS, LOSSES, TIES, OVERTIME_LOSSES, SHOTS_AGAINST, GOALS_AGAINST_AVERAGE,
+                    SAVE_PERCENTAGE, SHUTOUTS, GOALS, ASSISTS, PENALTY_MINUTES, TIME_ON_ICE
+                FROM
+                    Goalie JOIN GoalieSeason ON Goalie.GOALIEID = GoalieSeason.GOALIEID 
+                WHERE
+                    TYPE = ?
+                    AND (? IS NULL OR GoalieSeason.TEAM = ?)
+                    AND SEASON >= ? AND SEASON <= ?
+                ORDER BY
+                    {stat} {order_direction}
+                LIMIT ?; """
+                ,( 
+                    type,
+                    team, team,
+                    first_season, last_season,
+                    self.max_num_results ) 
+            )
+
         goalie_data = data.fetchall()
         goalie_stats = []
     
         for goalie in goalie_data:
-            season = goalie[2]
+            season = goalie[1]
 
             if type == 'Regular Season':
                 if self.nhl_util.is_overtime_losses_season( type, season ):
-                    goalie_season = NHL.GoalieSeason( type=type, name=goalie[0], season=season,
+                    goalie_season = NHL.GoalieSeason( type=type, name=goalie[0],
+                                                      season=season if first_season!=last_season else None,
                                                       team=goalie[2], games_played=goalie[3], 
                                                       games_started=goalie[4], wins=goalie[5],
-                                                      losses=goalie[6], overtime_losses=goalie[7],
-                                                      ties='--' if always_include_ties else None,
-                                                      shots_against=goalie[9], goals_against_average=goalie[10],
-                                                      save_percentage=goalie[11], shutouts=goalie[12],
-                                                      goals=goalie[13], assists=goalie[14],
-                                                      penalty_minutes=goalie[15], time_on_ice=goalie[16] )
-                else:
-                    goalie_season = NHL.GoalieSeason( type=type, name=goalie[0], season=season, 
-                                                      team=goalie[2], games_played=goalie[3], 
-                                                      games_started=goalie[4], wins=goalie[5],
-                                                      losses=goalie[6], overtime_losses='--'
-                                                      if always_include_overtime_losses else None,
-                                                      ties=goalie[8], shots_against=goalie[9],
+                                                      losses=goalie[6], ties='--' if always_include_ties else None,
+                                                      overtime_losses=goalie[8], shots_against=goalie[9],
                                                       goals_against_average=goalie[10], save_percentage=goalie[11],
-                                                      shutouts=goalie[12], goals=goalie[14],
+                                                      shutouts=goalie[12], goals=goalie[13],
                                                       assists=goalie[14], penalty_minutes=goalie[15],
                                                       time_on_ice=goalie[16] )
+                else:
+                    goalie_season = NHL.GoalieSeason( type=type, name=goalie[0],
+                                                      season=season if first_season!=last_season else None, 
+                                                      team=goalie[2], games_played=goalie[3], 
+                                                      games_started=goalie[4], wins=goalie[5],
+                                                      losses=goalie[6], ties=goalie[7],
+                                                      overtime_losses='--' if always_include_overtime_losses else None,
+                                                      shots_against=goalie[9], goals_against_average=goalie[10],
+                                                      save_percentage=goalie[11], shutouts=goalie[12],
+                                                      goals=goalie[14], assists=goalie[14],
+                                                      penalty_minutes=goalie[15], time_on_ice=goalie[16] )
             else:
-                goalie_season = NHL.GoalieSeason( type=type, name=goalie[0], season=season,
+                goalie_season = NHL.GoalieSeason( type=type, name=goalie[0],
+                                                  season=season if first_season!=last_season else None,
                                                   team=goalie[2], games_played=goalie[3],
                                                   games_started=goalie[4], wins=goalie[5],
                                                   losses=goalie[6], overtime_losses=None,

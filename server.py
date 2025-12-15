@@ -680,28 +680,10 @@ class MyHandler( BaseHTTPRequestHandler ):
 
             if name != None:
                 goalies = self.database.get_goalie_stats_for_one_player( name )
-
-                for goalie in goalies:
-                    if stat and multiplier:
-                        self.nhl_util.get_sorted_goalie_stats( goalie.seasons, stat, multiplier )
-                        self.nhl_util.get_sorted_goalie_stats( goalie.playoffs, stat, multiplier )
-                    else:
-                        self.nhl_util.sort_seasons_by_season( goalie.seasons )
-                        self.nhl_util.sort_seasons_by_season( goalie.playoffs )
-
                 goalies = [goalie.to_dict() for goalie in goalies]
 
             else:
-                if first_season == last_season:
-                    season = first_season
-                    goalie_stats = self.database.get_goalie_stats_for_one_season( type, season, team )
-                else:
-                    goalie_stats = self.database.get_goalie_stats( type, first_season, last_season, team )
-
-                if stat and multiplier:
-                    self.nhl_util.get_sorted_goalie_stats( goalie_stats, stat, multiplier )
-                else:
-                    self.nhl_util.get_sorted_goalie_stats( goalie_stats )
+                goalie_stats = self.database.get_goalie_stats( type, first_season, last_season, team, stat, multiplier )
 
                 logos = []
                 if isinstance( goalie_stats, list ):
@@ -709,7 +691,7 @@ class MyHandler( BaseHTTPRequestHandler ):
                         team_name = goalie_stats[i].team
 
                         if first_season == last_season:
-                            team_logo_path = self.nhl_util.get_team_logo_path( team_name, season )
+                            team_logo_path = self.nhl_util.get_team_logo_path( team_name, first_season )
                         else:
                             team_logo_path = self.nhl_util.get_team_logo_path( team_name, goalie_stats[i].season )
                         logos.append( team_logo_path )
