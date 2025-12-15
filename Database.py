@@ -737,7 +737,7 @@ class Database():
     # This method returns a list of SkaterSeason objects with all of the stats for all of the skaters
     # for the given season, team, if 'team' is defined and for all teams otherwise, and position, if
     # 'position' is defined and for all positions otherwise.
-    def get_skater_stats_for_one_season( self, type, season, team, position ):
+    def get_skater_stats_for_one_season( self, type, season, team, position, stat, multiplier ):
         cur = self.conn.cursor()
 
         if team != None:
@@ -883,7 +883,7 @@ class Database():
     # This method returns a list of SkaterSeason objects with all of the stats for all of the skaters
     # from the given first season up until the last season, team if 'team' is defined and for all
     # teams otherwise, and position, if 'position' is defined, and for all positions otherwise.
-    def get_skater_stats( self, type, first_season, last_season, team, position ):
+    def get_skater_stats( self, type, first_season, last_season, team, position, stat, multiplier ):
         cur = self.conn.cursor()
 
         always_include_faceoff_percentage = self.nhl_util.is_faceoff_percentage_season( last_season )

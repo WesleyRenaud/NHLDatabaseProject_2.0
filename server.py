@@ -622,16 +622,7 @@ class MyHandler( BaseHTTPRequestHandler ):
             multiplier = data.get( 'multiplier' )
 
             if name != None:
-                skaters = self.database.get_skater_stats_for_one_player( name )
-
-                for skater in skaters:
-                    if stat and multiplier:
-                        self.nhl_util.get_sorted_skater_stats( skater.seasons, stat, multiplier )
-                        self.nhl_util.get_sorted_skater_stats( skater.playoffs, stat, multiplier )
-                    else:
-                        self.nhl_util.sort_seasons_by_season( skater.seasons )
-                        self.nhl_util.sort_seasons_by_season( skater.playoffs )
-
+                skaters = self.database.get_skater_stats_for_one_player( name, stat, multiplier )
                 skaters = [skater.to_dict() for skater in skaters]
 
             else:
@@ -639,14 +630,9 @@ class MyHandler( BaseHTTPRequestHandler ):
 
                 if first_season == last_season:
                     season = first_season
-                    skater_stats = self.database.get_skater_stats_for_one_season( type, season, team, position )
+                    skater_stats = self.database.get_skater_stats_for_one_season( type, season, team, position, stat, multiplier )
                 else:
-                    skater_stats = self.database.get_skater_stats( type, first_season, last_season, team, position )
-
-                if stat and multiplier:
-                    self.nhl_util.get_sorted_skater_stats( skater_stats, stat, multiplier )
-                else:
-                    self.nhl_util.get_sorted_skater_stats( skater_stats )
+                    skater_stats = self.database.get_skater_stats( type, first_season, last_season, team, position, stat, multiplier )
 
                 logos = []
                 if isinstance( skater_stats, list ):

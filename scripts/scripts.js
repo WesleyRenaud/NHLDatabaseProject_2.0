@@ -215,25 +215,55 @@ function fetchSkaterStats(stat, multiplier) {
             first_season: firstSeason,
             last_season: lastSeason,
             position: position,
-            team: team
+            team: team,
+            stat: stat,
+            multiplier: multiplier
         }),
         contentType: 'application/json',
-        success: function(response) {   
-            sortedByStat = null;
-            multiplier = -1;
-
+        success: function(response) {
             displaySkaterStats(response);
+
+            // Mark the stat we are sorting by as such
+            if (stat != null) {
+                var abbreviation = getFieldAbbreviation(stat);
+                var statSortingButtons = document.querySelectorAll('.stat-sorting-button');
+
+                var button = Array.from(statSortingButtons).find(btn =>
+                    btn.textContent.trim() === abbreviation
+                );
+                button.classList.add('sorted-by-stat');
+
+                // Mark all of the successive stats in the column
+                var th = button.parentElement;
+
+                var table = document.querySelector('table');
+                var headerRow = table.querySelector('thead tr');
+
+                var thIndex = [...headerRow.children].indexOf(th);
+
+                var tds = table.querySelectorAll(`tbody tr td:nth-child(${thIndex + 1})`);
+
+                tds.forEach(td => {
+                    td.classList.add('sorted-by-stat');
+                });
+            }
             
             var statSortingButtons = document.querySelectorAll('.stat-sorting-button');
 
-            statSortingButtons.forEach(function(button) {
-                //var sortedByStatButton .sorted-by-stat-button
-                
-                //button.addEventListener('click', function() {
-                //    var stat = getStatNameFromAbbreviation(button.textContent);
-                //    multiplier *= -1; // toggles between 1 and -1
-                //    fetchSkaterStats(response);
-                //});
+            statSortingButtons.forEach(function(button) {                
+                button.addEventListener('click', function() {
+                    var sortedByStatButton = document.querySelector('.sorted-by-stat-button');
+
+                    if (sortedByStatButton == button) {
+                        var multiplier = -1;
+                    }
+                    else {
+                        var multiplier = 1;
+                    }
+
+                    var stat = getStatNameFromAbbreviation(button.textContent);                    
+                    fetchSkaterStats(stat, multiplier);
+                });
             });
         },
         error: function() {
@@ -296,23 +326,49 @@ function fetchGoalieStats() {
         }),
         contentType: 'application/json',
         success: function(response) {   
-            sortedByStat = null;
-            multiplier = -1;
-
             displayGoalieStats(response, type);
+            
+            // Mark the stat we are sorting by as such
+            if (stat != null) {
+                var abbreviation = getFieldAbbreviation(stat);
+                var statSortingButtons = document.querySelectorAll('.stat-sorting-button');
+
+                var button = Array.from(statSortingButtons).find(btn =>
+                    btn.textContent.trim() === abbreviation
+                );
+                button.classList.add('sorted-by-stat');
+
+                // Mark all of the successive stats in the column
+                var th = button.parentElement;
+
+                var table = document.querySelector('table');
+                var headerRow = table.querySelector('thead tr');
+
+                var thIndex = [...headerRow.children].indexOf(th);
+
+                var tds = table.querySelectorAll(`tbody tr td:nth-child(${thIndex + 1})`);
+
+                tds.forEach(td => {
+                    td.classList.add('sorted-by-stat');
+                });
+            }
             
             var statSortingButtons = document.querySelectorAll('.stat-sorting-button');
 
-            statSortingButtons.forEach(function(button) {
-                // TO-DO: Add goalie sorting
-
-                /*
+            statSortingButtons.forEach(function(button) {                
                 button.addEventListener('click', function() {
-                    var stat = getStatNameFromAbbreviation(button.textContent);
-                    multiplier *= -1; // toggles between 1 and -1
-                    getGoalieStatsByStat(type, team, firstSeason, lastSeason, stat, multiplier);
+                    var sortedByStatButton = document.querySelector('.sorted-by-stat-button');
+
+                    if (sortedByStatButton == button) {
+                        var multiplier = -1;
+                    }
+                    else {
+                        var multiplier = 1;
+                    }
+
+                    var stat = getStatNameFromAbbreviation(button.textContent);                    
+                    fetchSkaterStats(stat, multiplier);
                 });
-                */
             });
         },
         error: function() {
