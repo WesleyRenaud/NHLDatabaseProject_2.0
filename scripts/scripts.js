@@ -67,7 +67,9 @@ function displaySeasons() {
         });
 
         var teamDropdownButton = document.querySelector('#team-dropdown-button');
-        teamDropdownButton.textContent = 'Select Team';
+        if (teamDropdownButton != null) {
+            teamDropdownButton.textContent = 'Select Team';
+        }
     });
 }
 
@@ -180,11 +182,11 @@ function fetchSkaterStats() {
     else {
         var firstSeason = document.querySelector('#starting-season-text-field').value;
         var lastSeason = document.querySelector('#ending-season-text-field').value;
-        if (!isValidSeason(startingSeason)) {
+        if (!isValidSeason(firstSeason)) {
             alert('Error - invalid starting season');
             return;
         }
-        else if (!isValidSeason(endingSeason)) {
+        else if (!isValidSeason(lastSeason)) {
             alert('Error - invalid ending season');
             return
         }
@@ -201,11 +203,9 @@ function fetchSkaterStats() {
 
     // Get the team
     var team = document.querySelector('#team-dropdown-button').textContent;
-    if (team == 'Select Team') {
+    if (team == 'Select Team' || team == 'All' || team == 'all') {
         team = null;
     }
-
-    var multiplier = -1;
 
     $.ajax({
         type: 'POST',
@@ -227,12 +227,95 @@ function fetchSkaterStats() {
             var statSortingButtons = document.querySelectorAll('.stat-sorting-button');
 
             statSortingButtons.forEach(function(button) {
+                // To-DO: Add skater stat sorting
+                
+                /*
                 button.addEventListener('click', function() {
                     var stat = getStatNameFromAbbreviation(button.textContent);
                     multiplier *= -1; // toggles between 1 and -1
                     sortSkaterStats(response.skater_stats, stat, multiplier);
                     displaySkaterStats(response);
                 });
+                */
+            });
+        },
+        error: function() {
+            alert('Error - data entry is not complete yet');
+        }
+    });
+}
+
+function fetchGoalieStats() {
+    if (pageName == 'goalie-season-stats') {
+        var type = 'Regular Season';
+    }
+    else {
+        var type = 'Playoffs';
+    }
+
+    // Get the season(s)
+    var singleSeasonButton = document.querySelector('#single-season-button');
+    var multipleSeasonsButton = document.querySelector('#multiple-seasons-button');
+    if (!singleSeasonButton.classList.contains('button-selected') && !multipleSeasonsButton.classList.contains('button-selected')) {
+        alert('Error - no season selected');
+        return;
+    }
+    else if (singleSeasonButton.classList.contains('button-selected')) {
+        var season = document.querySelector('#season-dropdown-button').textContent;
+        if (!isValidSeason(season)) {
+            alert('Error - no season selected');
+            return;
+        }
+        var firstSeason = season;
+        var lastSeason = season;
+    }
+    else {
+        var firstSeason = document.querySelector('#starting-season-text-field').value;
+        var lastSeason = document.querySelector('#ending-season-text-field').value;
+        if (!isValidSeason(startingSeason)) {
+            alert('Error - invalid starting season');
+            return;
+        }
+        else if (!isValidSeason(endingSeason)) {
+            alert('Error - invalid ending season');
+            return
+        }
+    }
+
+    // Get the team
+    var team = document.querySelector('#team-dropdown-button').textContent;
+    if (team == 'Select Team') {
+        team = null;
+    }
+
+    $.ajax({
+        type: 'POST',
+        url: '/get-goalie-stats',
+        data: JSON.stringify({
+            type: type,
+            team: team,
+            first_season: firstSeason,
+            last_season: lastSeason,
+        }),
+        contentType: 'application/json',
+        success: function(response) {   
+            sortedByStat = null;
+            multiplier = -1;
+
+            displayGoalieStats(response, type);
+            
+            var statSortingButtons = document.querySelectorAll('.stat-sorting-button');
+
+            statSortingButtons.forEach(function(button) {
+                // TO-DO: Add goalie sorting
+
+                /*
+                button.addEventListener('click', function() {
+                    var stat = getStatNameFromAbbreviation(button.textContent);
+                    multiplier *= -1; // toggles between 1 and -1
+                    getGoalieStatsByStat(type, team, firstSeason, lastSeason, stat, multiplier);
+                });
+                */
             });
         },
         error: function() {
@@ -2629,7 +2712,7 @@ var statViewButtonContainer = document.querySelector('#stat-view-button-containe
 
 if (wildcardButton != null) {
     wildcardButton.addEventListener('click', function () {
-        var season = seasonDropdownButton.textContent;
+        var season = document.querySelector('#season-dropdown-button').textContent;
     
         if (isWildcardSeason(season)) {
             $.ajax({
@@ -2655,7 +2738,7 @@ if (wildcardButton != null) {
 
 if (divisionButton != null) {
     divisionButton.addEventListener('click', function () {
-        var season = seasonDropdownButton.textContent;
+        var season = document.querySelector('#season-dropdown-button').textContent;
     
         if (isDivisionSeason(season)) {
             $.ajax({
@@ -2691,7 +2774,7 @@ if (divisionButton != null) {
 
 if (conferenceButton != null) {
     conferenceButton.addEventListener('click', function () {
-        var season = seasonDropdownButton.textContent;
+        var season = document.querySelector('#season-dropdown-button').textContent;
     
         if (isConferenceSeason(season)) {
             $.ajax({
@@ -2727,7 +2810,7 @@ if (conferenceButton != null) {
 
 if (leagueButton != null) {
     leagueButton.addEventListener('click', function () {
-        var season = seasonDropdownButton.textContent;
+        var season = document.querySelector('#season-dropdown-button').textContent;
     
         $.ajax({
             type: 'POST',
@@ -2761,7 +2844,7 @@ function displayWildcardStandings(response, season) {
     resetStatsScreen();
     updateStandingsButtons(season);
 
-    var standings = response.wildcard-standings;
+    var standings = response.wildcard_standings;
     
     var hasHeaders = false;
     var teamIndex = 0;
@@ -2880,8 +2963,8 @@ function displayWildcardStandings(response, season) {
 
                     // check if the team has a clinching marker
                     var clinchingMarker = document.createElement('span');
-                    if (response.clinching-markers[fullTeamName] != null) {
-                        clinchingMarker.textContent = response.clinching-markers[fullTeamName];
+                    if (response.clinching_markers[fullTeamName] != null) {
+                        clinchingMarker.textContent = response.clinching_markers[fullTeamName];
                         clinchingMarker.classList.add('clinching-marker');
                     }
                     else {
@@ -2925,7 +3008,7 @@ function displayDivisionStandings(response, season) {
     resetStatsScreen();
     updateStandingsButtons(season);
 
-    var standings = response.division-standings;
+    var standings = response.division_standings;
     
     var hasHeaders = false;
     var teamIndex = 0;
@@ -3045,8 +3128,8 @@ function displayDivisionStandings(response, season) {
 
                     // check if the team has a clinching marker
                     var clinchingMarker = document.createElement('span');
-                    if (response.clinching-markers[fullTeamName] != null) {
-                        clinchingMarker.textContent = response.clinching-markers[fullTeamName];
+                    if (response.clinching_markers[fullTeamName] != null) {
+                        clinchingMarker.textContent = response.clinching_markers[fullTeamName];
                         clinchingMarker.classList.add('clinching-marker');
                     }
                     else {
@@ -3090,7 +3173,7 @@ function displayConferenceStandings(response, season) {
     resetStatsScreen();
     updateStandingsButtons(season);
 
-    var standings = response.conference-standings;
+    var standings = response.conference_standings;
     
     var hasHeaders = false;
     var teamIndex = 0;
@@ -3199,8 +3282,8 @@ function displayConferenceStandings(response, season) {
 
                     // check if the team has a clinching marker
                     var clinchingMarker = document.createElement('span');
-                    if (response.clinching-markers[fullTeamName] != null) {
-                        clinchingMarker.textContent = response.clinching-markers[fullTeamName];
+                    if (response.clinching_markers[fullTeamName] != null) {
+                        clinchingMarker.textContent = response.clinching_markers[fullTeamName];
                         clinchingMarker.classList.add('clinching-marker');
                     }
                     else {
@@ -3244,7 +3327,7 @@ function displayLeagueStandings(response, season) {
     resetStatsScreen();
     updateStandingsButtons(season);
 
-    var standings = response.league-standings;
+    var standings = response.league_standings;
     
     var hasHeaders = false;
     var teamIndex = 0;
@@ -3347,8 +3430,8 @@ function displayLeagueStandings(response, season) {
 
                 // check if the team has a clinching marker
                 var clinchingMarker = document.createElement('span');
-                if (response.clinching-markers[fullTeamName] != null) {
-                    clinchingMarker.textContent = response.clinching-markers[fullTeamName];
+                if (response.clinching_markers[fullTeamName] != null) {
+                    clinchingMarker.textContent = response.clinching_markers[fullTeamName];
                     clinchingMarker.classList.add('clinching-marker');
                 }
                 else {
@@ -4210,6 +4293,9 @@ function displaySkaterStats(response) {
                     else if (isPlusMinusSeason(season) && isShotsSeason(season) && isShootingPercentageSeason(season)) {
                         table.classList.add('skater-stats-table-plus-minus-and-shots-and-shooting-percentage-season');
                     }
+                    else if (isSkaterSpecialTeamsStatsSeason(season)) {
+                        table.classList.add('skater-stats-table-special-teams-stats');
+                    }
                     else {
                         table.classList.add('skater-stats-table');
                     }
@@ -4253,7 +4339,6 @@ function displaySkaterStats(response) {
                     }
                     else {
                         var button = document.createElement('button');
-                        console.log(field, getFieldAbbreviation(field));
                         button.textContent = getFieldAbbreviation(field);
                         button.classList.add('stat-sorting-button');
                         
@@ -4295,7 +4380,6 @@ function displaySkaterStats(response) {
                     td.classList.add('name-field');
 
                     var rankSpan = document.createElement('span');
-                    rankSpan.id = 'player-rank';
                     rankSpan.innerHTML = (i + 1) + ".";
 
                     var nameSpan = document.createElement('span');
@@ -4386,55 +4470,10 @@ function isPeriodWithSkaterStat(stat, season) {
 }
 
 
-function sortSkaterStats(seasons, stat, multiplier) {
-    seasons.sort((season1, season2) => {
-        if (season1[stat] < season2[stat]) return 1 * multiplier;
-        if (season1[stat] > season2[stat]) return -1 * multiplier;
-        return 0;
-    });
-}
-
-
-function getGoalieStats(type, team, firstSeason, lastSeason) {
-    sortedByStat = null;
-    multiplier = -1;
-
-    $.ajax({
-        type: 'POST',
-        url: '/get-goalie-stats',
-        data: JSON.stringify({
-            type: type,
-            team: team,
-            first_season: firstSeason,
-            last_season: lastSeason,
-        }),
-        contentType: 'application/json',
-        success: function(response) {   
-            sortedByStat = null;
-            multiplier = -1;
-
-            displayGoalieStats(response, type);
-            
-            var statSortingButtons = document.querySelectorAll('.stat-sorting-button');
-
-            statSortingButtons.forEach(function(button) {
-                button.addEventListener('click', function() {
-                    var stat = getStatNameFromAbbreviation(button.textContent);
-                    multiplier *= -1; // toggles between 1 and -1
-                    getGoalieStatsByStat(type, team, firstSeason, lastSeason, stat, multiplier);
-                });
-            });
-        },
-        error: function() {
-            alert('Error - data entry is not complete yet');
-        }
-    });
-}
-
 function displayGoalieStats(response, type) {
     resetStatsScreen();
 
-    var goalieStats = response.goalie-stats;
+    var goalieStats = response.goalie_stats;
 
     if (response.first_season == response.last_season && response.first_season == '1919-1920') {
         alert('There are no stats for the selected season.');
@@ -4650,43 +4689,6 @@ function isPeriodWithGoalieStat(stat, season, type) {
         default:
             return true;
     }
-}
-
-function getGoalieStatsByStat(type, team, firstSeason, lastSeason, stat, multiplier) {
-    $.ajax({
-        type: 'POST',
-        url: '/get-goalie-stats',
-        data: JSON.stringify({
-            type: type,
-            team: team,
-            first_season: firstSeason,
-            last_season: lastSeason,
-            stat: stat,
-            multiplier: multiplier,
-        }),
-        contentType: 'application/json',
-        success: function(response) {
-            sortedByStat = stat;
-
-            displayGoalieStats(response, type);
-            
-            var statSortingButtons = document.querySelectorAll('.stat-sorting-button');
-
-            statSortingButtons.forEach(function(button) {
-                button.addEventListener('click', function() {
-                    var newStat = getStatNameFromAbbreviation(button.textContent);
-                    if (newStat == sortedByStat) {
-                        multiplier *= -1;
-                    }
-                    else {
-                        sortedByStat = newStat;
-                        multiplier = 1;
-                    }
-                    getGoalieStatsByStat(type, team, firstSeason, lastSeason, sortedByStat, multiplier);
-                });
-            });
-        }
-    });
 }
 
 
@@ -5833,6 +5835,9 @@ function didTeamPlayInRange(team, firstSeason, lastSeason) {
     var lastSeasonFirstYear = getFirstYear(lastSeason);
 
     switch (team) {
+        case 'All':
+            return true;
+
         case 'Anaheim Ducks':
             if (firstSeasonFirstYear >= 1993 || lastSeasonFirstYear >= 1993) {
                 return true;
