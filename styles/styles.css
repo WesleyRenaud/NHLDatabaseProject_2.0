@@ -1183,7 +1183,7 @@ th.name-field, td.name-field, th.team-field, td.team-field {
 
 .goalie-stats-table th:nth-child(2),
 .goalie-stats-table td:nth-child(2) {
-    width: 21%;
+    width: 19.5%;
 }
 
 .goalie-stats-table th:nth-child(3),
@@ -1199,44 +1199,49 @@ th.name-field, td.name-field, th.team-field, td.team-field {
 
 .goalie-stats-table th:nth-child(7),
 .goalie-stats-table td:nth-child(7) {
-    width: 4.125%;
+    width: 3.375%;
 }
 
 .goalie-stats-table th:nth-child(8),
 .goalie-stats-table td:nth-child(8) {
-    width: 5.125%;
+    width: 4%;
 }
 
 .goalie-stats-table th:nth-child(9),
 .goalie-stats-table td:nth-child(9) {
-    width: 5.375%;
+    width: 4.875%;
 }
 
 .goalie-stats-table th:nth-child(10),
 .goalie-stats-table td:nth-child(10) {
-    width: 5.625%;
+    width: 5.125%;
 }
 
 .goalie-stats-table th:nth-child(11),
 .goalie-stats-table td:nth-child(11) {
-    width: 3.75%;
+    width: 5.25%;
 }
 
 .goalie-stats-table th:nth-child(12),
-.goalie-stats-table td:nth-child(12),
-.goalie-stats-table th:nth-child(13),
-.goalie-stats-table td:nth-child(13) {
-    width: 3.5%;
+.goalie-stats-table td:nth-child(12) {
+    width: 3.625%;
 }
 
+.goalie-stats-table th:nth-child(13),
+.goalie-stats-table td:nth-child(13),
 .goalie-stats-table th:nth-child(14),
 .goalie-stats-table td:nth-child(14) {
-    width: 4.25%;
+    width: 3.5%;
 }
 
 .goalie-stats-table th:nth-child(15),
 .goalie-stats-table td:nth-child(15) {
-    width: 7.25%;
+    width: 4.125%;
+}
+
+.goalie-stats-table th:nth-child(16),
+.goalie-stats-table td:nth-child(16) {
+    width: 5.875%;
 }
 
 
@@ -1246,12 +1251,12 @@ th.name-field, td.name-field, th.team-field, td.team-field {
 }
 
 .goalie-stats-table-with-seasons {
-    font-size: 16px;
+    font-size: 13.5px;
 }
 
 .goalie-stats-table-with-seasons th:nth-child(1),
 .goalie-stats-table-with-seasons td:nth-child(1) {
-    width: 16%;
+    width: 18.375%;
 }
 
 .goalie-stats-table-with-seasons th:nth-child(2),
@@ -1261,7 +1266,7 @@ th.name-field, td.name-field, th.team-field, td.team-field {
 
 .goalie-stats-table-with-seasons th:nth-child(3),
 .goalie-stats-table-with-seasons td:nth-child(3) {
-    width: 19.5%;
+    width: 18.25%;
 }
 
 .goalie-stats-table-with-seasons th:nth-child(4),
@@ -1269,27 +1274,30 @@ th.name-field, td.name-field, th.team-field, td.team-field {
 .goalie-stats-table-with-seasons th:nth-child(5),
 .goalie-stats-table-with-seasons td:nth-child(5),
 .goalie-stats-table-with-seasons th:nth-child(6),
-.goalie-stats-table-with-seasons td:nth-child(6),
+.goalie-stats-table-with-seasons td:nth-child(6) {
+    width: 3.5%;
+}
+
 .goalie-stats-table-with-seasons th:nth-child(7),
 .goalie-stats-table-with-seasons td:nth-child(7),
 .goalie-stats-table-with-seasons th:nth-child(8),
 .goalie-stats-table-with-seasons td:nth-child(8) {
-    width: 3.5%;
+    width: 3.375%;
 }
 
 .goalie-stats-table-with-seasons th:nth-child(9),
 .goalie-stats-table-with-seasons td:nth-child(9) {
-    width: 4%;
+    width: 3.625%;
 }
 
 .goalie-stats-table-with-seasons th:nth-child(10),
 .goalie-stats-table-with-seasons td:nth-child(10) {
-    width: 5%;
+    width: 4.75%;
 }
 
 .goalie-stats-table-with-seasons th:nth-child(11),
 .goalie-stats-table-with-seasons td:nth-child(11) {
-    width: 4.5%;
+    width: 4.375%;
 }
 
 .goalie-stats-table-with-seasons th:nth-child(12),
@@ -1316,7 +1324,7 @@ th.name-field, td.name-field, th.team-field, td.team-field {
 
 .goalie-stats-table-with-seasons th:nth-child(17),
 .goalie-stats-table-with-seasons td:nth-child(17) {
-    width: 6.25%;
+    width: 6.125%;
 }
 
 
