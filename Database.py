@@ -506,18 +506,18 @@ class Database():
                         goals=season[4],
                         assists=season[5],
                         points=season[6], 
-                        plus_minus=season[7] if season[7] != 'null' else None,
+                        plus_minus=season[7] if season[7] != None else '--',
                         penalty_minutes=season[8],
-                        powerplay_goals=season[9] if season[9] != 'null' else None,
-                        powerplay_points=season[10] if season[10] != 'null' else None,
-                        shorthanded_goals=season[11] if season[11] != 'null' else None,
-                        shorthanded_points=season[12] if season[12] != 'null' else None,
-                        time_on_ice_per_game=season[13] if season[13] != 'null' else None,
+                        powerplay_goals=season[9] if season[9] != None else '--',
+                        powerplay_points=season[10] if season[10] != None else '--',
+                        shorthanded_goals=season[11] if season[11] != None else '--',
+                        shorthanded_points=season[12] if season[12] != None else '--',
+                        time_on_ice_per_game=season[13] if season[13] != None else '--',
                         game_winning_goals=season[14],
                         overtime_goals=season[15],
-                        shots=season[16] if season[7] != 'null' else None,
-                        shooting_percentage=season[17] if season[17] != 'null' else None,
-                        faceoff_percentage=season[18] if season[18] != 'null' else None )
+                        shots=season[16] if season[7] != None else '--',
+                        shooting_percentage=season[17] if season[17] != None else '--',
+                        faceoff_percentage=season[18] if season[18] != None else '--' )
                 else:
                     curr_skater.add_playoffs(
                         season=season[1],
@@ -526,18 +526,18 @@ class Database():
                         goals=season[4],
                         assists=season[5],
                         points=season[6], 
-                        plus_minus=season[7] if season[7] != 'null' else None,
+                        plus_minus=season[7] if season[7] != None else '--',
                         penalty_minutes=season[8],
-                        powerplay_goals=season[9] if season[9] != 'null' else None,
-                        powerplay_points=season[10] if season[10] != 'null' else None,
-                        shorthanded_goals=season[11] if season[11] != 'null' else None,
-                        shorthanded_points=season[12] if season[12] != 'null' else None,
-                        time_on_ice_per_game=season[13] if season[13] != 'null' else None,
+                        powerplay_goals=season[9] if season[9] != None else '--',
+                        powerplay_points=season[10] if season[10] != None else '--',
+                        shorthanded_goals=season[11] if season[11] != None else '--',
+                        shorthanded_points=season[12] if season[12] != None else '--',
+                        time_on_ice_per_game=season[13] if season[13] != None else '--',
                         game_winning_goals=season[14],
                         overtime_goals=season[15],
-                        shots=season[16] if season[7] != 'null' else None,
-                        shooting_percentage=season[17] if season[17] != 'null' else None,
-                        faceoff_percentage=season[18] if season[18] != 'null' else None )
+                        shots=season[16] if season[7] != None else '--',
+                        shooting_percentage=season[17] if season[17] != None else '--',
+                        faceoff_percentage=season[18] if season[18] != None else '--' )
 
             skaters.append( curr_skater )
             
@@ -674,16 +674,16 @@ class Database():
                         games_started=season[4],
                         wins=season[5],
                         losses=season[6], 
-                        ties=season[7] if season[7] != 'null' else None,
-                        overtime_losses=season[8] if season[8] != 'null' else None,
-                        shots_against=season[9] if season[9] != 'null' else None,
+                        ties=season[7] if season[7] != None else '--',
+                        overtime_losses=season[8] if season[8] != None else '--',
+                        shots_against=season[9] if season[9] != None else '--',
                         goals_against_average=season[10],
-                        save_percentage=season[11] if season[11] != 'null' else None,
+                        save_percentage=season[11] if season[11] != None else '--',
                         shutouts=season[12],
                         goals=season[13],
                         assists=season[14], 
                         penalty_minutes=season[15],
-                        time_on_ice=season[16] if season[16] != 'null' else None )
+                        time_on_ice=season[16] if season[16] != None else '--' )
                 else:
                     curr_goalie.add_playoffs(
                         season=season[1],
@@ -692,16 +692,16 @@ class Database():
                         games_started=season[4],
                         wins=season[5],
                         losses=season[6], 
-                        ties=season[7] if season[7] != 'null' else None,
-                        overtime_losses=season[8] if season[8] != 'null' else None,
-                        shots_against=season[9] if season[9] != 'null' else None,
+                        ties=season[7] if season[7] != None else '--',
+                        overtime_losses=season[8] if season[8] != None else '--',
+                        shots_against=season[9] if season[9] != None else '--',
                         goals_against_average=season[10],
-                        save_percentage=season[11] if season[11] != 'null' else None,
+                        save_percentage=season[11] if season[11] != None else '--',
                         shutouts=season[12],
                         goals=season[13],
                         assists=season[14], 
                         penalty_minutes=season[15],
-                        time_on_ice=season[16] if season[16] != 'null' else None )
+                        time_on_ice=season[16] if season[16] != None else '--' )
 
             goalies.append( curr_goalie )
             
@@ -724,6 +724,26 @@ class Database():
         else:
             order_direction = 'ASC'
 
+        nullable_stats = ['ties', 'overtime_losses', 'shots_against', 'save_percentage', 'time_on_ice']
+        if stat == 'time_on_ice':
+            order_clause = f"""
+                TIME_ON_ICE IS NULL,
+                (
+                    CAST(SUBSTR(TIME_ON_ICE, 1,
+                        INSTR(TIME_ON_ICE, ':') - 1) AS INTEGER) * 60
+                    +
+                    CAST(SUBSTR(TIME_ON_ICE,
+                        INSTR(TIME_ON_ICE, ':') + 1) AS INTEGER)
+                ) {order_direction}
+            """
+        elif stat in nullable_stats:
+            order_clause = f"""
+                {stat} IS NULL,
+                {stat} {order_direction}
+            """
+        else:
+            order_clause = f"{stat} {order_direction}"
+
         data = cur.execute(
             f""" SELECT
                     NAME, SEASON, GoalieSeason.TEAM AS SEASON_TEAM, GAMES_PLAYED, GAMES_STARTED,
@@ -736,7 +756,7 @@ class Database():
                     AND (? IS NULL OR GoalieSeason.TEAM = ?)
                     AND SEASON >= ? AND SEASON <= ?
                 ORDER BY
-                    {stat} {order_direction}
+                    {order_clause}
                 LIMIT ?; """
                 ,( 
                     type,
@@ -758,11 +778,11 @@ class Database():
                 games_started=goalie[4],
                 wins=goalie[5],
                 losses=goalie[6],
-                ties=goalie[7] if goalie[7] != 'null' else '--',
-                overtime_losses=goalie[8] if goalie[8] != 'null' else '--',
-                shots_against=goalie[9] if goalie[9] != 'null' else '--',
+                ties=goalie[7] if goalie[7] != None else '--',
+                overtime_losses=goalie[8] if goalie[8] != None else '--',
+                shots_against=goalie[9] if goalie[9] != None else '--',
                 goals_against_average=goalie[10],
-                save_percentage=goalie[11] if goalie[11] != 'null' else '--',
+                save_percentage=goalie[11] if goalie[11] != None else '--',
                 shutouts=goalie[12],
                 goals=goalie[13],
                 assists=goalie[14],
