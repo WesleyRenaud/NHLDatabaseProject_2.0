@@ -544,34 +544,7 @@ class MyHandler( BaseHTTPRequestHandler ):
             stat = data.get( 'stat' )
             multiplier = data.get( 'multiplier' )
 
-            if team != 'all':
-                if first_season != None:
-                    season = first_season
-                    team_stats = self.database.get_team_stats_for_one_team_for_one_season( type, team, season )
-
-                else:
-                    team_stats = self.database.get_team_stats_for_one_team( team )
-                    if not stat:
-                        self.nhl_util.sort_seasons_by_season( team_stats )
-
-            else:
-                if first_season == last_season:
-                    season = first_season
-                    team_stats = self.database.get_team_stats_for_one_season( type, season )
-
-                else:
-                    team_stats = self.database.get_team_stats( type, first_season, last_season )
-
-            if type == 'Regular Season':
-                if team == 'all' or first_season != last_season:
-                    self.nhl_util.sort_teams_by_points( team_stats )
-
-            else:
-                if team == 'all' or first_season != last_season:
-                    self.nhl_util.sort_teams_by_wins( team_stats )
-
-            if stat and multiplier:
-                team_stats = self.nhl_util.get_league_standings( type, None, team_stats, stat, multiplier )
+            team_stats = self.database.get_team_stats( type, first_season, last_season, stat, multiplier )
 
             if team == 'all':
                 logos = []

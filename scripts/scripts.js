@@ -299,11 +299,11 @@ function fetchGoalieStats(stat, multiplier) {
     else {
         var firstSeason = document.querySelector('#starting-season-text-field').value;
         var lastSeason = document.querySelector('#ending-season-text-field').value;
-        if (!isValidSeason(startingSeason)) {
+        if (!isValidSeason(firstSeason)) {
             alert('Error - invalid starting season');
             return;
         }
-        else if (!isValidSeason(endingSeason)) {
+        else if (!isValidSeason(lastSeason)) {
             alert('Error - invalid ending season');
             return
         }
@@ -311,7 +311,7 @@ function fetchGoalieStats(stat, multiplier) {
 
     // Get the team
     var team = document.querySelector('#team-dropdown-button').textContent;
-    if (team == 'Select Team') {
+    if (team == 'Select Team' || team == 'All' || team == 'all') {
         team = null;
     }
 
@@ -2956,15 +2956,6 @@ function displayWildcardStandings(response, season) {
         
                 var table = document.createElement('table');
                 table.classList.add('standings-table');
-                if (isOvertimeLossesSeason('Regular Season', season)) {
-                    table.classList.add('standings-table-overtime-losses-season');
-                }
-                else if (isTiesAndOvertimeLossesSeason(season)) {
-                    table.classList.add('standings-table-ties-and-overtime-losses-season');
-                }
-                else {
-                    table.classList.add('standings-table-ties-season');
-                }
                 var thead = document.createElement('thead');
         
                 var headerRow = document.createElement('tr');
@@ -3112,15 +3103,7 @@ function displayDivisionStandings(response, season) {
         
                 var table = document.createElement('table');
                 table.classList.add('standings-table');
-                if (isOvertimeLossesSeason('Regular Season', season)) {
-                    table.classList.add('standings-table-overtime-losses-season');
-                }
-                else if (isTiesAndOvertimeLossesSeason(season)) {
-                    table.classList.add('standings-table-ties-and-overtime-losses-season');
-                }
-                else {
-                    table.classList.add('standings-table-ties-season');
-                }
+
                 var thead = document.createElement('thead');
         
                 var headerRow = document.createElement('tr');
@@ -3266,15 +3249,7 @@ function displayConferenceStandings(response, season) {
         
                 var table = document.createElement('table');
                 table.classList.add('standings-table');
-                if (isOvertimeLossesSeason('Regular Season', season)) {
-                    table.classList.add('standings-table-overtime-losses-season');
-                }
-                else if (isTiesAndOvertimeLossesSeason(season)) {
-                    table.classList.add('standings-table-ties-and-overtime-losses-season');
-                }
-                else {
-                    table.classList.add('standings-table-ties-season');
-                }
+
                 var thead = document.createElement('thead');
         
                 var headerRow = document.createElement('tr');
@@ -3414,15 +3389,7 @@ function displayLeagueStandings(response, season) {
     
             var table = document.createElement('table');
             table.classList.add('standings-table');
-            if (isOvertimeLossesSeason('Regular Season', season)) {
-                table.classList.add('standings-table-overtime-losses-season');
-            }
-            else if (isTiesAndOvertimeLossesSeason(season)) {
-                table.classList.add('standings-table-ties-and-overtime-losses-season');
-            }
-            else {
-                table.classList.add('standings-table-ties-season');
-            }
+
             var thead = document.createElement('thead');
     
             var headerRow = document.createElement('tr');
@@ -4324,53 +4291,14 @@ function displaySkaterStats(response) {
             }
     
             var table = document.createElement('table');
-            // the seasons determine which stats we need to include in the table and how the coluns should be sized
-            if (response.name != null) {
-                var lastSeason = response.last_season;
-
-                if (isTimeOnIcePerGameSeason(lastSeason) && isFaceoffPercentageSeason(lastSeason)) {
-                    table.classList.add('skater-stats-table-time-on-ice-per-game-and-faceoff-percentage-season-without-names');
-                }
-                else if (isPlusMinusSeason(lastSeason) && isShotsSeason(lastSeason) && isShootingPercentageSeason(lastSeason)) {
-                    table.classList.add('skater-stats-table-plus-minus-and-shots-and-shooting-percentage-season-without-names');
-                }
-                else {
-                    table.classList.add('skater-stats-table-without-names');
-                }
+            if (response.first_season == response.last_season) {
+                table.classList.add('skater-stats-table');
+            }
+            else if (response.name == null) {
+                table.classList.add('skater-stats-table-with-seasons');
             }
             else {
-                if (response.first_season == response.last_season) {
-                    var season = response.first_season;
-
-                    if (isTimeOnIcePerGameSeason(season) && isFaceoffPercentageSeason(season)) {
-                        table.classList.add('skater-stats-table-time-on-ice-per-game-and-faceoff-percentage-season');
-                    }
-                    else if (isPlusMinusSeason(season) && isShotsSeason(season) && isShootingPercentageSeason(season)) {
-                        table.classList.add('skater-stats-table-plus-minus-and-shots-and-shooting-percentage-season');
-                    }
-                    else if (isSkaterSpecialTeamsStatsSeason(season)) {
-                        table.classList.add('skater-stats-table-special-teams-stats-season');
-                    }
-                    else {
-                        table.classList.add('skater-stats-table');
-                    }
-                }
-                else {
-                    var lastSeason = response.last_season;
-
-                    if (isTimeOnIcePerGameSeason(lastSeason) && isFaceoffPercentageSeason(lastSeason)) {
-                        table.classList.add('skater-stats-table-time-on-ice-per-game-and-faceoff-percentage-season-with-seasons');
-                    }
-                    else if (isPlusMinusSeason(lastSeason) && isShotsSeason(lastSeason) && isShootingPercentageSeason(lastSeason)) {
-                        table.classList.add('skater-stats-table-plus-minus-and-shots-and-shooting-percentage-season-with-seasons');
-                    }
-                    else if (isSkaterSpecialTeamsStatsSeason(lastSeason)) {
-                        table.classList.add('skater-stats-table-special-teams-stats-season-with-seasons');
-                    }
-                    else {
-                        table.classList.add('skater-stats-table-with-seasons');
-                    }
-                }
+                table.classList.add('skater-stats-table-without-names');
             }
 
             var thead = document.createElement('thead');
@@ -4469,7 +4397,7 @@ function displaySkaterStats(response) {
                     td.appendChild(textSpan);
                 }
                 else {
-                    if (field == 'shooting_percentage' || field == 'faceoff_percentage' && skaterStats[i][field] != '--') {
+                    if ((field == 'shooting_percentage' || field == 'faceoff_percentage') && skaterStats[i][field] != '--') {
                         td.textContent = round(parseFloat(skaterStats[i][field]), 3).toFixed(1);
                     }
                     else {
@@ -4528,9 +4456,6 @@ function displayGoalieStats(response, type) {
 
     var goalieStats = response.goalie_stats;
 
-    if (response.first_season == response.last_season && response.first_season == '1919-1920') {
-        alert('There are no stats for the selected season.');
-    }
     for (var i = 0; i < goalieStats.length; i++) {       
         if (i == 0) {
             var fields = [];
@@ -4538,68 +4463,24 @@ function displayGoalieStats(response, type) {
             // Add the fields to the table
             for (var key in goalieStats[i]) {
                 if (goalieStats[i].hasOwnProperty(key) && goalieStats[i][key] !== null && key != 'type') {
-                    fields.push(key);
+                    if (key == 'name') {
+                        fields.push('rank-and-name');
+                    }
+                    else {
+                        fields.push(key);
+                    }
                 }
             }
     
             var table = document.createElement('table');
-            // the seasons determine which stats we need to include in the table and how the coluns should be sized
-            if (response.name != null) {
-                var firstSeason = response.first_season;
-                var lastSeason = response.last_season;
-
-                if (type == 'Regular Season') {
-                    if (!isOvertimeLossesSeason(type, firstSeason) && isOvertimeLossesSeason(type, lastSeason)) {
-                        
-                        table.classList.add('goalie-stats-table-overtime-losses-and-ties-season-without-names');
-                    }
-                    else if (isOvertimeLossesSeason(type, firstSeason) && isOvertimeLossesSeason(type, lastSeason)) {
-                        table.classList.add('goalie-stats-table-overtime-losses-season-without-names');
-                    }
-                    else {
-                        table.classList.add('goalie-stats-table-without-names');
-                    }
-                }
-                else {
-                    table.classList.add('goalie-playoff-stats-table-without-names');
-                }
+            if (response.first_season == response.last_season) {
+                table.classList.add('goalie-stats-table');
             }
-            else {
-                if (type == 'Regular Season') {
-                    if (response.first_season == response.last_season) {
-                        var season = response.first_season;
-        
-                        if (isOvertimeLossesSeason(type, season)) {
-                            table.classList.add('goalie-stats-table-overtime-losses-season');
-                        }
-                        else {
-                            table.classList.add('goalie-stats-table');
-                        }
-                    }
-                    else {
-                        var firstSeason = response.first_season;
-                        var lastSeason = response.last_season;
-        
-                        if (!isOvertimeLossesSeason(type, firstSeason) && isOvertimeLossesSeason(type, lastSeason)) {
-                            table.classList.add('goalie-stats-table-overtime-losses-and-ties-season-with-seasons');
-                        }
-                        else if (isOvertimeLossesSeason(type, firstSeason) && isOvertimeLossesSeason(type, lastSeason)) {
-                            table.classList.add('goalie-stats-table-overtime-losses-season-with-seasons');
-                        }
-                        else {
-                            table.classList.add('goalie-stats-table-with-seasons');
-                        }
-                    }
-                }
-                else {
-                    if (response.first_season == response.last_season) {
-                        table.classList.add('goalie-playoff-stats-table');
-                    }
-                    else {
-                        table.classList.add('goalie-playoff-stats-table-with-seasons');
-                    }
-                }
-            }
+            else if (response.name == null) {
+                table.classList.add('goalie-stats-table-with-seasons');
+            } else {
+                table.classList.add('goalie-stats-table-without-names');
+            }                
 
             var thead = document.createElement('thead');
     
@@ -4615,12 +4496,11 @@ function displayGoalieStats(response, type) {
                         th.classList.add('sorted-by-stat-button');
                     }
 
-                    if (field === 'name' || field === 'team') {
-                        th.style.textAlign = 'left';
+                    if (field === 'rank-and-name' || field === 'team') {
                         th.style.position = 'relative';
                         th.style.left = '5px';
 
-                        if (field === 'name') {
+                        if (field === 'rank-and-name') {
                             th.textContent = 'Name';
         
                         }
@@ -4668,11 +4548,20 @@ function displayGoalieStats(response, type) {
                     td.classList.add('sorted-by-stat-button');
                 }
 
-                if (field === 'name') {
+                if (field === 'rank-and-name') {
                     td.classList.add('name-field');
-                    td.textContent = goalieStats[i].name;
+
+                    var rankSpan = document.createElement('span');
+                    rankSpan.innerHTML = (i + 1) + ".";
+
+                    var nameSpan = document.createElement('span');
+                    nameSpan.id = 'player-name';
+                    nameSpan.innerHTML = goalieStats[i].name;
+
+                    td.append(rankSpan);
+                    td.append(nameSpan);
                 }
-                if (field === 'team') {
+                else if (field === 'team') {
                     td.classList.add('team-field');
                     var textSpan = document.createElement('span');
                     textSpan.textContent = goalieStats[i].team;
@@ -4694,7 +4583,10 @@ function displayGoalieStats(response, type) {
                     td.appendChild(textSpan);
                 }
                 else {
-                    if (field == 'goals_against_average' || field == 'save_percentage') {
+                    if (goalieStats[i][field] != '--' && field == 'goals_against_average') {
+                        td.textContent = round(parseFloat(goalieStats[i][field]), 2).toFixed(2);
+                    }
+                    else if (goalieStats[i][field] != '--' && field == 'save_percentage') {
                         td.textContent = round(parseFloat(goalieStats[i][field]), 3).toFixed(3);
                     }
                     else {
@@ -4800,164 +4692,7 @@ function displayTeamStats(response, type) {
             }
     
             var table = document.createElement('table');
-            // the seasons determine which stats we need to include in the table and how the coluns should be sized
-            if (response.team == null) {
-                if (response.first_season == response.last_season) {
-                    var season = response.first_season;
-
-                    if (type == 'Regular Season') {
-                        table.classList.add('team-stats-table');
-                        if (isOvertimeLossesSeason(type, season)) {
-                            table.classList.add('team-stats-table-overtime-losses-season');
-                        }
-                        else if (isTiesAndOvertimeLossesSeason(season)) {
-                            table.classList.add('team-stats-table-ties-and-overtime-losses-season');
-                        }
-                        else {
-                            if (isFaceoffWinPercentageSeason(season)) {
-                                table.classList.add('team-stats-table-ties-and-faceoff-win-percentage-season');
-                            }
-                            else if (isTeamSpecialTeamsSeason(season)) {
-                                table.classList.add('team-stats-table-ties-and-special-teams-season');
-                            }
-                            else {
-                                table.classList.add('team-stats-table-ties-season');
-                            }
-                        }
-                    }
-                    else {
-                        table.classList.add('team-playoff-stats-table');
-                        if (season == '2019-2020') {
-                            table.classList.add('team-playoff-stats-table-special-teams-and-overtime-losses-season');
-                        }
-                        else if (isFaceoffWinPercentageSeason(season)) {
-                            table.classList.add('team-playoff-stats-table-faceoff-win-percentage-season');
-                        }
-                        else if (isTeamSpecialTeamsSeason(season)) {
-                            table.classList.add('team-playoff-stats-table-special-teams-season');
-                        }
-                        else if (isTiesInPlayoffsSeason(season)) {
-                            table.classList.add('team-playoff-stats-ties-in-playoffs-season');
-                        }
-                        else {
-                            table.classList.add('team-playoff-stats-table-ties-season');
-                        }
-                    }
-                }
-                else {
-                    var firstSeason = response.first_season;
-                    var lastSeason = response.last_season;
-
-                    table.classList.add('team-stats-table-with-seasons');
-                    if (type == 'Regular Season') {
-                        if (isTiesSeason(firstSeason)) {
-                            if (seasonsFallInShootoutPeriod(lastSeason)) {
-                                table.classList.add('team-stats-table-ties-and-shootout-season-with-seasons');
-                            }
-                            else if (seasonsFallInTiesAndOvertimeLossesPeriod(firstSeason, lastSeason)) {
-                                table.classList.add('team-stats-table-ties-and-overtime-losses-season-with-seasons')
-                            }
-                            else if (seasonsFallInFaceoffWinPercentagePeriod(lastSeason)) {
-                                table.classList.add('team-stats-table-ties-and-faceoff-win-percentage-season-with-seasons');
-                            }
-                            else if (seasonsFallInSpecialTeamsStatsPeriod(lastSeason)) {
-                                table.classList.add('team-stats-table-ties-and-special-teams-stats-season-with-seasons');
-                            }
-                            else {
-                                table.classList.add('team-stats-table-ties-season-with-seasons');
-                            }
-                        }
-                        else if (isTiesAndOvertimeLossesSeason(firstSeason)) {
-                            if (!seasonsFallInShootoutPeriod(lastSeason)) {
-                                table.classList.add('team-stats-table-ties-and-overtime-losses-season-with-seasons');
-                            }
-                            else {
-                                table.classList.add('team-stats-table-ties-and-shootout-season-with-seasons');
-                            }
-                        }
-                        else {
-                            table.classList.add('team-stats-table-overtime-losses-season-with-seasons');
-                        }
-                    }
-                    else {
-                        if (seasonsFallInOvertimeLossesInPlayoffsPeriod(firstSeason, lastSeason)) {
-                            if (seasonsFallInTiesInPlayoffsPeriod(firstSeason, lastSeason)) {
-                                table.classList.add('team-playoff-stats-table-overtime-losses-and-ties-season-with-seasons');
-                            }
-                            else {
-                                table.classList.add('team-playoff-stats-overtime-losses-season-with-seasons');
-                            }
-                        }
-                        else if (seasonsFallInFaceoffWinPercentagePeriod(lastSeason)) {
-                            if (seasonsFallInTiesInPlayoffsPeriod(firstSeason, lastSeason)) {
-                                table.classList.add('team-playoff-stats-table-faceoff-win-percentage-and-ties-season-with-seasons');
-                            }
-                            else {
-                                table.classList.add('team-playoff-stats-table-faceoff-win-percentage-season-with-seasons');
-                            }
-                        }
-                        else if (seasonsFallInSpecialTeamsStatsPeriod(lastSeason)) {
-                            if (seasonsFallInTiesInPlayoffsPeriod(firstSeason, lastSeason)) {
-                                table.classList.add('team-playoff-stats-table-special-teams-stats-and-ties-season-with-seasons');
-                            }
-                            else {
-                                table.classList.add('team-playoff-stats-table-special-teams-stats-season-with-seasons');
-                            }
-                        }
-                        else {
-                            if (seasonsFallInTiesInPlayoffsPeriod(firstSeason, lastSeason)) {
-                                table.classList.add('team-playoff-stats-ties-season-with-seasons');
-                            }
-                            else {
-                                table.classList.add('team-playoff-stats-season-with-seasons');
-                            }
-                        }
-                    }
-                }
-            }
-            else {
-                var firstSeason = response.first_season;
-                var lastSeason = response.last_season;
-
-                if (type == 'Regular Season') {
-                    if (isTiesSeason(firstSeason)) {
-                        if (seasonsFallInShootoutPeriod(lastSeason)) {
-                            table.classList.add('team-stats-table-ties-and-shootout-season-without-names');
-                        }
-                        else if (seasonsFallInSpecialTeamsStatsPeriod(lastSeason)) {
-                            table.classList.add('team-stats-table-ties-and-special-teams-stats-season-without-names');
-                        }
-                        else {
-                            table.classList.add('team-stats-table-ties-season-without-names');
-                        }
-                    }
-                    else if (isTiesAndOvertimeLossesSeason(firstSeason)) {
-                        table.classList.add('team-stats-table-ties-and-shootout-season-without-names');
-                    }
-                    else {
-                        table.classList.add('team-stats-table-overtime-losses-season-without-names');
-                    }
-                }
-                else {
-                    if (seasonsFallInOvertimeLossesInPlayoffsPeriod(firstSeason, lastSeason)) {
-                        if (seasonsFallInTiesInPlayoffsPeriod(firstSeason, lastSeason)) {
-                            table.classList.add('team-playoff-stats-table-overtime-losses-and-ties-season-without-names');
-                        }
-                        else {
-                            table.classList.add('team-playoff-stats-overtime-losses-season-without-names');
-                        }
-                    }
-                    else if (seasonsFallInFaceoffWinPercentagePeriod(lastSeason)) {
-                        table.classList.add('team-playoff-stats-table-faceoff-win-percentage-season-without-names');
-                    }
-                    else if (seasonsFallInSpecialTeamsStatsPeriod(lastSeason)) {
-                        table.classList.add('team-playoff-stats-table-special-teams-stats-season-without-names');
-                    }
-                    else {
-                        table.classList.add('team-playoff-stats-season-without-names');
-                    }
-                }
-            }
+            table.classList.add('team-stats-table');            
 
             var thead = document.createElement('thead');
     
@@ -5870,11 +5605,17 @@ function isSavePercentageSeason(season) {
     return false;
 }
 
-function isGoalieTiesInPlayoffsSeason(season) {
-    if (getFirstYear(season) <= 1934) {
-        return true;
+function isGoalieTiesSeason(type, season) {
+    if (type == 'Regular Season') {
+        if (getFirstYear(season) <= 2003) {
+            return true;
+        }
     }
-
+    else {
+        if (getFirstYear(season) >= 1950) {
+            return true;
+        }
+    }
     return false;
 }
 

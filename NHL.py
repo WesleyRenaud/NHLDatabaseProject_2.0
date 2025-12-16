@@ -1299,6 +1299,7 @@ class NHLUtil():
                 return True
        
         return False
+    
 
     # This method returns 'True' if the given season had overtime losses and ties and 'False' otherwise.
     def is_overtime_losses_and_ties_season( self, season ):
@@ -1311,10 +1312,10 @@ class NHLUtil():
 
 
     # This method returns 'True' if the given season had overtime losses and no ties and 'False' otherwise.
-    def is_ties_season( self, season ): 
-        if self.get_first_year( season ) <= 1998:
-            return True
-        
+    def is_ties_season( self, season ):
+        if type == 'Regular Season': 
+            if self.get_first_year( season ) <= 1998:
+                return True        
         return False
     
 
@@ -1488,6 +1489,17 @@ class NHLUtil():
 
         if first_season_first_year <= 1950:
             return True
+        
+        return False
+    
+
+    def is_goalie_ties_season( self, type, season ):
+        if type == 'Regular Season': 
+            if self.get_first_year( season ) <= 2003:
+                return True
+        else:
+            if self.get_first_year( season ) <= 1950:
+                return True
         
         return False
     
