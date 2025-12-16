@@ -207,6 +207,8 @@ function fetchSkaterStats(stat, multiplier) {
         team = null;
     }
 
+    var combineSeasonsOnDifferentTeams = document.querySelector('#checkbox-combine-seasons-on-different-teams').checked;
+
     $.ajax({
         type: 'POST',
         url: '/get-skater-stats',
@@ -216,8 +218,9 @@ function fetchSkaterStats(stat, multiplier) {
             last_season: lastSeason,
             position: position,
             team: team,
+            combine_seasons_on_different_teams: combineSeasonsOnDifferentTeams,
             stat: stat,
-            multiplier: multiplier
+            multiplier: multiplier,
         }),
         contentType: 'application/json',
         success: function(response) {
@@ -4389,7 +4392,7 @@ function displaySkaterStats(response) {
                         teamLogo.alt = skaterStats[i].team + ' Logo';
                         teamLogo.classList.add('team-logo');
                         
-                        teamLogoContainer.appendChild(teamLogo);                                
+                        teamLogoContainer.appendChild(teamLogo);   
 
                         td.appendChild(teamLogoContainer);
                     }

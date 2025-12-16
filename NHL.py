@@ -345,7 +345,6 @@ class Team():
         }
     
 
-    # returns the city plus a whitespace plus the team name
     def get_full_name( self ): 
         return self.city + ' ' + self.name
     
@@ -353,9 +352,6 @@ class Team():
 ################################################################################
 
 class NHLUtil():
-    # This method takes a list of teams and a season, and using a season_to_teams_mapping file, creates a 
-    # new list with the teams sorted into their divisions, sorted by a stat and a mutlipier (1 == 
-    # descending, -1 == ascending) when given.
     def get_division_standings( self, season, teams, stat=None, multiplier=None ): 
         teams = self.sort_teams_into_divisions( season, teams )
 
@@ -380,9 +376,6 @@ class NHLUtil():
         return teams_by_division
 
 
-    # This is a helper method that takes a list of teams and a season and sorts the teams into a 2-D array 
-    # where each 'row' contains the team for one division, and the teams in the rows are also sorted in the 
-    # descending order of their number of points.
     def sort_teams_into_divisions( self, season, teams ):
         file = open( 'season_to_teams_mapping/%s.txt' % season, 'r' )
 
@@ -407,9 +400,6 @@ class NHLUtil():
         return teams_by_division
     
 
-    # This method takes a list of teams and a season, and using a season_to_teams_mapping file, creates a 
-    # new list with the teams sorted into their conferences, sorted by a stat and a mutlipier (1 == 
-    # descending, -1 == ascending) when given.
     def get_conference_standings( self, season, teams, stat=None, multiplier=None ): 
         teams = self.sort_teams_into_conferences( season, teams )
 
@@ -430,10 +420,7 @@ class NHLUtil():
 
         return teams_by_conference
 
-    
-    # This is a helper method that takes a list of teams and a season and sorts the teams into a 2-D array
-    # where each 'row' contains the team for one conference, and the teams in the rows are also sorted in 
-    # the descending order of their number of points.
+
     def sort_teams_into_conferences( self, season, teams ):
         file = open( 'season_to_teams_mapping/%s.txt' % season, 'r' )
 
@@ -458,8 +445,6 @@ class NHLUtil():
         return teams_by_conference
          
 
-    # This method takes a list of teams and a season, and using a season_to_teams_mapping file, creates a 
-    # new list of teams with them sorted with their divisions conferences to present the wildcard standings.
     def get_wildcard_standings( self, season, teams ): 
         teams_by_division = self.sort_teams_into_divisions( season, teams )
         teams_by_conference = self.sort_teams_into_conferences( season, teams )
@@ -492,8 +477,10 @@ class NHLUtil():
         return teams
     
 
-    # This method returns the path to local image for the specified team in the specified season.
     def get_team_logo_path( self, team_name, season ):
+        if team_name == 'Multiple':
+            return 'images/NHL.png'
+        
         folder = 'images/team_logos'
 
         if os.path.exists( folder ):
@@ -512,16 +499,12 @@ class NHLUtil():
                                         return folder + '/' + file_name
 
 
-    # This method returns the first season from the name of a file representing a team's logo between two 
-    # seasons, and the file name is of the form s1y1-s1y2_s2y1-s2y2.png.
     def get_first_season( self, file_name ):
         first_season = file_name[:9]
 
         return first_season
     
 
-    # returns the second season from the name of a file representing a team's logo between two seasons, 
-    # and the file name is of the form s1y1-s1y2_s2y1-s2y2.png.
     def get_second_season( self, file_name ):
         second_season = file_name[10:19]
         
@@ -530,8 +513,7 @@ class NHLUtil():
 
         return None
     
-    # checks if the target season is during the window between the first season and the second season,
-    # inclusively.
+
     def is_in_between_seasons( self, target_season, first_season, second_season ): 
         if second_season == None: # we only have one season
             if target_season == first_season:
@@ -549,9 +531,7 @@ class NHLUtil():
             
             return False
         
-    # This method get_clinching_markers( season, teams ): returns a list of clinching markers where the 
-    # clinching marker at each index in the list is the marker corresponding to the team at that index in 
-    # the teams list, given the season which the teams are in.
+
     def get_clinching_markers( self, season, teams ):
         clinching_markers = {}
         league_standings = self.get_league_standings( 'Regular Season', season, teams )
@@ -701,10 +681,7 @@ class NHLUtil():
 
         return clinching_markers
     
-    
-    # This method takes a list of teams and a season, and sorts the teams in order of points, plus 
-    # additional tie breakers when applicable or  by a stat and a mutlipier (1 == descending, -1 == 
-    # ascending) when given.
+
     def get_league_standings( self, type, season, teams, stat=None, multiplier=None ):
         league_standings = []
         for i in range( len( teams ) ):
@@ -731,8 +708,6 @@ class NHLUtil():
         return league_standings
     
 
-    # This method defines how to compare certain NHL team stats which do not work using the standard 
-    # formula (value2 - value1).
     def team_stat_compare( self, team1, team2, stat, multiplier ):
         if multiplier == -1:
             dummy_team = team1
@@ -953,7 +928,6 @@ class NHLUtil():
             return value2 - value1
         
 
-    # This method returns 'True' if the given season had conferences and 'False' if if it did not.
     def is_conference_season( self, season ): 
         first_year = self.get_first_year( season )
         if first_year >= 1974 and first_year != 2020:
@@ -962,7 +936,6 @@ class NHLUtil():
         return False
     
 
-    # This method returns 'True' if the given season had divisions and 'False' if it did not.
     def is_division_season( self, season ): 
         first_year = self.get_first_year( season )
         if first_year >= 1967 or (first_year <= 1937 and first_year >= 1926):
@@ -971,12 +944,10 @@ class NHLUtil():
         return False
 
 
-    # This method returns the first year from a season string in the form y1y1-y2y2.
     def get_first_year( self, season ):
         return int( season[:4] )
     
-    # This method takes the full name of a team (city and name) and returns the city part, or None if 
-    # the full name given is not valid.
+
     def get_city( self, full_name ):
         if full_name == 'Anaheim Ducks':
            return 'Anaheim'
@@ -1132,8 +1103,6 @@ class NHLUtil():
             return 'Winnipeg'
 
 
-    # This method takes the full name of a team (city and name) and returns the name part, or None if 
-    # the full name was not valid.
     def get_name( self, full_name ):
         if full_name == 'Anaheim Ducks':
            return 'Ducks'
@@ -1289,7 +1258,6 @@ class NHLUtil():
             return 'Jets'
         
 
-    # This method returns 'True' if the given season had overtime losses and no ties and 'False' otherwise.
     def is_overtime_losses_season( self, type, season ):
         if type == 'Regular Season':
             if self.get_first_year( season ) >= 2005:
@@ -1301,7 +1269,6 @@ class NHLUtil():
         return False
     
 
-    # This method returns 'True' if the given season had overtime losses and ties and 'False' otherwise.
     def is_overtime_losses_and_ties_season( self, season ):
         first_year = self.get_first_year( season )
 
@@ -1311,7 +1278,6 @@ class NHLUtil():
         return False
 
 
-    # This method returns 'True' if the given season had overtime losses and no ties and 'False' otherwise.
     def is_ties_season( self, season ):
         if type == 'Regular Season': 
             if self.get_first_year( season ) <= 1998:
@@ -1319,7 +1285,6 @@ class NHLUtil():
         return False
     
 
-    # This method returns 'True' if the given season tracked faceoff win percentage and 'False' otherwise.
     def is_faceoff_win_percentage_season( self, season ): 
         if self.get_first_year( season ) >= 1997:
             return True
@@ -1327,7 +1292,6 @@ class NHLUtil():
         return False
     
 
-    # This method returns 'True' if the given season tracked special teams stats and 'False' otherwise.
     def is_special_teams_season( self, season ):
         if self.get_first_year( season ) >= 1977:
             return True
@@ -1335,7 +1299,6 @@ class NHLUtil():
         return False
     
 
-    # This method returns 'True' if the given season tracked faceoff percentage and 'False' otherwise.
     def is_faceoff_percentage_season( self, season ):
        if self.get_first_year( season ) >= 1997:
            return True
@@ -1343,7 +1306,6 @@ class NHLUtil():
        return False
     
 
-    # This method returns 'True' if the given season tracked time on ice per game and 'False' otherwise.
     def is_time_on_ice_per_game_season( self, season ):
         if self.get_first_year( season ) >= 1997:
             return True
@@ -1351,7 +1313,6 @@ class NHLUtil():
         return False
     
 
-    # This method returns 'True' if the given season tracked plus-minus and 'False' otherwise.
     def is_plus_minus_season( self, season ): 
         if self.get_first_year( season ) >= 1959:
             return True
@@ -1359,7 +1320,6 @@ class NHLUtil():
         return False
     
 
-    # This method returns 'True' if the given season tracked shots and 'False' otherwise.
     def is_shots_season( self, season ):
         if self.get_first_year( season ) >= 1959:
             return True
@@ -1367,8 +1327,6 @@ class NHLUtil():
         return False
     
 
-    # This method returns 'True' if the given season tracked shooting percentage and 'False' 
-    # otherwise.
     def is_shooting_percentage_season( self, season ): 
         if self.get_first_year( season ) >= 1959:
             return True
@@ -1376,8 +1334,6 @@ class NHLUtil():
         return False
 
 
-    # This method returns 'True' if the given season tracked skater special team stats and
-    # 'False' otherwise.
     def is_skater_special_teams_stats_season( self, season ): 
         if self.get_first_year( season ) >= 1933:
             return True
@@ -1385,7 +1341,6 @@ class NHLUtil():
         return False
 
 
-    # This method returns 'True' if the given season tracked shots against and 'False' otherwise.
     def is_shots_against_season( self, season ):
         if self.get_first_year( season ) >= 1955:
             return True
@@ -1393,7 +1348,6 @@ class NHLUtil():
         return False
     
 
-    # This method returns 'True' if the given season tracked save percentage and 'False' otherwise.
     def is_save_percentage_season( self, season ):
         if self.get_first_year( season ) >= 1955:
             return True
@@ -1401,14 +1355,10 @@ class NHLUtil():
         return False
 
 
-    # This method sorts a given list of teams by points percentage, then points, then regulation wins, 
-    # then regulation and overtime wins, and finally goals for.
     def sort_teams_by_points( self, teams ):
         teams.sort( key=lambda team: ( team.points_percentage, team.points , team.regulation_wins, team.regulation_and_overtime_wins, team.goals_for), reverse=True )
 
 
-    # This method returns 'True' if there was one or more seasons in from the first season onwards where 
-    # ties were recorded, and 'False' otherwise.
     def seasons_fall_in_ties_period( self, first_season ): 
         first_season_first_year = self.get_first_year( first_season )
         if first_season_first_year <= 2003:
@@ -1416,9 +1366,7 @@ class NHLUtil():
         
         return False
 
-    
-    # This method returns 'True' if a there was one or more seasons in between the first season and the 
-    # last season where overtime losses were recorded, and 'False' otherwise.
+
     def seasons_fall_in_overtime_losses_period( self, last_season ):
         last_season_first_year = self.get_first_year( last_season )
 
@@ -1428,8 +1376,6 @@ class NHLUtil():
         return False
     
 
-    # This method returns 'True' if a there was one or more seasons in between the first season and the 
-    # last season where  faceoff win percetage was recorded, and 'False' otherwise.
     def seasons_fall_in_faceoff_win_percentage_period( self, last_season ):
         last_season_first_year = self.get_first_year( last_season )
 
@@ -1439,8 +1385,6 @@ class NHLUtil():
         return False
     
 
-    # This method returns 'True' if a there was one or more seasons in between the first season and the 
-    # last season where special teams stats were recorded, and 'False' otherwise.
     def seasons_fall_in_special_teams_period( self, last_season ):
         last_season_first_year = self.get_first_year( last_season )
 
@@ -1450,8 +1394,6 @@ class NHLUtil():
         return False
     
 
-    # This method returns 'True' if there was one or more seasons from the last season or before where the 
-    # shootout was active, and 'False' otherwise.
     def seasons_fall_in_shootout_period( self, last_season ):
         last_season_first_year = self.get_first_year( last_season )
         if last_season_first_year >= 2005:
@@ -1460,7 +1402,6 @@ class NHLUtil():
         return False
 
 
-    # This method returns 'True' if the given season had ties in the playoffs and 'False' otherwise.
     def is_ties_in_playoffs_season( self, season ):
         first_year = self.get_first_year( season )
 
@@ -1470,8 +1411,6 @@ class NHLUtil():
         return False
     
 
-    # This method returns 'True' if there was one or more seasons in between the first season and the 
-    # last season where overtimelosses occurred during the playoffs, and 'False' otherwise.
     def seasons_fall_in_overtime_losses_in_playoffs_period( self, first_season, last_season ):
         first_season_first_year = self.get_first_year( first_season )
         last_season_first_year = self.get_first_year( last_season )
@@ -1482,8 +1421,6 @@ class NHLUtil():
         return False
     
 
-    # This method returns 'True' if there was one or more seasons in between the first season and the
-    # last season where ties occurred during the playoffs, and 'False' otherwise.
     def seasons_fall_in_ties_in_playoffs_period( self, first_season ): 
         first_season_first_year = self.get_first_year( first_season )
 

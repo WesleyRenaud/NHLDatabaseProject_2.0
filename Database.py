@@ -144,8 +144,6 @@ class Database():
         self.conn.commit()
 
 
-    # This method adds a skater to the database by first adding their personal details to the Skater table, 
-    # then adding their regular season and playoff stats to the  table.
     def add_skater( self, skater ):
         cur = self.conn.cursor()
 
@@ -271,8 +269,6 @@ class Database():
         self.conn.commit()
                 
 
-    # This method adds a goalie to the database by first adding their personal details to the Goalie table, 
-    # then adding their regular season and playoff stats to the GoalieSeason table.
     def add_goalie( self, goalie ):
         cur = self.conn.cursor()
 
@@ -392,7 +388,6 @@ class Database():
         self.conn.commit()
 
 
-    # This method adds a team stats in either the regular season or the playoffs for a certin season.
     def add_team( self, team ):
         cur = self.conn.cursor()
 
@@ -466,8 +461,6 @@ class Database():
         self.conn.commit()
 
 
-    # This method returns a list of Player objects with all of the stats of the players with the given 
-    # name.
     def get_skater_stats_for_one_player( self, name ): 
         cur = self.conn.cursor()
 
@@ -545,10 +538,7 @@ class Database():
         return skaters
     
 
-    # This method returns a list of SkaterSeason objects with all of the stats for all of the skaters
-    # from the given first season up until the last season, team if 'team' is defined and for all
-    # teams otherwise, and position, if 'position' is defined, and for all positions otherwise.
-    def get_skater_stats( self, type, first_season, last_season, team, position, stat, multiplier ):
+    def get_skater_stats( self, type, first_season, last_season, position, team, combine_seasons_on_different_teams, stat, multiplier ):
         cur = self.conn.cursor()
 
         if stat == None:
@@ -581,29 +571,107 @@ class Database():
         else:
             order_clause = f"{stat} {order_direction}"
 
-        data = cur.execute(
-            f""" SELECT
-                    NAME, POSITION, SEASON, SkaterSeason.TEAM AS SEASON_TEAM, GAMES_PLAYED,
-                    GOALS, ASSISTS, POINTS, PLUS_MINUS, PENALTY_MINUTES, POWERPLAY_GOALS,
-                    POWERPLAY_POINTS, SHORTHANDED_GOALS, SHORTHANDED_POINTS, TIME_ON_ICE_PER_GAME,
-                    GAME_WINNING_GOALS, OVERTIME_GOALS, SHOTS, SHOOTING_PERCENTAGE, FACEOFF_PERCENTAGE
-                FROM
-                    Skater JOIN SkaterSeason ON Skater.SKATERID = SkaterSeason.SKATERID 
-                WHERE
-                    TYPE = ?
-                    AND SEASON >= ? AND SEASON <= ?
-                    AND (? IS NULL OR Skater.POSITION = ?)
-                    AND (? IS NULL OR SkaterSeason.TEAM = ?)
-                ORDER BY
-                    {order_clause}
-                LIMIT ?; """
-                ,( 
-                    type,
-                    first_season, last_season,
-                    position, position,
-                    team, team,
-                    self.max_num_results ) 
-                )
+        if combine_seasons_on_different_teams:
+                data = cur.execute(
+                f""" SELECT
+                        NAME,
+                        POSITION,
+                        SEASON,
+                        CASE WHEN COUNT(DISTINCT SS.TEAM) > 1 THEN 'Multiple'
+                            ELSE MIN(SS.TEAM)
+                        END AS SEASON_TEAM,
+                        SUM(GAMES_PLAYED),
+                        SUM(GOALS),
+                        SUM(ASSISTS),
+                        SUM(POINTS),
+                        SUM(PLUS_MINUS),
+                        SUM(PENALTY_MINUTES),
+                        SUM(POWERPLAY_GOALS),
+                        SUM(POWERPLAY_POINTS),
+                        SUM(SHORTHANDED_GOALS),
+                        SUM(SHORTHANDED_POINTS),
+
+                        -- Weighted average TOI/G as MM:SS
+                        (
+                            CAST(
+                                (
+                                    SUM(
+                                        (CAST(SUBSTR(SS.TIME_ON_ICE_PER_GAME,1,INSTR(SS.TIME_ON_ICE_PER_GAME,':')-1) AS INTEGER)*60
+                                        + CAST(SUBSTR(SS.TIME_ON_ICE_PER_GAME,INSTR(SS.TIME_ON_ICE_PER_GAME,':')+1) AS INTEGER))
+                                        * SS.GAMES_PLAYED
+                                    ) * 1.0 / SUM(SS.GAMES_PLAYED)
+                                ) / 60 AS INTEGER
+                            )
+                        ) || ':' ||
+                        printf(
+                            '%02d',
+                            CAST(
+                                (
+                                    SUM(
+                                        (CAST(SUBSTR(SS.TIME_ON_ICE_PER_GAME,1,INSTR(SS.TIME_ON_ICE_PER_GAME,':')-1) AS INTEGER)*60
+                                        + CAST(SUBSTR(SS.TIME_ON_ICE_PER_GAME,INSTR(SS.TIME_ON_ICE_PER_GAME,':')+1) AS INTEGER))
+                                        * SS.GAMES_PLAYED
+                                    ) * 1.0 / SUM(SS.GAMES_PLAYED)
+                                ) % 60 AS INTEGER
+                            )
+                        ) AS AVG_TOI_PER_GAME,
+
+                        SUM(GAME_WINNING_GOALS),
+                        SUM(OVERTIME_GOALS),
+                        SUM(SHOTS),
+
+                        -- Weighted shooting percentage by shots
+                        CASE WHEN SUM(SS.SHOTS) > 0 THEN
+                            ROUND(SUM(SS.GOALS * 1.0) / SUM(SS.SHOTS) * 100, 2)
+                        ELSE NULL END,
+
+                        -- Weighted faceoff percentage by total faceoffs
+                        CASE WHEN SUM(SS.FACEOFF_PERCENTAGE * SS.GAMES_PLAYED) IS NOT NULL THEN
+                            ROUND(SUM(SS.FACEOFF_PERCENTAGE * SS.GAMES_PLAYED) / SUM(SS.GAMES_PLAYED), 2)
+                        ELSE NULL END
+                    FROM
+                        Skater S JOIN SkaterSeason SS ON S.SKATERID = SS.SKATERID 
+                    WHERE
+                        TYPE = ?
+                        AND SEASON >= ? AND SEASON <= ?
+                        AND (? IS NULL OR S.POSITION = ?)
+                        AND (? IS NULL OR SS.TEAM = ?)
+                    GROUP BY
+                        SS.SKATERID, SS.SEASON
+                    ORDER BY
+                        {order_clause}
+                    LIMIT ?; """
+                    ,( 
+                        type,
+                        first_season, last_season,
+                        position, position,
+                        team, team,
+                        self.max_num_results ) 
+                    )
+        else:
+            data = cur.execute(
+                f""" SELECT
+                        NAME, POSITION, SEASON, SkaterSeason.TEAM AS SEASON_TEAM, GAMES_PLAYED,
+                        GOALS, ASSISTS, POINTS, PLUS_MINUS, PENALTY_MINUTES, POWERPLAY_GOALS,
+                        POWERPLAY_POINTS, SHORTHANDED_GOALS, SHORTHANDED_POINTS, TIME_ON_ICE_PER_GAME,
+                        GAME_WINNING_GOALS, OVERTIME_GOALS, SHOTS, SHOOTING_PERCENTAGE, FACEOFF_PERCENTAGE
+                    FROM
+                        Skater JOIN SkaterSeason ON Skater.SKATERID = SkaterSeason.SKATERID 
+                    WHERE
+                        TYPE = ?
+                        AND SEASON >= ? AND SEASON <= ?
+                        AND (? IS NULL OR Skater.POSITION = ?)
+                        AND (? IS NULL OR SkaterSeason.TEAM = ?)
+                    ORDER BY
+                        {order_clause}
+                    LIMIT ?; """
+                    ,( 
+                        type,
+                        first_season, last_season,
+                        position, position,
+                        team, team,
+                        self.max_num_results ) 
+                    )
             
         skater_data = data.fetchall()
         skater_stats = []
@@ -637,8 +705,6 @@ class Database():
         return skater_stats
     
 
-    # This method returns a list of Goalie objects with all of the stats of the goalies with the
-    # given name.
     def get_goalie_stats_for_one_player( self, name ): 
         cur = self.conn.cursor()
 
@@ -707,11 +773,8 @@ class Database():
             
         cur.close()
         return goalies
-    
 
-    # This method returns a list of GoalieSeason objects with all of the stats for all of the goalies
-    # from the given first season up until the ast season and team, if 'team' is defined and for all
-    # teams otherwise.
+
     def get_goalie_stats( self, type, first_season, last_season, team, stat, multiplier ):
         cur = self.conn.cursor()
 
@@ -794,9 +857,7 @@ class Database():
         cur.close()
         return goalie_stats
 
-    
-    # This method returns a list of 'Team' objects with the fields needed for the standings view from a 
-    # given season.
+
     def get_standings_stats( self, season ):
         cur = self.conn.cursor()
         teams = []
@@ -858,8 +919,6 @@ class Database():
         return teams
     
 
-    # This method returns a list of Team objects with all of the stats for all of the teams from the 
-    # given first season up until the last season.
     def get_team_stats( self, type, first_season, last_season, team, stat, multiplier ): 
         cur = self.conn.cursor()
         if team != None:
@@ -962,13 +1021,11 @@ class Database():
         return teams
 
 
-    # this method calls commit and close on the connection
     def close( self ):
         self.conn.commit()
         self.conn.close()
     
 
-    # this method resets the database (deletes 'phylib.db')
     def reset( self ):
         if os.path.exists( 'stats.db' ):
             os.remove( 'stats.db' )
