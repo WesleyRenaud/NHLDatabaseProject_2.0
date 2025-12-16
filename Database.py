@@ -551,8 +551,6 @@ class Database():
     def get_skater_stats( self, type, first_season, last_season, team, position, stat, multiplier ):
         cur = self.conn.cursor()
 
-        cur.execute( "UPDATE SkaterSeason SET TIME_ON_ICE_PER_GAME = NULL WHERE TIME_ON_ICE_PER_GAME = 'null';" );
-
         if stat == None:
             stat = 'points'
         stat = stat.replace( '-', '_' )
@@ -562,6 +560,8 @@ class Database():
         else:
             order_direction = 'ASC'
 
+        nullable_stats = ['plus_minus', 'powerplay_goals', 'powerplay_points', 'shorthanded_goals', 'shorthanded_points', 
+                          'time_on_ice_per_game', 'shots', 'shooting_percentage', 'faceoff_percentage']
         if stat == 'time_on_ice_per_game':
             order_clause = f"""
                 TIME_ON_ICE_PER_GAME IS NULL,
@@ -572,6 +572,11 @@ class Database():
                     CAST(SUBSTR(TIME_ON_ICE_PER_GAME,
                         INSTR(TIME_ON_ICE_PER_GAME, ':') + 1) AS INTEGER)
                 ) {order_direction}
+            """
+        elif stat in nullable_stats:
+            order_clause = f"""
+                {stat} IS NULL,
+                {stat} {order_direction}
             """
         else:
             order_clause = f"{stat} {order_direction}"
@@ -613,18 +618,18 @@ class Database():
                 goals=skater_season[5],
                 assists=skater_season[6],
                 points=skater_season[7],
-                plus_minus=skater_season[8] if skater_season[8] != 'null' else '--',
+                plus_minus=skater_season[8] if skater_season[8] != None else '--',
                 penalty_minutes=skater_season[9],
-                powerplay_goals=skater_season[10] if skater_season[10] != 'null' else '--',
-                powerplay_points=skater_season[11] if skater_season[11] != 'null' else '--',
-                shorthanded_goals=skater_season[12] if skater_season[12] != 'null' else '--',
-                shorthanded_points=skater_season[13] if skater_season[13] != 'null' else '--',
-                time_on_ice_per_game=skater_season[14] if skater_season[14] != 'null' else '--',
+                powerplay_goals=skater_season[10] if skater_season[10] != None else '--',
+                powerplay_points=skater_season[11] if skater_season[11] != None else '--',
+                shorthanded_goals=skater_season[12] if skater_season[12] != None else '--',
+                shorthanded_points=skater_season[13] if skater_season[13] != None else '--',
+                time_on_ice_per_game=skater_season[14] if skater_season[14] != None else '--',
                 game_winning_goals=skater_season[15],
                 overtime_goals=skater_season[16],
-                shots=skater_season[17] if skater_season[17] != 'null' else '--',
-                shooting_percentage=skater_season[18] if skater_season[18] != 'null' else '--',
-                faceoff_percentage=skater_season[19] if skater_season[19] != 'null' else '--' )
+                shots=skater_season[17] if skater_season[17] != None else '--',
+                shooting_percentage=skater_season[18] if skater_season[18] != None else '--',
+                faceoff_percentage=skater_season[19] if skater_season[19] != None else '--' )
 
             skater_stats.append( skater_season )
             
