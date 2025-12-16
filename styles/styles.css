@@ -885,7 +885,7 @@ th.name-field, td.name-field, th.team-field, td.team-field {
 
 .skater-stats-table th:nth-child(1),
 .skater-stats-table td:nth-child(1) {
-    width: 18.5%;
+    width: 19.5%;
 }
 
 .skater-stats-table th:nth-child(2),
@@ -900,7 +900,7 @@ th.name-field, td.name-field, th.team-field, td.team-field {
 
 .skater-stats-table th:nth-child(4),
 .skater-stats-table td:nth-child(4) {
-    width: 3.25%;
+    width: 3.125%;
 }
 
 .skater-stats-table th:nth-child(5),
@@ -910,17 +910,17 @@ th.name-field, td.name-field, th.team-field, td.team-field {
 
 .skater-stats-table th:nth-child(6),
 .skater-stats-table td:nth-child(6) {
-    width: 4%;
+    width: 3.75%;
 }
 
 .skater-stats-table th:nth-child(7),
 .skater-stats-table td:nth-child(7) {
-    width: 3.75%;
+    width: 3.625%;
 }
 
 .skater-stats-table th:nth-child(8),
 .skater-stats-table td:nth-child(8) {
-    width: 4.125%;
+    width: 3.875%;
 }
 
 .skater-stats-table th:nth-child(9),
@@ -957,7 +957,7 @@ th.name-field, td.name-field, th.team-field, td.team-field {
 
 .skater-stats-table th:nth-child(16),
 .skater-stats-table td:nth-child(16) {
-    width: 4%;
+    width: 3.75%;
 }
 
 .skater-stats-table th:nth-child(17),
@@ -979,12 +979,12 @@ th.name-field, td.name-field, th.team-field, td.team-field {
 
 .skater-stats-table-with-seasons th:nth-child(1),
 .skater-stats-table-with-seasons td:nth-child(1) {
-    width: 16.25%;
+    width: 17.875%;
 }
 
 .skater-stats-table-with-seasons th:nth-child(2),
 .skater-stats-table-with-seasons td:nth-child(2) {
-    width: 8%;
+    width: 7.875%;
 }
 
 .skater-stats-table-with-seasons th:nth-child(3),
@@ -993,7 +993,10 @@ th.name-field, td.name-field, th.team-field, td.team-field {
 }
 
 .skater-stats-table-with-seasons th:nth-child(4),
-.skater-stats-table-with-seasons td:nth-child(4),
+.skater-stats-table-with-seasons td:nth-child(4) {
+    width: 3.125%;
+}
+
 .skater-stats-table-with-seasons th:nth-child(5),
 .skater-stats-table-with-seasons td:nth-child(5),
 .skater-stats-table-with-seasons th:nth-child(6),
@@ -1003,7 +1006,7 @@ th.name-field, td.name-field, th.team-field, td.team-field {
 
 .skater-stats-table-with-seasons th:nth-child(7),
 .skater-stats-table-with-seasons td:nth-child(7) {
-    width: 3.75%;
+    width: 3.625%;
 }
 
 .skater-stats-table-with-seasons th:nth-child(8),
@@ -1019,24 +1022,27 @@ th.name-field, td.name-field, th.team-field, td.team-field {
 .skater-stats-table-with-seasons th:nth-child(10),
 .skater-stats-table-with-seasons td:nth-child(10),
 .skater-stats-table-with-seasons th:nth-child(11),
-.skater-stats-table-with-seasons td:nth-child(11),
+.skater-stats-table-with-seasons td:nth-child(11) {
+    width: 3.625%;
+}
+
 .skater-stats-table-with-seasons th:nth-child(12),
 .skater-stats-table-with-seasons td:nth-child(12),
 .skater-stats-table-with-seasons th:nth-child(13),
 .skater-stats-table-with-seasons td:nth-child(13) {
-    width: 3.75%;
+    width: 3.625%;
 }
 
 .skater-stats-table-with-seasons th:nth-child(14),
 .skater-stats-table-with-seasons td:nth-child(14) {
-    width: 4.875%;
+    width: 4.75%;
 }
 
 .skater-stats-table-with-seasons th:nth-child(15),
 .skater-stats-table-with-seasons td:nth-child(15),
 .skater-stats-table-with-seasons th:nth-child(16),
 .skater-stats-table-with-seasons td:nth-child(16) {
-    width: 4%;
+    width: 3.875%;
 }
 
 .skater-stats-table-with-seasons th:nth-child(17),
@@ -1045,10 +1051,13 @@ th.name-field, td.name-field, th.team-field, td.team-field {
 }
 
 .skater-stats-table-with-seasons th:nth-child(18),
-.skater-stats-table-with-seasons td:nth-child(18),
+.skater-stats-table-with-seasons td:nth-child(18) {
+    width: 4%
+}
+
 .skater-stats-table-with-seasons th:nth-child(19),
 .skater-stats-table-with-seasons td:nth-child(19) {
-    width: 4.125%;
+    width: 3.75%;
 }
 
 

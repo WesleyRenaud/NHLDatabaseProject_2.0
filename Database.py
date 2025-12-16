@@ -551,6 +551,8 @@ class Database():
     def get_skater_stats( self, type, first_season, last_season, team, position, stat, multiplier ):
         cur = self.conn.cursor()
 
+        cur.execute( "UPDATE SkaterSeason SET TIME_ON_ICE_PER_GAME = NULL WHERE TIME_ON_ICE_PER_GAME = 'null';" );
+
         if stat == None:
             stat = 'points'
         stat = stat.replace( '-', '_' )
@@ -559,6 +561,20 @@ class Database():
             order_direction = 'DESC'
         else:
             order_direction = 'ASC'
+
+        if stat == 'time_on_ice_per_game':
+            order_clause = f"""
+                TIME_ON_ICE_PER_GAME IS NULL,
+                (
+                    CAST(SUBSTR(TIME_ON_ICE_PER_GAME, 1,
+                        INSTR(TIME_ON_ICE_PER_GAME, ':') - 1) AS INTEGER) * 60
+                    +
+                    CAST(SUBSTR(TIME_ON_ICE_PER_GAME,
+                        INSTR(TIME_ON_ICE_PER_GAME, ':') + 1) AS INTEGER)
+                ) {order_direction}
+            """
+        else:
+            order_clause = f"{stat} {order_direction}"
 
         data = cur.execute(
             f""" SELECT
@@ -571,10 +587,10 @@ class Database():
                 WHERE
                     TYPE = ?
                     AND SEASON >= ? AND SEASON <= ?
-                    AND (? IS NULL OR SEASON_TEAM = ?)
                     AND (? IS NULL OR Skater.POSITION = ?)
+                    AND (? IS NULL OR SkaterSeason.TEAM = ?)
                 ORDER BY
-                    {stat} {order_direction}
+                    {order_clause}
                 LIMIT ?; """
                 ,( 
                     type,
