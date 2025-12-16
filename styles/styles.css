@@ -850,11 +850,7 @@ th.name-field, td.name-field, th.team-field, td.team-field {
     border-radius: 0 16px 16px 0;
 }
 
-#checkbox {
-    margin-top: 20px;
-}
-
-#checkbox-text {
+.checkbox-text {
     margin-top: 5px;
     display: block;
     text-align: center;

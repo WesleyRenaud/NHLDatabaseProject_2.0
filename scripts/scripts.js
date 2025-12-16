@@ -155,6 +155,26 @@ function displayTeams() {
     });
 }
 
+var checkboxCombineSeasonsOnDifferentTeams = document.querySelector('#checkbox-combine-seasons-on-different-teams');
+if (checkboxCombineSeasonsOnDifferentTeams != null) {
+    checkboxCombineSeasonsOnDifferentTeams.addEventListener('change', e => {
+        if (e.target.checked === false) {
+            var checkBoxSumResultsBetweenSeasons = document.querySelector('#checkbox-sum-results-between-seasons');
+            checkBoxSumResultsBetweenSeasons.checked = false;
+        }
+    });
+}
+
+var checkBoxSumResultsBetweenSeasons = document.querySelector('#checkbox-sum-results-between-seasons');
+if (checkBoxSumResultsBetweenSeasons != null) {
+    checkBoxSumResultsBetweenSeasons.addEventListener('change', e => {
+        if (e.target.checked === true) {
+            var checkboxCombineSeasonsOnDifferentTeams = document.querySelector('#checkbox-combine-seasons-on-different-teams');
+            checkboxCombineSeasonsOnDifferentTeams.checked = true;
+        }
+    });
+}
+
 function fetchSkaterStats(stat, multiplier) {
     if (pageName == 'skater-season-stats') {
         var type = 'Regular Season';
@@ -208,6 +228,7 @@ function fetchSkaterStats(stat, multiplier) {
     }
 
     var combineSeasonsOnDifferentTeams = document.querySelector('#checkbox-combine-seasons-on-different-teams').checked;
+    var checkBoxSumResultsBetweenSeasons = document.querySelector('#checkbox-sum-results-between-seasons').checked;
 
     $.ajax({
         type: 'POST',
@@ -219,6 +240,7 @@ function fetchSkaterStats(stat, multiplier) {
             position: position,
             team: team,
             combine_seasons_on_different_teams: combineSeasonsOnDifferentTeams,
+            sum_results_between_seasons: checkBoxSumResultsBetweenSeasons,
             stat: stat,
             multiplier: multiplier,
         }),

@@ -373,6 +373,7 @@ class MyHandler( BaseHTTPRequestHandler ):
             position = data.get( 'position' )
             team = data.get( 'team' )
             combine_seasons_on_different_teams = data.get( 'combine_seasons_on_different_teams' )
+            sum_results_between_seasons = data.get( 'sum_results_between_seasons' )
             stat = data.get( 'stat' )
             multiplier = data.get( 'multiplier' )
 
@@ -382,7 +383,8 @@ class MyHandler( BaseHTTPRequestHandler ):
 
             else:
                 skater_stats = self.database.get_skater_stats( type, first_season, last_season, position, team,
-                                                                combine_seasons_on_different_teams, stat, multiplier )
+                                                                combine_seasons_on_different_teams, 
+                                                                sum_results_between_seasons, stat, multiplier )
 
                 logos = []
                 if isinstance( skater_stats, list ):

@@ -538,7 +538,8 @@ class Database():
         return skaters
     
 
-    def get_skater_stats( self, type, first_season, last_season, position, team, combine_seasons_on_different_teams, stat, multiplier ):
+    def get_skater_stats( self, type, first_season, last_season, position, team, combine_seasons_on_different_teams,
+                            sum_results_between_seasons, stat, multiplier ):
         cur = self.conn.cursor()
 
         if stat == None:
@@ -552,17 +553,24 @@ class Database():
 
         nullable_stats = ['plus_minus', 'powerplay_goals', 'powerplay_points', 'shorthanded_goals', 'shorthanded_points', 
                           'time_on_ice_per_game', 'shots', 'shooting_percentage', 'faceoff_percentage']
+        
         if stat == 'time_on_ice_per_game':
+            if combine_seasons_on_different_teams or sum_results_between_seasons:
+                toi_name = 'AVG_TOI_PER_GAME'
+            else:
+                toi_name = 'TIME_ON_ICE_PER_GAME'
+
             order_clause = f"""
-                TIME_ON_ICE_PER_GAME IS NULL,
+                {toi_name} IS NULL,
                 (
-                    CAST(SUBSTR(TIME_ON_ICE_PER_GAME, 1,
-                        INSTR(TIME_ON_ICE_PER_GAME, ':') - 1) AS INTEGER) * 60
+                    CAST(SUBSTR({toi_name}, 1,
+                        INSTR({toi_name}, ':') - 1) AS INTEGER) * 60
                     +
-                    CAST(SUBSTR(TIME_ON_ICE_PER_GAME,
-                        INSTR(TIME_ON_ICE_PER_GAME, ':') + 1) AS INTEGER)
+                    CAST(SUBSTR({toi_name},
+                        INSTR({toi_name}, ':') + 1) AS INTEGER)
                 ) {order_direction}
             """
+            
         elif stat in nullable_stats:
             order_clause = f"""
                 {stat} IS NULL,
@@ -571,85 +579,8 @@ class Database():
         else:
             order_clause = f"{stat} {order_direction}"
 
-        if combine_seasons_on_different_teams:
-                data = cur.execute(
-                f""" SELECT
-                        NAME,
-                        POSITION,
-                        SEASON,
-                        CASE WHEN COUNT(DISTINCT SS.TEAM) > 1 THEN 'Multiple'
-                            ELSE MIN(SS.TEAM)
-                        END AS SEASON_TEAM,
-                        SUM(GAMES_PLAYED),
-                        SUM(GOALS),
-                        SUM(ASSISTS),
-                        SUM(POINTS),
-                        SUM(PLUS_MINUS),
-                        SUM(PENALTY_MINUTES),
-                        SUM(POWERPLAY_GOALS),
-                        SUM(POWERPLAY_POINTS),
-                        SUM(SHORTHANDED_GOALS),
-                        SUM(SHORTHANDED_POINTS),
-
-                        -- Weighted average TOI/G as MM:SS
-                        (
-                            CAST(
-                                (
-                                    SUM(
-                                        (CAST(SUBSTR(SS.TIME_ON_ICE_PER_GAME,1,INSTR(SS.TIME_ON_ICE_PER_GAME,':')-1) AS INTEGER)*60
-                                        + CAST(SUBSTR(SS.TIME_ON_ICE_PER_GAME,INSTR(SS.TIME_ON_ICE_PER_GAME,':')+1) AS INTEGER))
-                                        * SS.GAMES_PLAYED
-                                    ) * 1.0 / SUM(SS.GAMES_PLAYED)
-                                ) / 60 AS INTEGER
-                            )
-                        ) || ':' ||
-                        printf(
-                            '%02d',
-                            CAST(
-                                (
-                                    SUM(
-                                        (CAST(SUBSTR(SS.TIME_ON_ICE_PER_GAME,1,INSTR(SS.TIME_ON_ICE_PER_GAME,':')-1) AS INTEGER)*60
-                                        + CAST(SUBSTR(SS.TIME_ON_ICE_PER_GAME,INSTR(SS.TIME_ON_ICE_PER_GAME,':')+1) AS INTEGER))
-                                        * SS.GAMES_PLAYED
-                                    ) * 1.0 / SUM(SS.GAMES_PLAYED)
-                                ) % 60 AS INTEGER
-                            )
-                        ) AS AVG_TOI_PER_GAME,
-
-                        SUM(GAME_WINNING_GOALS),
-                        SUM(OVERTIME_GOALS),
-                        SUM(SHOTS),
-
-                        -- Weighted shooting percentage by shots
-                        CASE WHEN SUM(SS.SHOTS) > 0 THEN
-                            ROUND(SUM(SS.GOALS * 1.0) / SUM(SS.SHOTS) * 100, 2)
-                        ELSE NULL END,
-
-                        -- Weighted faceoff percentage by total faceoffs
-                        CASE WHEN SUM(SS.FACEOFF_PERCENTAGE * SS.GAMES_PLAYED) IS NOT NULL THEN
-                            ROUND(SUM(SS.FACEOFF_PERCENTAGE * SS.GAMES_PLAYED) / SUM(SS.GAMES_PLAYED), 2)
-                        ELSE NULL END
-                    FROM
-                        Skater S JOIN SkaterSeason SS ON S.SKATERID = SS.SKATERID 
-                    WHERE
-                        TYPE = ?
-                        AND SEASON >= ? AND SEASON <= ?
-                        AND (? IS NULL OR S.POSITION = ?)
-                        AND (? IS NULL OR SS.TEAM = ?)
-                    GROUP BY
-                        SS.SKATERID, SS.SEASON
-                    ORDER BY
-                        {order_clause}
-                    LIMIT ?; """
-                    ,( 
-                        type,
-                        first_season, last_season,
-                        position, position,
-                        team, team,
-                        self.max_num_results ) 
-                    )
-        else:
-            data = cur.execute(
+        if not combine_seasons_on_different_teams and not sum_results_between_seasons:
+                        data = cur.execute(
                 f""" SELECT
                         NAME, POSITION, SEASON, SkaterSeason.TEAM AS SEASON_TEAM, GAMES_PLAYED,
                         GOALS, ASSISTS, POINTS, PLUS_MINUS, PENALTY_MINUTES, POWERPLAY_GOALS,
@@ -664,6 +595,100 @@ class Database():
                         AND (? IS NULL OR SkaterSeason.TEAM = ?)
                     ORDER BY
                         {order_clause}
+                    LIMIT ?; """
+                    ,( 
+                        type,
+                        first_season, last_season,
+                        position, position,
+                        team, team,
+                        self.max_num_results ) 
+                    )  
+        else:
+            if sum_results_between_seasons:
+                group_by_clause = 'SS.SKATERID'
+            else:
+                group_by_clause = 'SS.SKATERID, SS.SEASON'
+            data = cur.execute(
+                f""" SELECT
+                        NAME,
+                        POSITION,
+                        SEASON,
+                        SEASON_TEAM,
+                        GAMES_PLAYED,
+                        GOALS,
+                        ASSISTS,
+                        POINTS,
+                        PLUS_MINUS,
+                        PENALTY_MINUTES,
+                        POWERPLAY_GOALS,
+                        POWERPLAY_POINTS,
+                        SHORTHANDED_GOALS,
+                        SHORTHANDED_POINTS,
+
+                        -- Format seconds → MM:SS
+                        CAST(AVG_TOI_SECONDS / 60 AS INTEGER)
+                            || ':' ||
+                        printf('%02d', CAST(AVG_TOI_SECONDS % 60 AS INTEGER))
+                            AS AVG_TOI_PER_GAME,
+
+                        GAME_WINNING_GOALS,
+                        OVERTIME_GOALS,
+                        SHOTS,
+                        SHOOTING_PERCENTAGE,
+                        FACEOFF_PERCENTAGE
+
+                    FROM (
+                        SELECT
+                            NAME,
+                            POSITION,
+                            SEASON,
+
+                            CASE
+                                WHEN COUNT(DISTINCT SS.TEAM) > 1 THEN 'Multiple'
+                                ELSE MIN(SS.TEAM)
+                            END AS SEASON_TEAM,
+
+                            SUM(GAMES_PLAYED) AS GAMES_PLAYED,
+                            SUM(GOALS) AS GOALS,
+                            SUM(ASSISTS) AS ASSISTS,
+                            SUM(POINTS) AS POINTS,
+                            SUM(PLUS_MINUS) AS PLUS_MINUS,
+                            SUM(PENALTY_MINUTES) AS PENALTY_MINUTES,
+                            SUM(POWERPLAY_GOALS) AS POWERPLAY_GOALS,
+                            SUM(POWERPLAY_POINTS) AS POWERPLAY_POINTS,
+                            SUM(SHORTHANDED_GOALS) AS SHORTHANDED_GOALS,
+                            SUM(SHORTHANDED_POINTS) AS SHORTHANDED_POINTS,
+
+                            (
+                                SUM(
+                                    (CAST(SUBSTR(SS.TIME_ON_ICE_PER_GAME,1,INSTR(SS.TIME_ON_ICE_PER_GAME,':')-1) AS INTEGER) * 60
+                                    + CAST(SUBSTR(SS.TIME_ON_ICE_PER_GAME,INSTR(SS.TIME_ON_ICE_PER_GAME,':')+1) AS INTEGER))
+                                    * SS.GAMES_PLAYED
+                                ) * 1.0 / SUM(SS.GAMES_PLAYED)
+                            ) AS AVG_TOI_SECONDS,
+
+                            SUM(GAME_WINNING_GOALS) AS GAME_WINNING_GOALS,
+                            SUM(OVERTIME_GOALS) AS OVERTIME_GOALS,
+                            SUM(SHOTS) AS SHOTS,
+
+                            CASE WHEN SUM(SS.SHOTS) > 0 THEN
+                                ROUND(SUM(SS.GOALS * 1.0) / SUM(SS.SHOTS) * 100, 2)
+                            ELSE NULL END AS SHOOTING_PERCENTAGE,
+
+                            CASE WHEN SUM(SS.FACEOFF_PERCENTAGE * SS.GAMES_PLAYED) IS NOT NULL THEN
+                                ROUND(SUM(SS.FACEOFF_PERCENTAGE * SS.GAMES_PLAYED) / SUM(SS.GAMES_PLAYED), 2)
+                            ELSE NULL END AS FACEOFF_PERCENTAGE
+
+                        FROM Skater S
+                        JOIN SkaterSeason SS ON S.SKATERID = SS.SKATERID
+                        WHERE
+                            TYPE = ?
+                            AND SEASON >= ? AND SEASON <= ?
+                            AND (? IS NULL OR S.POSITION = ?)
+                            AND (? IS NULL OR SS.TEAM = ?)
+                        GROUP BY {group_by_clause}
+                    )
+                    ORDER BY {order_clause}
                     LIMIT ?; """
                     ,( 
                         type,
