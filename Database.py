@@ -96,6 +96,8 @@ class Database():
                                 TIES                    INTEGER,
                                 OVERTIME_LOSSES         INTEGER,
                                 SHOTS_AGAINST           INTEGER,
+                                SAVES,                  INTEGER,
+                                GOALS_AGAINST           INTEGER,
                                 GOALS_AGAINST_AVERAGE   FLOAT       NOT NULL,
                                 SAVE_PERCENTAGE         FLOAT,
                                 SHUTOUTS                INTEGER     NOT NULL,
@@ -608,6 +610,7 @@ class Database():
                 group_by_clause = 'SS.SKATERID'
             else:
                 group_by_clause = 'SS.SKATERID, SS.SEASON'
+
             data = cur.execute(
                 f""" SELECT
                         NAME,
@@ -641,9 +644,14 @@ class Database():
                         SELECT
                             NAME,
                             POSITION,
-                            SEASON,
 
                             CASE
+                                WHEN COUNT(DISTINCT SS.SEASON) > 1 THEN 'N/A'
+                                ELSE MIN(SS.SEASON)
+                            END AS SEASON,
+
+                            CASE
+                                WHEN COUNT(DISTINCT SS.SEASON) > 1 THEN 'N/A'
                                 WHEN COUNT(DISTINCT SS.TEAM) > 1 THEN 'Multiple'
                                 ELSE MIN(SS.TEAM)
                             END AS SEASON_TEAM,
@@ -800,7 +808,8 @@ class Database():
         return goalies
 
 
-    def get_goalie_stats( self, type, first_season, last_season, team, stat, multiplier ):
+    def get_goalie_stats( self, type, first_season, last_season, team, combine_seasons_on_different_teams,
+                            sum_results_between_seasons, stat, multiplier ):
         cur = self.conn.cursor()
 
         if stat == None:
@@ -813,15 +822,20 @@ class Database():
             order_direction = 'ASC'
 
         nullable_stats = ['ties', 'overtime_losses', 'shots_against', 'save_percentage', 'time_on_ice']
+
         if stat == 'time_on_ice':
+            if combine_seasons_on_different_teams or sum_results_between_seasons:
+                toi_name = 'TOTAL_TOI'
+            else:
+                toi_name = 'TIME_ON_ICE'
             order_clause = f"""
-                TIME_ON_ICE IS NULL,
+                {toi_name} IS NULL,
                 (
-                    CAST(SUBSTR(TIME_ON_ICE, 1,
-                        INSTR(TIME_ON_ICE, ':') - 1) AS INTEGER) * 60
+                    CAST(SUBSTR({toi_name}, 1,
+                        INSTR({toi_name}, ':') - 1) AS INTEGER) * 60
                     +
-                    CAST(SUBSTR(TIME_ON_ICE,
-                        INSTR(TIME_ON_ICE, ':') + 1) AS INTEGER)
+                    CAST(SUBSTR({toi_name},
+                        INSTR({toi_name}, ':') + 1) AS INTEGER)
                 ) {order_direction}
             """
         elif stat in nullable_stats:
@@ -832,26 +846,111 @@ class Database():
         else:
             order_clause = f"{stat} {order_direction}"
 
-        data = cur.execute(
-            f""" SELECT
-                    NAME, SEASON, GoalieSeason.TEAM AS SEASON_TEAM, GAMES_PLAYED, GAMES_STARTED,
-                    WINS, LOSSES, TIES, OVERTIME_LOSSES, SHOTS_AGAINST, GOALS_AGAINST_AVERAGE,
-                    SAVE_PERCENTAGE, SHUTOUTS, GOALS, ASSISTS, PENALTY_MINUTES, TIME_ON_ICE
-                FROM
-                    Goalie JOIN GoalieSeason ON Goalie.GOALIEID = GoalieSeason.GOALIEID 
-                WHERE
-                    TYPE = ?
-                    AND (? IS NULL OR GoalieSeason.TEAM = ?)
-                    AND SEASON >= ? AND SEASON <= ?
-                ORDER BY
-                    {order_clause}
-                LIMIT ?; """
-                ,( 
-                    type,
-                    team, team,
-                    first_season, last_season,
-                    self.max_num_results ) 
-                )
+        if not combine_seasons_on_different_teams and not sum_results_between_seasons:
+            data = cur.execute(
+                f""" SELECT
+                        NAME, SEASON, GoalieSeason.TEAM AS SEASON_TEAM, GAMES_PLAYED, GAMES_STARTED,
+                        WINS, LOSSES, TIES, OVERTIME_LOSSES, SHOTS_AGAINST, GOALS_AGAINST_AVERAGE,
+                        SAVE_PERCENTAGE, SHUTOUTS, GOALS, ASSISTS, PENALTY_MINUTES, TIME_ON_ICE
+                    FROM
+                        Goalie JOIN GoalieSeason ON Goalie.GOALIEID = GoalieSeason.GOALIEID 
+                    WHERE
+                        TYPE = ?
+                        AND (? IS NULL OR GoalieSeason.TEAM = ?)
+                        AND SEASON >= ? AND SEASON <= ?
+                    ORDER BY
+                        {order_clause}
+                    LIMIT ?; """
+                    ,( 
+                        type,
+                        team, team,
+                        first_season, last_season,
+                        self.max_num_results )
+                    )
+        else:
+            if sum_results_between_seasons:
+                group_by_clause = 'GS.GOALIEID'
+            else:
+                group_by_clause = 'GS.GOALIEID, GS.SEASON'
+
+            data = cur.execute(
+                f""" SELECT
+                        NAME,
+                        SEASON,
+                        SEASON_TEAM,
+                        GAMES_PLAYED,
+                        GAMES_STARTED,
+                        WINS,
+                        LOSSES,
+                        TIES,
+                        OVERTIME_LOSSES,
+                        SHOTS_AGAINST,
+                        GOALS_AGAINST_AVERAGE,
+                        SAVE_PERCENTAGE,
+                        SHUTOUTS,
+                        GOALS,
+                        ASSISTS,
+                        PENALTY_MINUTES,
+
+                        -- Format total TOI in MM:SS
+                        CAST(AVG_TOI_SECONDS / 60 AS INTEGER)
+                            || ':' ||
+                        printf('%02d', CAST(AVG_TOI_SECONDS % 60 AS INTEGER))
+                            AS TOTAL_TOI
+
+                    FROM (
+                        SELECT
+                            NAME,
+
+                            CASE
+                                WHEN COUNT(DISTINCT GS.SEASON) > 1 THEN 'N/A'
+                                ELSE MIN(GS.SEASON)
+                            END AS SEASON,
+
+                            CASE
+                                WHEN COUNT(DISTINCT GS.SEASON) > 1 THEN 'N/A'
+                                WHEN COUNT(DISTINCT GS.TEAM) > 1 THEN 'Multiple'
+                                ELSE MIN(GS.TEAM)
+                            END AS SEASON_TEAM,
+
+                            SUM(GAMES_PLAYED) AS GAMES_PLAYED,
+                            SUM(GAMES_STARTED) AS GAMES_STARTED,
+                            SUM(WINS) AS WINS,
+                            SUM(LOSSES) AS LOSSES,
+                            SUM(TIES) AS TIES,
+                            SUM(OVERTIME_LOSSES) AS OVERTIME_LOSSES,
+                            SUM(SHOTS_AGAINST) AS SHOTS_AGAINST,
+
+                            NULL AS GOALS_AGAINST_AVERAGE,
+                            NULL AS SAVE_PERCENTAGE,
+
+                            SUM(SHUTOUTS) AS SHUTOUTS,
+                            SUM(GOALS) AS GOALS,
+                            SUM(ASSISTS) AS ASSISTS,
+                            SUM(PENALTY_MINUTES) AS PENALTY_MINUTES,
+
+                            -- Total TOI in seconds
+                            SUM(
+                                CAST(SUBSTR(GS.TIME_ON_ICE,1,INSTR(GS.TIME_ON_ICE,':')-1) AS INTEGER) * 60
+                                + CAST(SUBSTR(GS.TIME_ON_ICE,INSTR(GS.TIME_ON_ICE,':')+1) AS INTEGER)
+                            ) AS AVG_TOI_SECONDS
+
+                        FROM Goalie G
+                        JOIN GoalieSeason GS ON G.GOALIEID = GS.GOALIEID
+                        WHERE
+                            TYPE = ?
+                            AND SEASON >= ? AND SEASON <= ?
+                            AND (? IS NULL OR GS.TEAM = ?)
+                        GROUP BY {group_by_clause}
+                    )
+                    ORDER BY {order_clause}
+                    LIMIT ?; """
+                    ,( 
+                        type,
+                        first_season, last_season,
+                        team, team,
+                        self.max_num_results ) 
+                    )
 
         goalie_data = data.fetchall()
         goalie_stats = []
@@ -869,7 +968,7 @@ class Database():
                 ties=goalie[7] if goalie[7] != None else '--',
                 overtime_losses=goalie[8] if goalie[8] != None else '--',
                 shots_against=goalie[9] if goalie[9] != None else '--',
-                goals_against_average=goalie[10],
+                goals_against_average=goalie[10] if goalie[10] != None else '--',
                 save_percentage=goalie[11] if goalie[11] != None else '--',
                 shutouts=goalie[12],
                 goals=goalie[13],

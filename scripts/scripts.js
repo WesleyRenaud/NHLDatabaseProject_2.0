@@ -228,7 +228,7 @@ function fetchSkaterStats(stat, multiplier) {
     }
 
     var combineSeasonsOnDifferentTeams = document.querySelector('#checkbox-combine-seasons-on-different-teams').checked;
-    var checkBoxSumResultsBetweenSeasons = document.querySelector('#checkbox-sum-results-between-seasons').checked;
+    var sumResultsBetweenSeasons = document.querySelector('#checkbox-sum-results-between-seasons').checked;
 
     $.ajax({
         type: 'POST',
@@ -240,7 +240,7 @@ function fetchSkaterStats(stat, multiplier) {
             position: position,
             team: team,
             combine_seasons_on_different_teams: combineSeasonsOnDifferentTeams,
-            sum_results_between_seasons: checkBoxSumResultsBetweenSeasons,
+            sum_results_between_seasons: sumResultsBetweenSeasons,
             stat: stat,
             multiplier: multiplier,
         }),
@@ -340,6 +340,9 @@ function fetchGoalieStats(stat, multiplier) {
         team = null;
     }
 
+    var combineSeasonsOnDifferentTeams = document.querySelector('#checkbox-combine-seasons-on-different-teams').checked;
+    var sumResultsBetweenSeasons = document.querySelector('#checkbox-sum-results-between-seasons').checked;
+
     $.ajax({
         type: 'POST',
         url: '/get-goalie-stats',
@@ -348,6 +351,8 @@ function fetchGoalieStats(stat, multiplier) {
             team: team,
             first_season: firstSeason,
             last_season: lastSeason,
+            combine_seasons_on_different_teams: combineSeasonsOnDifferentTeams,
+            sum_results_between_seasons: sumResultsBetweenSeasons,
             stat,
             multiplier
         }),
@@ -4405,7 +4410,7 @@ function displaySkaterStats(response) {
                     var textSpan = document.createElement('span');
                     textSpan.textContent = skaterStats[i].team;
 
-                    if (response.name == null) {
+                    if (response.name == null && skaterStats[i].team != 'N/A') {
                         var teamLogoContainer = document.createElement('span');
                         teamLogoContainer.classList.add('skater-stats-table-logo-container');
 
@@ -4591,7 +4596,7 @@ function displayGoalieStats(response, type) {
                     var textSpan = document.createElement('span');
                     textSpan.textContent = goalieStats[i].team;
 
-                    if (response.name == null) {
+                    if (response.name == null && goalieStats[i].team != 'N/A') {
                         var teamLogoContainer = document.createElement('span');
                         teamLogoContainer.classList.add('goalie-stats-table-logo-container');
         

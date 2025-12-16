@@ -432,6 +432,8 @@ class MyHandler( BaseHTTPRequestHandler ):
             team = data.get( 'team' )
             first_season = data.get( 'first_season' )
             last_season = data.get( 'last_season' )
+            combine_seasons_on_different_teams = data.get( 'combine_seasons_on_different_teams' )
+            sum_results_between_seasons = data.get( 'sum_results_between_seasons' )
             stat = data.get( 'stat' )
             multiplier = data.get( 'multiplier' )
 
@@ -440,7 +442,9 @@ class MyHandler( BaseHTTPRequestHandler ):
                 goalies = [goalie.to_dict() for goalie in goalies]
 
             else:
-                goalie_stats = self.database.get_goalie_stats( type, first_season, last_season, team, stat, multiplier )
+                goalie_stats = self.database.get_goalie_stats( type, first_season, last_season, team,
+                                                                combine_seasons_on_different_teams,
+                                                                sum_results_between_seasons, stat, multiplier )
 
                 logos = []
                 if isinstance( goalie_stats, list ):
