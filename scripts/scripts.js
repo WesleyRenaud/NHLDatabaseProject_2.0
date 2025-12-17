@@ -584,35 +584,33 @@ function displayGoalieStats(response) {
         sortedByStat = sortedByStat.replace('-', '-');
     }
     fields.forEach(function(field) {
-        if (response.name == null) {
-            var th = document.createElement('th');
-            if (sortedByStat != null && field === sortedByStat) {
-                th.classList.add('sorted-by-stat-button');
-            }
+        var th = document.createElement('th');
+        if (sortedByStat != null && field === sortedByStat) {
+            th.classList.add('sorted-by-stat-button');
+        }
 
-            if (field === 'rank-and-name' || field === 'team') {
-                th.style.position = 'relative';
-                th.style.left = '5px';
+        if (field === 'rank-and-name' || field === 'team') {
+            th.style.position = 'relative';
+            th.style.left = '5px';
 
-                if (field === 'rank-and-name') {
-                    th.textContent = 'Name';
+            if (field === 'rank-and-name') {
+                th.textContent = 'Name';
 
-                }
-                else {
-                    th.textContent = 'Team';
-                }
             }
             else {
-                var button = document.createElement('button');
-                button.textContent = getFieldAbbreviation(field);
-                button.classList.add('stat-sorting-button');
-                
-                th.textContent = '';
-                th.appendChild(button);
+                th.textContent = 'Team';
             }
-            
-            headerRow.appendChild(th);
         }
+        else {
+            var button = document.createElement('button');
+            button.textContent = getFieldAbbreviation(field);
+            button.classList.add('stat-sorting-button');
+            
+            th.textContent = '';
+            th.appendChild(button);
+        }
+        
+        headerRow.appendChild(th);
     });
 
     thead.appendChild(headerRow);
@@ -635,72 +633,72 @@ function displayGoalieStats(response) {
 
         var dataRow = document.createElement('tr');
         fields.forEach(function(field) {
-            if (response.name == null) {
-                var td = document.createElement('td');
+            var td = document.createElement('td');
 
-                if (sortedByStat != null && field === sortedByStat) {
-                    td.classList.add('sorted-by-stat-button');
+            if (sortedByStat != null && field === sortedByStat) {
+                td.classList.add('sorted-by-stat-button');
+            }
+
+            if (field === 'rank-and-name') {
+                td.classList.add('name-field');
+
+                var rankSpan = document.createElement('span');
+                rankSpan.innerHTML = (i + 1) + ".";
+
+                var nameSpan = document.createElement('span');
+                nameSpan.id = 'player-name';
+                nameSpan.innerHTML = goalieStats[i].name;
+
+                td.append(rankSpan);
+                td.append(nameSpan);
+            }
+            else if (field === 'team') {
+                td.classList.add('team-field');
+                var textSpan = document.createElement('span');
+                textSpan.textContent = goalieStats[i].team;
+
+                if (response.name == null && goalieStats[i].team != 'N/A') {
+                    var teamLogoContainer = document.createElement('span');
+                    teamLogoContainer.classList.add('goalie-stats-table-logo-container');
+    
+                    var teamLogo = document.createElement('img');
+                    teamLogo.src = response.logos[i];
+                    teamLogo.alt = goalieStats[i].team + ' Logo';
+                    teamLogo.classList.add('team-logo');
+                    
+                    teamLogoContainer.appendChild(teamLogo);                                
+    
+                    td.appendChild(teamLogoContainer);
                 }
 
-                if (field === 'rank-and-name') {
-                    td.classList.add('name-field');
-
-                    var rankSpan = document.createElement('span');
-                    rankSpan.innerHTML = (i + 1) + ".";
-
-                    var nameSpan = document.createElement('span');
-                    nameSpan.id = 'player-name';
-                    nameSpan.innerHTML = goalieStats[i].name;
-
-                    td.append(rankSpan);
-                    td.append(nameSpan);
+                td.appendChild(textSpan);
+            }
+            else {
+                if (goalieStats[i][field] != '--' && field == 'goals_against_average') {
+                    td.textContent = round(parseFloat(goalieStats[i][field]), 2).toFixed(2);
                 }
-                else if (field === 'team') {
-                    td.classList.add('team-field');
-                    var textSpan = document.createElement('span');
-                    textSpan.textContent = goalieStats[i].team;
-
-                    if (response.name == null && goalieStats[i].team != 'N/A') {
-                        var teamLogoContainer = document.createElement('span');
-                        teamLogoContainer.classList.add('goalie-stats-table-logo-container');
-        
-                        var teamLogo = document.createElement('img');
-                        teamLogo.src = response.logos[i];
-                        teamLogo.alt = goalieStats[i].team + ' Logo';
-                        teamLogo.classList.add('team-logo');
-                        
-                        teamLogoContainer.appendChild(teamLogo);                                
-        
-                        td.appendChild(teamLogoContainer);
-                    }
-
-                    td.appendChild(textSpan);
+                else if (goalieStats[i][field] != '--' && field == 'save_percentage') {
+                    td.textContent = round(parseFloat(goalieStats[i][field]), 3).toFixed(3);
                 }
                 else {
-                    if (goalieStats[i][field] != '--' && field == 'goals_against_average') {
-                        td.textContent = round(parseFloat(goalieStats[i][field]), 2).toFixed(2);
-                    }
-                    else if (goalieStats[i][field] != '--' && field == 'save_percentage') {
-                        td.textContent = round(parseFloat(goalieStats[i][field]), 3).toFixed(3);
-                    }
-                    else {
-                        td.textContent = goalieStats[i][field];
-                    }
+                    td.textContent = goalieStats[i][field];
                 }
+            }
 
-                dataRow.appendChild(td);
-            } 
+            dataRow.appendChild(td);
         });
 
         tbody.appendChild(dataRow);
     }                      
 }
 
-var skaterSearchBar = document.querySelector('#search-bar');
+var choice = null;
+var skaterSearchBar = document.querySelector('#skater-search-bar');
 if (skaterSearchBar != null) {
     skaterSearchBar.addEventListener('keypress', function(event) {
         var seasonTypeChangeButton = document.querySelector('#season-type-change-button');
         if (event.key === 'Enter') {
+            choice = null; 
             seasonTypeChangeButton.style.visibility = 'visible';
             seasonTypeChangeButton.textContent = 'Playoffs';
 
@@ -711,7 +709,7 @@ if (skaterSearchBar != null) {
 
 function searchSkaterToggleType() {
     var seasonTypeChangeButton = document.querySelector('#season-type-change-button');
-    var skaterName = document.querySelector('#search-bar').value;
+    var skaterName = document.querySelector('#skater-search-bar').value;
 
     if (seasonTypeChangeButton.textContent == 'Regular Season') {
         seasonTypeChangeButton.textContent = 'Playoffs';
@@ -737,9 +735,31 @@ function searchSkater(skaterName, type, stat, multiplier) {
             contentType: 'application/json',
             success: function(response) {
                 var skaters = response.skaters;
+                
+                if (skaters.length == 0) {
+                    alert('Error - skater not found');
+                    return;
+                }
                 if (skaters.length > 1) {
-                    // TO-DO: provide system for the user to choose between the players
-                    var skater = skaters[0];
+                    if (choice == null) {
+                        choice = -1;
+
+                        while (!(choice >= 1 && choice <= skaters.length)) {
+                            var message = `Which + '${skaterName}' would you like to select?`;
+                            for (var i = 0; i < skaters.length; i++) {
+                                message += `\n (${i+1}) ${skaters[i].birthday}`;
+                                if (skaters[i] != skaters[skaters.length - 1]) {
+                                    message += ',';
+                                }
+                            }
+                            
+                            choice = prompt(message);
+                            if (!(choice >= 1 && choice <= skaters.length)) {
+                                alert(`Error - choice must be between 1 and ${skaters.length}.`);
+                            }
+                        }
+                    }
+                    var skater = skaters[choice - 1];
                 }
                 else {
                     var skater = skaters[0];
@@ -797,8 +817,8 @@ function searchSkater(skaterName, type, stat, multiplier) {
                             multiplier = 1;
                         }
 
-                        var stat = getStatNameFromAbbreviation(button.textContent);                    
-                        searchSkater(skaterName, type, stat, multiplier);
+                        var stat = getStatNameFromAbbreviation(button.textContent);
+                        searchSkater(skaterName, type, stat, multiplier, choice);
                     });
                 });
             },
@@ -807,8 +827,147 @@ function searchSkater(skaterName, type, stat, multiplier) {
             }
         });
     }
+    else {
+        alert('Error - no skater name provided.');
+    }
 }
 
+var choice = null;
+var goalieSearchBar = document.querySelector('#goalie-search-bar');
+if (goalieSearchBar != null) {
+    goalieSearchBar.addEventListener('keypress', function(event) {
+        var seasonTypeChangeButton = document.querySelector('#season-type-change-button');
+        if (event.key === 'Enter') {
+            choice = null;
+            seasonTypeChangeButton.style.visibility = 'visible';
+            seasonTypeChangeButton.textContent = 'Playoffs';
+
+            searchGoalie(goalieSearchBar.value, 'Regular Season');
+        }
+    });
+}
+
+function searchGoalieToggleType() {
+    var seasonTypeChangeButton = document.querySelector('#season-type-change-button');
+    var goalieName = document.querySelector('#goalie-search-bar').value;
+
+    if (seasonTypeChangeButton.textContent == 'Regular Season') {
+        seasonTypeChangeButton.textContent = 'Playoffs';
+        searchGoalie(goalieName, 'Regular Season');
+    }
+    else {
+        seasonTypeChangeButton.textContent = 'Regular Season';
+        searchGoalie(goalieName, 'Playoffs');
+    }
+}
+
+function searchGoalie(goalieName, type, stat, multiplier) {
+    if (goalieName != '') {
+        $.ajax({
+            type: 'POST',
+            url: '/get-goalie-stats-for-one-goalie',
+            data: JSON.stringify({
+                name: goalieName,
+                type: type,
+                stat: stat,
+                multiplier: multiplier
+            }),
+            contentType: 'application/json',
+            success: function(response) {
+                var goalies = response.goalies;
+                if (goalies.length == 0) {
+                    alert('Error - goalie not found');
+                    return;
+                }
+                else if (goalies.length > 1) {
+                    choice = -1;
+
+                    while (!(choice >= 1 && choice <= goalies.length)) {
+                        var message = `Which + '${goalieName}' would you like to select?`;
+                        for (var i = 0; i < goalies.length; i++) {
+                            message += `\n (${i+1}) ${goalies[i].birthday}`;
+                            if (goalies[i] != goalies[goalies.length - 1]) {
+                                message += ',';
+                            }
+                        }
+                        
+                        choice = prompt(message);
+                        if (!(choice >= 1 && choice <= goalies.length)) {
+                            alert(`Error - choice must be between 1 and ${goalies.length}.`);
+                        }
+                    }
+                    var goalie = goalies[choice - 1];
+                }
+                else {
+                    var goalie = goalies[0];
+                }
+                
+                if (type == 'Regular Season') {
+                    var goalie_stats = goalie.seasons;
+                }
+                else {
+                    var goalie_stats = goalie.playoffs;
+                }
+
+                var response = {
+                    goalie_stats: goalie_stats,
+                    name: goalieName
+                }
+
+                displayGoalieStats(response);
+
+                // Mark the stat we are sorting by as such
+                if (stat != null) {
+                    var abbreviation = getFieldAbbreviation(stat);
+                    var statSortingButtons = document.querySelectorAll('.stat-sorting-button');
+
+                    var button = Array.from(statSortingButtons).find(btn =>
+                        btn.textContent.trim() === abbreviation
+                    );
+                    button.classList.add('sorted-by-stat');
+
+                    // Mark all of the successive stats in the column
+                    var th = button.parentElement;
+
+                    var table = document.querySelector('table');
+                    var headerRow = table.querySelector('thead tr');
+
+                    var thIndex = [...headerRow.children].indexOf(th);
+
+                    var tds = table.querySelectorAll(`tbody tr td:nth-child(${thIndex + 1})`);
+
+                    tds.forEach(td => {
+                        td.classList.add('sorted-by-stat');
+                    });
+                }
+                
+                var statSortingButtons = document.querySelectorAll('.stat-sorting-button');
+
+                statSortingButtons.forEach(function(button) {                
+                    button.addEventListener('click', function() {
+                        var sortedByStatButton = document.querySelector('button.sorted-by-stat');
+
+                        if (sortedByStatButton == button) {
+                            multiplier *= -1;
+                        }
+                        else {
+                            multiplier = 1;
+                        }
+
+                        var stat = getStatNameFromAbbreviation(button.textContent);                    
+                        searchGoalie(goalieName, type, stat, multiplier);
+                    });
+                });
+            },
+            error: function() {
+                alert('Error - goalie not found');
+            }
+        });
+    }
+    else {
+        alert('Error - no goalie name provided.');
+    }
+}
 
 function isValidSeason(season) {
     if (season.length == 9 && season[4] == '-') {

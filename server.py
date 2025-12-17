@@ -290,11 +290,11 @@ class MyHandler( BaseHTTPRequestHandler ):
             
             self.database.add_team( team )
 
-            self.send_response(200)
+            self.send_response( 200 )
             self.send_header('Content-type', 'application/json')
             self.end_headers()
             response = {'status': 'success'}
-            self.wfile.write(json.dumps(response).encode('utf-8'))
+            self.wfile.write( json.dumps( response ).encode( 'utf-8' ) )
 
 
         if self.path == '/add-skater':
@@ -393,7 +393,7 @@ class MyHandler( BaseHTTPRequestHandler ):
 
                     skater_stats[i] = skater_stats[i].to_dict()
 
-            self.send_response(200)
+            self.send_response( 200 )
             self.send_header('Content-type', 'application/json')
             self.end_headers()                
 
@@ -405,7 +405,7 @@ class MyHandler( BaseHTTPRequestHandler ):
                 'logos': logos
             }
             
-            self.wfile.write(json.dumps(response).encode('utf-8'))
+            self.wfile.write( json.dumps( response ).encode( 'utf-8' ) )
 
 
         elif self.path == '/get-skater-stats-for-one-skater':
@@ -418,10 +418,10 @@ class MyHandler( BaseHTTPRequestHandler ):
             stat = data.get( 'stat' )
             multiplier = data.get( 'multiplier' )
 
-            skaters = self.database.get_skater_stats_for_one_player( name, type, stat, multiplier )
+            skaters = self.database.get_skater_stats_for_one_skater( name, type, stat, multiplier )
             skaters = [skater.to_dict() for skater in skaters]
 
-            self.send_response(200)
+            self.send_response( 200 )
             self.send_header('Content-type', 'application/json')
             self.end_headers() 
 
@@ -430,7 +430,7 @@ class MyHandler( BaseHTTPRequestHandler ):
                 'skaters': skaters
             }
 
-            self.wfile.write(json.dumps(response).encode('utf-8'))
+            self.wfile.write( json.dumps( response ).encode( 'utf-8' ) )
 
 
         elif self.path == '/get-goalie-stats':
@@ -438,7 +438,6 @@ class MyHandler( BaseHTTPRequestHandler ):
             post_data = self.rfile.read( content_length )
             data = json.loads( post_data.decode( 'utf-8' ) )
 
-            name = data.get( 'name' )
             type = data.get( 'type' )
             team = data.get( 'team' )
             first_season = data.get( 'first_season' )
@@ -448,48 +447,61 @@ class MyHandler( BaseHTTPRequestHandler ):
             stat = data.get( 'stat' )
             multiplier = data.get( 'multiplier' )
 
-            if name != None:
-                goalies = self.database.get_goalie_stats_for_one_player( name )
-                goalies = [goalie.to_dict() for goalie in goalies]
+            goalie_stats = self.database.get_goalie_stats( type, first_season, last_season, team,
+                                                            combine_seasons_on_different_teams,
+                                                            sum_results_between_seasons, stat, multiplier )
 
-            else:
-                goalie_stats = self.database.get_goalie_stats( type, first_season, last_season, team,
-                                                                combine_seasons_on_different_teams,
-                                                                sum_results_between_seasons, stat, multiplier )
+            logos = []
+            if isinstance( goalie_stats, list ):
+                for i in range( len( goalie_stats ) ):
+                    team_name = goalie_stats[i].team
 
-                logos = []
-                if isinstance( goalie_stats, list ):
-                    for i in range( len( goalie_stats ) ):
-                        team_name = goalie_stats[i].team
+                    if first_season == last_season:
+                        team_logo_path = self.nhl_util.get_team_logo_path( team_name, first_season )
+                    else:
+                        team_logo_path = self.nhl_util.get_team_logo_path( team_name, goalie_stats[i].season )
+                    logos.append( team_logo_path )
 
-                        if first_season == last_season:
-                            team_logo_path = self.nhl_util.get_team_logo_path( team_name, first_season )
-                        else:
-                            team_logo_path = self.nhl_util.get_team_logo_path( team_name, goalie_stats[i].season )
-                        logos.append( team_logo_path )
+                    goalie_stats[i] = goalie_stats[i].to_dict()
 
-                        goalie_stats[i] = goalie_stats[i].to_dict()
-
-            self.send_response(200)
+            self.send_response( 200 )
             self.send_header('Content-type', 'application/json')
             self.end_headers()
 
-            if name != None:
-                response = {
-                    'status': 'success',
-                    'goalies': goalies
-                }
-
-            else:
-                response = {
-                    'status': 'success',
-                    'first_season': first_season,
-                    'last_season': last_season,
-                    'goalie_stats': goalie_stats,
-                    'logos': logos
-                }
+            response = {
+                'status': 'success',
+                'first_season': first_season,
+                'last_season': last_season,
+                'goalie_stats': goalie_stats,
+                'logos': logos
+            }
             
-            self.wfile.write(json.dumps(response).encode('utf-8'))  
+            self.wfile.write( json.dumps( response ).encode( 'utf-8' ) )
+
+        
+        elif self.path == '/get-goalie-stats-for-one-goalie':
+            content_length = int( self.headers[ 'Content-Length'] )
+            post_data = self.rfile.read( content_length )
+            data = json.loads( post_data.decode( 'utf-8' ) )
+
+            name = data.get( 'name' )
+            type = data.get( 'type' )
+            stat = data.get( 'stat' )
+            multiplier = data.get( 'multiplier' )
+
+            goalies = self.database.get_goalie_stats_for_one_goalie( name, type, stat, multiplier )
+            goalies = [goalie.to_dict() for goalie in goalies]
+
+            self.send_response( 200 )
+            self.send_header('Content-type', 'application/json')
+            self.end_headers() 
+
+            response = {
+                'status': 'success',
+                'goalies': goalies
+            }
+
+            self.wfile.write( json.dumps( response ).encode( 'utf-8' ) )
 
 
         elif self.path == '/get-team-stats':
@@ -520,7 +532,7 @@ class MyHandler( BaseHTTPRequestHandler ):
             else:
                 team_stats = team_stats.to_dict()
 
-            self.send_response(200)
+            self.send_response( 200 )
             self.send_header('Content-type', 'application/json')
             self.end_headers()
         
@@ -538,7 +550,7 @@ class MyHandler( BaseHTTPRequestHandler ):
                     'team_stats': team_stats
                 }
             
-            self.wfile.write(json.dumps(response).encode('utf-8'))
+            self.wfile.write( json.dumps( response ).encode( 'utf-8' ) )
 
 
         elif self.path == '/get-wildcard-standings':
@@ -564,7 +576,7 @@ class MyHandler( BaseHTTPRequestHandler ):
             # get the clinching markers
             clinching_markers = self.nhl_util.get_clinching_markers( season, teams )
 
-            self.send_response(200)
+            self.send_response( 200 )
             self.send_header('Content-type', 'application/json')
             self.end_headers()
             
@@ -575,7 +587,7 @@ class MyHandler( BaseHTTPRequestHandler ):
                 'clinching_markers': clinching_markers
             }
             
-            self.wfile.write(json.dumps(response).encode('utf-8'))
+            self.wfile.write( json.dumps( response ).encode( 'utf-8' ) )
 
 
         elif self.path == '/get-division-standings':
@@ -609,7 +621,7 @@ class MyHandler( BaseHTTPRequestHandler ):
             # get the clinching markers
             clinching_markers = self.nhl_util.get_clinching_markers( season, teams )
 
-            self.send_response(200)
+            self.send_response( 200 )
             self.send_header('Content-type', 'application/json')
             self.end_headers()
             
@@ -620,7 +632,7 @@ class MyHandler( BaseHTTPRequestHandler ):
                 'clinching_markers': clinching_markers
             }
             
-            self.wfile.write(json.dumps(response).encode('utf-8'))
+            self.wfile.write( json.dumps( response ).encode( 'utf-8' ) )
 
 
         elif self.path == '/get-conference-standings':
@@ -653,7 +665,7 @@ class MyHandler( BaseHTTPRequestHandler ):
             # get the clinching markers
             clinching_markers = self.nhl_util.get_clinching_markers( season, teams )
 
-            self.send_response(200)
+            self.send_response( 200 )
             self.send_header('Content-type', 'application/json')
             self.end_headers()
             
@@ -664,7 +676,7 @@ class MyHandler( BaseHTTPRequestHandler ):
                 'clinching_markers': clinching_markers
             }
             
-            self.wfile.write(json.dumps(response).encode('utf-8'))
+            self.wfile.write( json.dumps( response ).encode( 'utf-8' ) )
 
 
         elif self.path == '/get-league-standings':
@@ -698,7 +710,7 @@ class MyHandler( BaseHTTPRequestHandler ):
             # get the clinching markers
             clinching_markers = self.nhl_util.get_clinching_markers( season, teams )
 
-            self.send_response(200)
+            self.send_response( 200 )
             self.send_header('Content-type', 'application/json')
             self.end_headers()
             
@@ -709,7 +721,7 @@ class MyHandler( BaseHTTPRequestHandler ):
                 'clinching_markers': clinching_markers
             }
             
-            self.wfile.write(json.dumps(response).encode('utf-8'))
+            self.wfile.write( json.dumps( response ).encode( 'utf-8' ) )
 
 
 if __name__ == '__main__':

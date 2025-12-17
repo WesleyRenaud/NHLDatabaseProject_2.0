@@ -463,7 +463,7 @@ class Database():
         self.conn.commit()
 
 
-    def get_skater_stats_for_one_player( self, name, type, stat, multiplier ): 
+    def get_skater_stats_for_one_skater( self, name, type, stat, multiplier ): 
         cur = self.conn.cursor()
 
         data = cur.execute( """ SELECT SKATERID, TEAM, NUMBER, POSITION, HEIGHT, WEIGHT, BIRTHDAY,
@@ -524,8 +524,8 @@ class Database():
                         SKATERID = ?
                         AND TYPE = ?
                     ORDER BY
-                        {order_clause}; """
-                    , ( skater_id, type, ) )
+                        {order_clause}; """ ,
+                    ( skater_id, type, ) )
             
             season_data = data.fetchall()
             if type == 'Regular Season':
@@ -775,7 +775,7 @@ class Database():
         return skater_stats
     
 
-    def get_goalie_stats_for_one_player( self, name ): 
+    def get_goalie_stats_for_one_goalie( self, name, type, stat, multiplier ): 
         cur = self.conn.cursor()
 
         data = cur.execute( """ SELECT GOALIEID, TEAM, NUMBER, HEIGHT, WEIGHT, BIRTHDAY,
@@ -784,6 +784,35 @@ class Database():
                                        WHERE NAME = ?; """, ( name, ) )
 
         goalie_data = data.fetchall()
+
+        if stat == None:
+            stat = 'season'
+        stat = stat.replace( '-', '_' )
+
+        if multiplier == 1 or multiplier == None:
+            order_direction = 'DESC'
+        else:
+            order_direction = 'ASC'
+
+        nullable_stats = ['ties', 'overtime_losses', 'shots_against', 'save_percentage', 'time_on_ice']
+        if stat == 'time_on_ice':
+            order_clause = f"""
+                time_on_ice IS NULL,
+                (
+                    CAST(SUBSTR(time_on_ice, 1,
+                        INSTR(time_on_ice, ':') - 1) AS INTEGER) * 60
+                    +
+                    CAST(SUBSTR(time_on_ice,
+                        INSTR(time_on_ice, ':') + 1) AS INTEGER)
+                ) {order_direction}
+            """
+        elif stat in nullable_stats:
+            order_clause = f"""
+                {stat} IS NULL,
+                {stat} {order_direction}
+            """
+        else:
+            order_clause = f"{stat} {order_direction}"
         
         goalies = []
         for goalie in goalie_data:
@@ -794,50 +823,59 @@ class Database():
 
             goalie_id = goalie[0]
 
-            data = cur.execute( """ SELECT TYPE, SEASON, TEAM, GAMES_PLAYED, GAMES_STARTED, WINS, 
-                                    LOSSES, TIES, OVERTIME_LOSSES, SHOTS_AGAINST, GOALS_AGAINST_AVERAGE,
-                                    SAVE_PERCENTAGE, SHUTOUTS, GOALS, ASSISTS, PENALTY_MINUTES,
-                                    TIME_ON_ICE
-                                    FROM GoalieSeason 
-                                    WHERE GOALIEID = ?; """, ( goalie_id, ) )
+            data = cur.execute(
+                f""" SELECT
+                        SEASON, TEAM, GAMES_PLAYED, GAMES_STARTED, WINS, LOSSES, TIES,
+                        OVERTIME_LOSSES, SHOTS_AGAINST, GOALS_AGAINST_AVERAGE, SAVE_PERCENTAGE,
+                        SHUTOUTS, GOALS, ASSISTS, PENALTY_MINUTES, TIME_ON_ICE
+                    FROM
+                        GoalieSeason 
+                    WHERE
+                        GOALIEID = ?
+                        AND TYPE = ?
+                    ORDER BY
+                        {order_clause}; """,
+                    ( goalie_id, type ) )
+            
             season_data = data.fetchall()
-            for season in season_data:
-                if season[0] == 'Regular Season':
+            if type == 'Regular Season':
+                for season in season_data:
                     curr_goalie.add_season(
-                        season=season[1],
-                        team=season[2],
-                        games_played=season[3],
-                        games_started=season[4],
-                        wins=season[5],
-                        losses=season[6], 
-                        ties=season[7] if season[7] != None else '--',
-                        overtime_losses=season[8] if season[8] != None else '--',
-                        shots_against=season[9] if season[9] != None else '--',
-                        goals_against_average=season[10],
-                        save_percentage=season[11] if season[11] != None else '--',
-                        shutouts=season[12],
-                        goals=season[13],
-                        assists=season[14], 
-                        penalty_minutes=season[15],
-                        time_on_ice=season[16] if season[16] != None else '--' )
-                else:
+                        season=season[0],
+                        team=season[1],
+                        games_played=season[2],
+                        games_started=season[3],
+                        wins=season[4],
+                        losses=season[5], 
+                        ties=season[6] if season[6] != None else '--',
+                        overtime_losses=season[7] if season[7] != None else '--',
+                        shots_against=season[8] if season[8] != None else '--',
+                        goals_against_average=season[9],
+                        save_percentage=season[10] if season[10] != None else '--',
+                        shutouts=season[11],
+                        goals=season[12],
+                        assists=season[13], 
+                        penalty_minutes=season[14],
+                        time_on_ice=season[15] if season[15] != None else '--' )
+            else:
+                for season in season_data:
                     curr_goalie.add_playoffs(
-                        season=season[1],
-                        team=season[2],
-                        games_played=season[3],
-                        games_started=season[4],
-                        wins=season[5],
-                        losses=season[6], 
-                        ties=season[7] if season[7] != None else '--',
-                        overtime_losses=season[8] if season[8] != None else '--',
-                        shots_against=season[9] if season[9] != None else '--',
-                        goals_against_average=season[10],
-                        save_percentage=season[11] if season[11] != None else '--',
-                        shutouts=season[12],
-                        goals=season[13],
-                        assists=season[14], 
-                        penalty_minutes=season[15],
-                        time_on_ice=season[16] if season[16] != None else '--' )
+                        season=season[0],
+                        team=season[1],
+                        games_played=season[2],
+                        games_started=season[3],
+                        wins=season[4],
+                        losses=season[5], 
+                        ties=season[6] if season[6] != None else '--',
+                        overtime_losses=season[7] if season[7] != None else '--',
+                        shots_against=season[8] if season[8] != None else '--',
+                        goals_against_average=season[9],
+                        save_percentage=season[10] if season[10] != None else '--',
+                        shutouts=season[11],
+                        goals=season[12],
+                        assists=season[13], 
+                        penalty_minutes=season[14],
+                        time_on_ice=season[15] if season[15] != None else '--' )
 
             goalies.append( curr_goalie )
             

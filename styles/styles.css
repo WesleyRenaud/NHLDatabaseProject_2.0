@@ -192,7 +192,7 @@ button:hover {
     margin: 25px auto 35px auto;
 }
 
-#search-bar {
+.search-bar {
     width: 100%;
     padding: 10px 10px 10px 40px;
     border: 2px solid black;
@@ -1461,3 +1461,4 @@ th.name-field, td.name-field, th.team-field, td.team-field {
     border: 1px solid black;
     border-radius: 0 16px 16px 0;
 }
+
