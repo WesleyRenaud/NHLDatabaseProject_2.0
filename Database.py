@@ -1065,7 +1065,7 @@ class Database():
         
         data = cur.execute(
             """ SELECT 
-                    CITY, NAME, GAMES_PLAYED, WINS, LOSSES, OVERTIME_LOSSES, POINTS,
+                    CITY, NAME, GAMES_PLAYED, WINS, LOSSES, TIES, OVERTIME_LOSSES, POINTS,
                     POINTS_PERCENTAGE, REGULATION_WINS, REGULATION_AND_OVERTIME_WINS,
                     GOALS_FOR, GOALS_AGAINST, GOAL_DIFFERENTIAL, HOME, AWAY, SHOOTOUT,
                     LAST_10, STREAK

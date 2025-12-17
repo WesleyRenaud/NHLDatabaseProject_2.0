@@ -504,55 +504,6 @@ class MyHandler( BaseHTTPRequestHandler ):
             self.wfile.write( json.dumps( response ).encode( 'utf-8' ) )
 
 
-        elif self.path == '/get-team-stats':
-            content_length = int( self.headers[ 'Content-Length'] )
-            post_data = self.rfile.read( content_length )
-            data = json.loads( post_data.decode( 'utf-8' ) )
-
-            type = data.get( 'type' )
-            team = data.get( 'team' )
-            first_season = data.get( 'first_season' )
-            last_season = data.get( 'last_season' )
-            stat = data.get( 'stat' )
-            multiplier = data.get( 'multiplier' )
-
-            team_stats = self.database.get_team_stats( type, first_season, last_season, stat, multiplier )
-
-            if team == 'all':
-                logos = []
-                for i in range( len( team_stats ) ):
-                    # get the image for each team based on the season
-                    team_name = team_stats[i].get_full_name()
-                    team_logo_path = self.nhl_util.get_team_logo_path( team_name, team_stats[i].season )
-                    logos.append( team_logo_path )                
-
-            if isinstance( team_stats, list ):
-                for i in range( len( team_stats ) ):
-                    team_stats[i] = team_stats[i].to_dict()
-            else:
-                team_stats = team_stats.to_dict()
-
-            self.send_response( 200 )
-            self.send_header('Content-type', 'application/json')
-            self.end_headers()
-        
-            if team == 'all':
-                response = {
-                    'status': 'success',
-                    'first_season': first_season,
-                    'last_season': last_season,
-                    'team_stats': team_stats,
-                    'logos': logos
-                }
-            else:
-                response = {
-                    'status': 'success',
-                    'team_stats': team_stats
-                }
-            
-            self.wfile.write( json.dumps( response ).encode( 'utf-8' ) )
-
-
         elif self.path == '/get-wildcard-standings':
             content_length = int( self.headers[ 'Content-Length'] )
             post_data = self.rfile.read( content_length )
@@ -720,6 +671,55 @@ class MyHandler( BaseHTTPRequestHandler ):
                 'logos': logos,
                 'clinching_markers': clinching_markers
             }
+            
+            self.wfile.write( json.dumps( response ).encode( 'utf-8' ) )
+
+
+        elif self.path == '/get-team-stats':
+            content_length = int( self.headers[ 'Content-Length'] )
+            post_data = self.rfile.read( content_length )
+            data = json.loads( post_data.decode( 'utf-8' ) )
+
+            type = data.get( 'type' )
+            team = data.get( 'team' )
+            first_season = data.get( 'first_season' )
+            last_season = data.get( 'last_season' )
+            stat = data.get( 'stat' )
+            multiplier = data.get( 'multiplier' )
+
+            team_stats = self.database.get_team_stats( type, first_season, last_season, stat, multiplier )
+
+            if team == 'all':
+                logos = []
+                for i in range( len( team_stats ) ):
+                    # get the image for each team based on the season
+                    team_name = team_stats[i].get_full_name()
+                    team_logo_path = self.nhl_util.get_team_logo_path( team_name, team_stats[i].season )
+                    logos.append( team_logo_path )                
+
+            if isinstance( team_stats, list ):
+                for i in range( len( team_stats ) ):
+                    team_stats[i] = team_stats[i].to_dict()
+            else:
+                team_stats = team_stats.to_dict()
+
+            self.send_response( 200 )
+            self.send_header('Content-type', 'application/json')
+            self.end_headers()
+        
+            if team == 'all':
+                response = {
+                    'status': 'success',
+                    'first_season': first_season,
+                    'last_season': last_season,
+                    'team_stats': team_stats,
+                    'logos': logos
+                }
+            else:
+                response = {
+                    'status': 'success',
+                    'team_stats': team_stats
+                }
             
             self.wfile.write( json.dumps( response ).encode( 'utf-8' ) )
 

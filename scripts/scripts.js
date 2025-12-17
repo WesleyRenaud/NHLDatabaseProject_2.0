@@ -969,6 +969,413 @@ function searchGoalie(goalieName, type, stat, multiplier) {
     }
 }
 
+function displayStandingsTypes() {
+    var season = document.querySelector('#season-dropdown-button').textContent;
+    if (!isValidSeason(season)) {
+        alert('Error - a season must be selected first');
+        return;
+    }
+
+    // Get all of the standings types
+    var standingsTypeDropdownItems = document.querySelectorAll('.standings-type-dropdown-option');
+    var standingsTypeSelector = document.querySelector('#standings-type-selector');
+    var standingsTypeDropdownButton = document.querySelector('#standings-type-dropdown-button');
+
+    standingsTypeDropdownItems.forEach(standingsTypeDropdownItem => {
+        var standingsType = standingsTypeDropdownItem.textContent;
+        if (didStandingsTypeExistInSeason(standingsType, season)) {
+            standingsTypeDropdownItem.style.display = 'block';
+        }
+    });
+    
+    standingsTypeSelector.style.display = 'block';
+
+    standingsTypeDropdownItems.forEach(standingsTypeDropdownItem => {
+        standingsTypeDropdownItem.addEventListener('click', function () {
+            standingsTypeSelector.style.display = 'none';
+
+            standingsTypeDropdownItems.forEach(item => {
+                item.style.display = 'none';
+            });
+
+            standingsTypeDropdownButton.textContent = standingsTypeDropdownItem.textContent;
+            standingsTypeDropdownButton.style.fontSize = '10px';
+        });
+    });
+}
+
+function fetchStandings() {
+    var standingsType = document.querySelector('#standings-type-dropdown-button').textContent;
+    var season = document.querySelector('#season-dropdown-button').textContent;
+
+    if (standingsType == 'Wildcard') {
+        fetchWildcardStandings(season);
+    }
+    else if (standingsType == 'Division') {
+        fetchDivisionStandings(season);
+    }
+    else if (standingsType == 'Conference') {
+        fetchConferenceStandings(season);
+    }
+    else {
+        fetchLeagueStandings(season);
+    }
+}
+
+function fetchWildcardStandings(season) {
+    $.ajax({
+        type: 'POST',
+        url: '/get-wildcard-standings',
+        data: JSON.stringify({
+            season: season
+        }),
+        contentType: 'application/json',
+        success: function(response) {
+            sortedByStat = null;
+            multiplier = -1;
+            resetStatsScreen();
+            displayWildcardStandings(response);
+        }
+    });
+}
+
+function displayWildcardStandings(response) {
+    resetStatsScreen();
+
+    var standings = response.wildcard_standings;
+    var statViewingContainer = document.querySelector('#stat-viewing-container');
+    
+    var hasHeaders = false;
+    var teamIndex = 0;
+
+    for (var i = 0; i < standings.length; i++) {                    
+        if (typeof standings[i] == 'string' && standings[i].includes('Conference')) {
+            hasHeaders = false;
+
+            var conference = standings[i].split('Conference:')[1].trim();
+
+            var conferenceHeader = document.createElement('h2');
+            conferenceHeader.textContent = conference;
+            conferenceHeader.classList.add('header');
+
+            statViewingContainer.appendChild(conferenceHeader);
+        }
+        else if (typeof standings[i] == 'string' && standings[i].includes('Division')) {
+            hasHeaders = false;
+            
+            var division = standings[i].split('Division:')[1].trim();
+
+            var divisionHeader = document.createElement('h3');
+            divisionHeader.textContent = division;
+            divisionHeader.classList.add('header');
+
+            statViewingContainer.appendChild(divisionHeader);
+        }
+        else if (typeof standings[i] == 'string' && standings[i].includes('Wildcard')) {
+            hasHeaders = false;
+            
+            var wildcardHeader = document.createElement('h3');
+            wildcardHeader.textContent = 'Wildcard';
+            wildcardHeader.classList.add('header');
+
+            statViewingContainer.appendChild(wildcardHeader);
+        }
+        else {
+            if (!hasHeaders) {
+                var rank  = 1;
+
+                hasHeaders = true;
+        
+                var fields = [];
+        
+                // Add the fields to the table
+                fields.push('rank-and-team');
+                for (var key in standings[i]) {
+                    if (standings[i].hasOwnProperty(key) && standings[i][key] !== null) {
+                        if (key !== 'city' && key !== 'name') {
+                            fields.push(key);
+                        }
+                    }
+                }
+        
+                var table = document.createElement('table');
+                table.classList.add('standings-table');
+                var thead = document.createElement('thead');
+        
+                var headerRow = document.createElement('tr');
+                fields.forEach(function(field) {
+                    var th = document.createElement('th');
+                
+                    if (field === 'rank-and-team') {
+                        th.classList.add('name-field');
+                        th.textContent = getFieldAbbreviation(field);
+                    } 
+                    else {
+                        var button = document.createElement('button');
+                        button.textContent = getFieldAbbreviation(field);
+                        button.classList.add('stat-sorting-button');
+                        
+                        th.textContent = '';
+                        th.appendChild(button);
+                    }
+                    
+                    headerRow.appendChild(th);
+                });
+
+                thead.appendChild(headerRow);
+                table.appendChild(thead);
+        
+                statViewingContainer.appendChild(table);                   
+            }
+        
+            var tables = statViewingContainer.querySelectorAll('table');
+            var table = tables[tables.length - 1];
+            var tbody = table.querySelector('tbody');
+            
+            if (!tbody) {
+                tbody = document.createElement('tbody');
+                table.appendChild(tbody);
+            }
+            
+            // add the team to the table
+            var dataRow = document.createElement('tr');
+            fields.forEach(function(field) {
+                var td = document.createElement('td');
+                if (field === 'rank-and-team') {
+                    var fullTeamName = standings[i].city + ' ' + standings[i].name
+
+                    var rankSpan = document.createElement('span');
+                    rankSpan.innerHTML = rank + '. ';
+
+                    var textSpan = document.createElement('span');
+                    textSpan.textContent = fullTeamName;
+                    textSpan.classList.add('standings-rank-and-team');
+
+                    // check if the team has a clinching marker
+                    var clinchingMarker = document.createElement('span');
+                    if (response.clinching_markers[fullTeamName] != null) {
+                        clinchingMarker.textContent = response.clinching_markers[fullTeamName];
+                        clinchingMarker.classList.add('clinching-marker');
+                    }
+                    else {
+                        clinchingMarker.classList.add('clinching-marker-placeholder');
+                    } 
+
+                    var teamLogoContainer = document.createElement('span');
+                    teamLogoContainer.classList.add('standings-table-logo-container');
+
+                    var teamLogo = document.createElement('img');
+                    teamLogo.src = response.logos[teamIndex];
+                    teamLogo.alt = fullTeamName + ' Logo';
+                    teamLogo.classList.add('team-logo');
+                    
+                    teamLogoContainer.appendChild(teamLogo);                                
+
+                    td.appendChild(rankSpan);
+                    td.appendChild(clinchingMarker); // adds the actual marker or a blank placeholder
+                    td.appendChild(teamLogoContainer);
+                    td.appendChild(textSpan);
+
+                    td.classList.add('name-field');
+                }
+                else if (field === 'points-percentage') {
+                    td.textContent = round(parseFloat(standings[i][field]), 3).toFixed(3);
+                }
+                else {
+                    td.textContent = standings[i][field];
+                }
+                console.log(standings[i][field]);
+                dataRow.appendChild(td);
+            });
+            tbody.appendChild(dataRow);
+
+            teamIndex++;
+            rank++;
+        }                 
+    }
+}
+
+function fetchDivisionStandings(season, stat, multiplier) {
+    $.ajax({
+        type: 'POST',
+        url: '/get-division-standings',
+        data: JSON.stringify({
+            season: season
+        }),
+        contentType: 'application/json',
+        success: function(response) {
+            stat = null;
+            multiplier = -1;
+            resetStatsScreen();
+            displayDivisionStandings(response, season);
+        
+            // Mark the stat we are sorting by as such
+            if (stat != null) {
+                var abbreviation = getFieldAbbreviation(stat);
+                var statSortingButtons = document.querySelectorAll('.stat-sorting-button');
+
+                var button = Array.from(statSortingButtons).find(btn =>
+                    btn.textContent.trim() === abbreviation
+                );
+                button.classList.add('sorted-by-stat');
+
+                // Mark all of the successive stats in the column
+                var th = button.parentElement;
+
+                var table = document.querySelector('table');
+                var headerRow = table.querySelector('thead tr');
+
+                var thIndex = [...headerRow.children].indexOf(th);
+
+                var tds = table.querySelectorAll(`tbody tr td:nth-child(${thIndex + 1})`);
+
+                tds.forEach(td => {
+                    td.classList.add('sorted-by-stat');
+                });
+            }
+            
+            var statSortingButtons = document.querySelectorAll('.stat-sorting-button');
+
+            statSortingButtons.forEach(function(button) {                
+                button.addEventListener('click', function() {
+                    var sortedByStatButton = document.querySelector('button.sorted-by-stat');
+
+                    if (sortedByStatButton == button) {
+                        multiplier *= -1;
+                    }
+                    else {
+                        multiplier = 1;
+                    }
+
+                    var stat = getStatNameFromAbbreviation(button.textContent);                    
+                    fetchGoalieStats(stat, multiplier);
+                });
+            });
+        }
+    });
+}
+
+function fetchConferenceStandings(season, stat, multiplier) {
+    $.ajax({
+        type: 'POST',
+        url: '/get-conference-standings',
+        data: JSON.stringify({
+            season: season
+        }),
+        contentType: 'application/json',
+        success: function(response) {
+            stat = null;
+            multiplier = -1;
+            resetStatsScreen();
+            displayConferenceStandings(response, season);
+        
+            // Mark the stat we are sorting by as such
+            if (stat != null) {
+                var abbreviation = getFieldAbbreviation(stat);
+                var statSortingButtons = document.querySelectorAll('.stat-sorting-button');
+
+                var button = Array.from(statSortingButtons).find(btn =>
+                    btn.textContent.trim() === abbreviation
+                );
+                button.classList.add('sorted-by-stat');
+
+                // Mark all of the successive stats in the column
+                var th = button.parentElement;
+
+                var table = document.querySelector('table');
+                var headerRow = table.querySelector('thead tr');
+
+                var thIndex = [...headerRow.children].indexOf(th);
+
+                var tds = table.querySelectorAll(`tbody tr td:nth-child(${thIndex + 1})`);
+
+                tds.forEach(td => {
+                    td.classList.add('sorted-by-stat');
+                });
+            }
+            
+            var statSortingButtons = document.querySelectorAll('.stat-sorting-button');
+
+            statSortingButtons.forEach(function(button) {                
+                button.addEventListener('click', function() {
+                    var sortedByStatButton = document.querySelector('button.sorted-by-stat');
+
+                    if (sortedByStatButton == button) {
+                        multiplier *= -1;
+                    }
+                    else {
+                        multiplier = 1;
+                    }
+
+                    var stat = getStatNameFromAbbreviation(button.textContent);                    
+                    fetchGoalieStats(stat, multiplier);
+                });
+            });
+        }
+    });
+}
+
+function fetchLeagueStandings(season, stat, multiplier) {
+    $.ajax({
+        type: 'POST',
+        url: '/get-league-standings',
+        data: JSON.stringify({
+            type: 'Regular Season',
+            season: season
+        }),
+        contentType: 'application/json',
+        success: function(response) {
+            sortedByStat = null;
+            multiplier = -1;
+            resetStatsScreen();
+            displayLeagueStandings(response, season);
+            
+            // Mark the stat we are sorting by as such
+            if (stat != null) {
+                var abbreviation = getFieldAbbreviation(stat);
+                var statSortingButtons = document.querySelectorAll('.stat-sorting-button');
+
+                var button = Array.from(statSortingButtons).find(btn =>
+                    btn.textContent.trim() === abbreviation
+                );
+                button.classList.add('sorted-by-stat');
+
+                // Mark all of the successive stats in the column
+                var th = button.parentElement;
+
+                var table = document.querySelector('table');
+                var headerRow = table.querySelector('thead tr');
+
+                var thIndex = [...headerRow.children].indexOf(th);
+
+                var tds = table.querySelectorAll(`tbody tr td:nth-child(${thIndex + 1})`);
+
+                tds.forEach(td => {
+                    td.classList.add('sorted-by-stat');
+                });
+            }
+            
+            var statSortingButtons = document.querySelectorAll('.stat-sorting-button');
+
+            statSortingButtons.forEach(function(button) {                
+                button.addEventListener('click', function() {
+                    var sortedByStatButton = document.querySelector('button.sorted-by-stat');
+
+                    if (sortedByStatButton == button) {
+                        multiplier *= -1;
+                    }
+                    else {
+                        multiplier = 1;
+                    }
+
+                    var stat = getStatNameFromAbbreviation(button.textContent);                    
+                    fetchGoalieStats(stat, multiplier);
+                });
+            });
+        }
+    });
+}
+
 function isValidSeason(season) {
     if (season.length == 9 && season[4] == '-') {
         var year1 = parseInt(season.split('-')[0]);
@@ -998,369 +1405,133 @@ var multiplier = -1;
 function search(stat, type) {
     var searchBarValue = searchBar.value;
 
-    if (searchBarValue != '') {
-        if (pageName == 'skater-lookup') {
-            $.ajax({
-                type: 'POST',
-                url: '/get-skater-stats',
-                data: JSON.stringify({
-                    name: searchBarValue,
-                    stat: sortedByStat,
-                    multiplier: multiplier
-                }),
-                contentType: 'application/json',
-                success: function(response) {
-                    var skaters = response.skaters;
-                    if (skaters.length > 1) {
-                        // TO-DO: provide system for the user to choose between the players
+    $.ajax({
+        type: 'POST',
+        url: '/get-team-stats',
+        data: JSON.stringify({
+            team: searchBarValue,
+            stat: sortedByStat,
+            multiplier: multiplier
+        }),
+        contentType: 'application/json',
+        success: function(response) {
+            var teamStats = response.team-stats;
+            if (teamStats.length > 0) {
+                var regularSeasons = teamStats.filter(season => (season.type === 'Regular Season'));
+                var playoffs = teamStats.filter(season => (season.type === 'Playoffs'));
+
+                // get seasons range
+                if (sortedByStat == null) {
+                    var firstRegularSeason = regularSeasons[0].season;
+                    var lastRegularSeason = regularSeasons[regularSeasons.length - 1].season;
+                }
+                else {
+                    var firstRegularSeason = regularSeasons[0].season;
+                    var firstRegularSeasonFirstYear = getFirstYear(firstRegularSeason);
+                    var lastRegularSeason = firstRegularSeason;
+                    var lastRegularSeasonFirstYear = firstRegularSeasonFirstYear;
+
+                    for (i = 1; i < regularSeasons.length; i++) {
+                        var currFirstYear = getFirstYear(regularSeasons[i].season);
+                        if (currFirstYear < firstRegularSeasonFirstYear) {
+                            firstRegularSeason = regularSeasons[i].season;
+                            firstRegularSeasonFirstYear = currFirstYear;
+                        }
+                        else if (currFirstYear > lastRegularSeasonFirstYear) {
+                            lastRegularSeason = regularSeasons[i].season;
+                            lastRegularSeasonFirstYear = currFirstYear;
+                        }
+                    }
+                }
+
+                // get playoffs seasons range
+                if (playoffs.length > 0) {
+                        if (sortedByStat == null) {
+                        var firstPlayoffsSeason = playoffs[0].season;
+                        var lastPlayoffsSeason = playoffs[playoffs.length - 1].season;
                     }
                     else {
-                        var skater = skaters[0];
+                        var firstPlayoffsSeason = playoffs[0].season;
+                        var firstPlayoffsSeasonFirstYear = getFirstYear(firstPlayoffsSeason);
+                        var lastPlayoffsSeason = firstPlayoffsSeason;
+                        var lastPlayoffsSeasonFirstYear = firstPlayoffsSeasonFirstYear;
 
-                        // get regular seasons range
-                        if (sortedByStat == null) {
-                            var firstRegularSeason = skater.seasons[0].season;
-                            var lastRegularSeason = skater.seasons[skater.seasons.length - 1].season;
-                        }
-                        else {
-                            var firstRegularSeason = skater.seasons[0].season;
-                            var firstRegularSeasonFirstYear = getFirstYear(firstRegularSeason);
-                            var lastRegularSeason = firstRegularSeason;
-                            var lastRegularSeasonFirstYear = firstRegularSeasonFirstYear;
-
-                            for (i = 1; i < skater.seasons.length; i++) {
-                                var currFirstYear = getFirstYear(skater.seasons[i].season);
-                                if (currFirstYear < firstRegularSeasonFirstYear) {
-                                    firstRegularSeason = skater.seasons[i].season;
-                                    firstRegularSeasonFirstYear = currFirstYear;
-                                }
-                                else if (currFirstYear > lastRegularSeasonFirstYear) {
-                                    lastRegularSeason = skater.seasons[i].season;
-                                    lastRegularSeasonFirstYear = currFirstYear;
-                                }
+                        for (i = 1; i < playoffs.length; i++) {
+                            var currFirstYear = getFirstYear(playoffs[i].season);
+                            if (currFirstYear < firstPlayoffsSeasonFirstYear) {
+                                firstPlayoffsSeason = playoffs[i].season;
+                                firstPlayoffsSeasonFirstYear = currFirstYear;
+                            }
+                            else if (currFirstYear > lastPlayoffsSeasonFirstYear) {
+                                lastPlayoffsSeason = playoffs[i].season;
+                                lastPlayoffsSeasonFirstYear = currFirstYear;
                             }
                         }
-
-                        // get playoffs seasons range
-                        if (sortedByStat == null) {
-                            var firstPlayoffsSeason = skater.playoffs[0].season;
-                            var lastPlayoffsSeason = skater.playoffs[skater.playoffs.length - 1].season;
-                        }
-                        else {
-                            var firstPlayoffsSeason = skater.playoffs[0].season;
-                            var firstPlayoffsSeasonFirstYear = getFirstYear(firstPlayoffsSeason);
-                            var lastPlayoffsSeason = firstPlayoffsSeason;
-                            var lastPlayoffsSeasonFirstYear = firstPlayoffsSeasonFirstYear;
-
-                            for (i = 1; i < skater.playoffs.length; i++) {
-                                var currFirstYear = getFirstYear(skater.playoffs[i].season);
-                                if (currFirstYear < firstPlayoffsSeasonFirstYear) {
-                                    firstPlayoffsSeason = skater.playoffs[i].season;
-                                    firstPlayoffsSeasonFirstYear = currFirstYear;
-                                }
-                                else if (currFirstYear > lastPlayoffsSeasonFirstYear) {
-                                    lastPlayoffsSeason = skater.seasons[i].season;
-                                    lastPlayoffsSeasonFirstYear = currFirstYear;
-                                }
-                            }
-                        }
-
-                        if (type == 'Regular Season') {
-                            var response = {
-                                skater_stats: skater.seasons,
-                                first_season: firstRegularSeason,
-                                last_season: lastRegularSeason,
-                                name: searchBarValue
-                            }
-                        }
-                        else {
-                            var response = {
-                                skater_stats: skater.playoffs,
-                                first_season: firstPlayoffsSeason,
-                                last_season: lastPlayoffsSeason,
-                                name: searchBarValue
-                            }
-                        }
-
-                        displaySkaterStats(response);
-
-                        var statSortingButtons = document.querySelectorAll('.stat-sorting-button');
-
-                        statSortingButtons.forEach(function(button) {
-                            button.addEventListener('click', function() {
-                                sortedByStat = getStatNameFromAbbreviation(button.textContent);
-                                
-                                if (sortedByStat == stat) {
-                                    multiplier *= -1;
-                                }
-                                else {
-                                    multiplier = 1;
-                                }
-
-                                search(sortedByStat, type);
-                            });
-                        });
                     }
-
-                    if (stat == null) {
-                        removeSortedByStatButtonClasses();
-                    }
-                },
-                error: function() {
-                    alert('Error - skater not found');
                 }
-            });
-        }
-        else if (pageName == 'goalie-lookup') {
-            $.ajax({
-                type: 'POST',
-                url: '/get-goalie-stats',
-                data: JSON.stringify({
-                    name: searchBarValue,
-                    stat: sortedByStat,
-                    multiplier: multiplier
-                }),
-                contentType: 'application/json',
-                success: function(response) {
-                    var goalies = response.goalies;
-                    if (goalies.length > 1) {
-                        // TO-DO: provide system for the user to choose between the players
+
+                if (type == 'Regular Season') {
+                    var response = {
+                        team_stats: regularSeasons,
+                        first_season: firstRegularSeason,
+                        last_season: lastRegularSeason,
+                        team: searchBarValue 
                     }
-                    else {
-                        var goalie = goalies[0];
-
-                        // get regular seasons range
-                        if (sortedByStat == null) {
-                            var firstRegularSeason = goalie.seasons[0].season;
-                            var lastRegularSeason = goalie.seasons[goalie.seasons.length - 1].season;
-                        }
-                        else {
-                            var firstRegularSeason = goalie.seasons[0].season;
-                            var firstRegularSeasonFirstYear = getFirstYear(firstRegularSeason);
-                            var lastRegularSeason = firstRegularSeason;
-                            var lastRegularSeasonFirstYear = firstRegularSeasonFirstYear;
-
-                            for (i = 1; i < goalie.seasons.length; i++) {
-                                var currFirstYear = getFirstYear(goalie.seasons[i].season);
-                                if (currFirstYear < firstRegularSeasonFirstYear) {
-                                    firstRegularSeason = goalie.seasons[i].season;
-                                    firstRegularSeasonFirstYear = currFirstYear;
-                                }
-                                else if (currFirstYear > lastRegularSeasonFirstYear) {
-                                    lastRegularSeason = goalie.seasons[i].season;
-                                    lastRegularSeasonFirstYear = currFirstYear;
-                                }
-                            }
-                        }
-
-                        // get playoffs seasons range
-                        if (sortedByStat == null) {
-                            var firstPlayoffsSeason = goalie.playoffs[0].season;
-                            var lastPlayoffsSeason = goalie.playoffs[goalie.playoffs.length - 1].season;
-                        }
-                        else {
-                            var firstPlayoffsSeason = goalie.playoffs[0].season;
-                            var firstPlayoffsSeasonFirstYear = getFirstYear(firstPlayoffsSeason);
-                            var lastPlayoffsSeason = firstPlayoffsSeason;
-                            var lastPlayoffsSeasonFirstYear = firstPlayoffsSeasonFirstYear;
-
-                            for (i = 1; i < goalie.playoffs.length; i++) {
-                                var currFirstYear = getFirstYear(goalie.playoffs[i].season);
-                                if (currFirstYear < firstPlayoffsSeasonFirstYear) {
-                                    firstPlayoffsSeason = goalie.playoffs[i].season;
-                                    firstPlayoffsSeasonFirstYear = currFirstYear;
-                                }
-                                else if (currFirstYear > lastPlayoffsSeasonFirstYear) {
-                                    lastPlayoffsSeason = goalie.seasons[i].season;
-                                    lastPlayoffsSeasonFirstYear = currFirstYear;
-                                }
-                            }
-                        }
-
-                        if (type == 'Regular Season') {
-                            var response = {
-                                goalie_stats: goalie.seasons,
-                                first_season: firstRegularSeason,
-                                last_season: lastRegularSeason,
-                                name: searchBarValue
-                            }
-                        }
-                        else {
-                            var response = {
-                                goalie_stats: goalie.playoffs,
-                                first_season: firstPlayoffsSeason,
-                                last_season: lastPlayoffsSeason,
-                                name: searchBarValue
-                            }
-                        }
-
-                        displayGoalieStats(response, type);
-
-                        var statSortingButtons = document.querySelectorAll('.stat-sorting-button');
-
-                        statSortingButtons.forEach(function(button) {
-                            button.addEventListener('click', function() {
-                                sortedByStat = getStatNameFromAbbreviation(button.textContent);
-                                
-                                if (sortedByStat == stat) {
-                                    multiplier *= -1;
-                                }
-                                else {
-                                    multiplier = 1;
-                                }
-
-                                search(sortedByStat, type);
-                            });
-                        });
-                    }
-
-                    if (stat == null) {
-                        removeSortedByStatButtonClasses();
-                    }
-                },
-                error: function() {
-                    alert('Error - goalie not found');
                 }
-            });
-        }
-        else {
-            $.ajax({
-                type: 'POST',
-                url: '/get-team-stats',
-                data: JSON.stringify({
-                    team: searchBarValue,
-                    stat: sortedByStat,
-                    multiplier: multiplier
-                }),
-                contentType: 'application/json',
-                success: function(response) {
-                    var teamStats = response.team-stats;
-                    if (teamStats.length > 0) {
-                        var regularSeasons = teamStats.filter(season => (season.type === 'Regular Season'));
-                        var playoffs = teamStats.filter(season => (season.type === 'Playoffs'));
-
-                        // get seasons range
-                        if (sortedByStat == null) {
-                            var firstRegularSeason = regularSeasons[0].season;
-                            var lastRegularSeason = regularSeasons[regularSeasons.length - 1].season;
-                        }
-                        else {
-                            var firstRegularSeason = regularSeasons[0].season;
-                            var firstRegularSeasonFirstYear = getFirstYear(firstRegularSeason);
-                            var lastRegularSeason = firstRegularSeason;
-                            var lastRegularSeasonFirstYear = firstRegularSeasonFirstYear;
-
-                            for (i = 1; i < regularSeasons.length; i++) {
-                                var currFirstYear = getFirstYear(regularSeasons[i].season);
-                                if (currFirstYear < firstRegularSeasonFirstYear) {
-                                    firstRegularSeason = regularSeasons[i].season;
-                                    firstRegularSeasonFirstYear = currFirstYear;
-                                }
-                                else if (currFirstYear > lastRegularSeasonFirstYear) {
-                                    lastRegularSeason = regularSeasons[i].season;
-                                    lastRegularSeasonFirstYear = currFirstYear;
-                                }
-                            }
-                        }
-
-                        // get playoffs seasons range
-                        if (playoffs.length > 0) {
-                                if (sortedByStat == null) {
-                                var firstPlayoffsSeason = playoffs[0].season;
-                                var lastPlayoffsSeason = playoffs[playoffs.length - 1].season;
-                            }
-                            else {
-                                var firstPlayoffsSeason = playoffs[0].season;
-                                var firstPlayoffsSeasonFirstYear = getFirstYear(firstPlayoffsSeason);
-                                var lastPlayoffsSeason = firstPlayoffsSeason;
-                                var lastPlayoffsSeasonFirstYear = firstPlayoffsSeasonFirstYear;
-
-                                for (i = 1; i < playoffs.length; i++) {
-                                    var currFirstYear = getFirstYear(playoffs[i].season);
-                                    if (currFirstYear < firstPlayoffsSeasonFirstYear) {
-                                        firstPlayoffsSeason = playoffs[i].season;
-                                        firstPlayoffsSeasonFirstYear = currFirstYear;
-                                    }
-                                    else if (currFirstYear > lastPlayoffsSeasonFirstYear) {
-                                        lastPlayoffsSeason = playoffs[i].season;
-                                        lastPlayoffsSeasonFirstYear = currFirstYear;
-                                    }
-                                }
-                            }
-                        }
-
-                        if (type == 'Regular Season') {
+                else {
+                    if (playoffs.length > 0) {
                             var response = {
-                                team_stats: regularSeasons,
-                                first_season: firstRegularSeason,
-                                last_season: lastRegularSeason,
-                                team: searchBarValue 
-                            }
-                        }
-                        else {
-                            if (playoffs.length > 0) {
-                                    var response = {
-                                    team_stats: playoffs,
-                                    first_season: firstPlayoffsSeason,
-                                    last_season: lastPlayoffsSeason,
-                                    team: searchBarValue 
-                                }
-                            }
-                            else {
-                                alert('Error - this team has no playoff stats');
-                                seasonTypeChangeButton.textContent = 'Playoffs';
-                                var response = {
-                                    team_stats: regularSeasons,
-                                    first_season: firstRegularSeason,
-                                    last_season: lastRegularSeason,
-                                    team: searchBarValue 
-                                }
-                                type = 'Regular Season';
-                            }
-                        }
-
-                        displayTeamStats(response, type);
-
-                        var statSortingButtons = document.querySelectorAll('.stat-sorting-button');
-
-                        statSortingButtons.forEach(function(button) {
-                            button.addEventListener('click', function() {
-                                sortedByStat = getStatNameFromAbbreviation(button.textContent);
-                                
-                                if (sortedByStat == stat) {
-                                    multiplier *= -1;
-                                }
-                                else {
-                                    multiplier = 1;
-                                }
-
-                                search(sortedByStat, type);
-                            });
-                        });
-
-                        if (stat == null) {
-                            removeSortedByStatButtonClasses();
+                            team_stats: playoffs,
+                            first_season: firstPlayoffsSeason,
+                            last_season: lastPlayoffsSeason,
+                            team: searchBarValue 
                         }
                     }
                     else {
-                        alert('Error - team not found');
+                        alert('Error - this team has no playoff stats');
+                        seasonTypeChangeButton.textContent = 'Playoffs';
+                        var response = {
+                            team_stats: regularSeasons,
+                            first_season: firstRegularSeason,
+                            last_season: lastRegularSeason,
+                            team: searchBarValue 
+                        }
+                        type = 'Regular Season';
                     }
-                },
-                error: function() {
-                    alert('Error - team not found');
                 }
-            });
+
+                displayTeamStats(response, type);
+
+                var statSortingButtons = document.querySelectorAll('.stat-sorting-button');
+
+                statSortingButtons.forEach(function(button) {
+                    button.addEventListener('click', function() {
+                        sortedByStat = getStatNameFromAbbreviation(button.textContent);
+                        
+                        if (sortedByStat == stat) {
+                            multiplier *= -1;
+                        }
+                        else {
+                            multiplier = 1;
+                        }
+
+                        search(sortedByStat, type);
+                    });
+                });
+
+                if (stat == null) {
+                    removeSortedByStatButtonClasses();
+                }
+            }
+            else {
+                alert('Error - team not found');
+            }
+        },
+        error: function() {
+            alert('Error - team not found');
         }
-    }
+    });
 }
-
-function removeSortedByStatButtonClasses() {
-    var sortedByStatButtons = document.querySelectorAll('.sorted-by-stat-button');
-    for (i = 0; i < sortedByStatButtons.length; i++) {
-        sortedByStatButtons[i].classList.remove('sorted-by-stat-button');
-    }
-}
-
 
 function addSkaterStats() {
     var player = JSON.parse(localStorage.getItem('player'));
@@ -3173,301 +3344,8 @@ function displayStandings(season) {
     }
 }
 
-var wildcardButton = document.querySelector('#wildcard-button');
-var divisionButton = document.querySelector('#division-button');
-var conferenceButton = document.querySelector('#conference-button');
-var leagueButton = document.querySelector('#league-button');
-
-var statViewButtonContainer = document.querySelector('#stat-view-button-container');
-
-if (wildcardButton != null) {
-    wildcardButton.addEventListener('click', function () {
-        var season = document.querySelector('#season-dropdown-button').textContent;
-    
-        if (isWildcardSeason(season)) {
-            $.ajax({
-                type: 'POST',
-                url: '/get-wildcard-standings',
-                data: JSON.stringify({
-                    season: season
-                }),
-                contentType: 'application/json',
-                success: function(response) {
-                    sortedByStat = null;
-                    multiplier = -1;
-                    resetStatsScreen();
-                    displayWildcardStandings(response, season);
-                }
-            });
-        }
-        else {
-            alert('Wildcard standings are not valid for this season');
-        }
-    });
-}
-
-if (divisionButton != null) {
-    divisionButton.addEventListener('click', function () {
-        var season = document.querySelector('#season-dropdown-button').textContent;
-    
-        if (isDivisionSeason(season)) {
-            $.ajax({
-                type: 'POST',
-                url: '/get-division-standings',
-                data: JSON.stringify({
-                    season: season
-                }),
-                contentType: 'application/json',
-                success: function(response) {
-                    sortedByStat = null;
-                    multiplier = -1;
-                    resetStatsScreen();
-                    displayDivisionStandings(response, season);
-                 
-                    var statSortingButtons = document.querySelectorAll('.stat-sorting-button');
-    
-                    statSortingButtons.forEach(function(button) {
-                        button.addEventListener('click', function() {
-                            var stat = getStatNameFromAbbreviation(button.textContent);
-                            multiplier *= -1; // toggles between 1 and -1
-                            getDivisionStandingsByStat(season, stat, multiplier);
-                        });
-                    });
-                }
-            });
-        }
-        else {
-            alert('Divisional standings are not valid for this season');
-        }
-    });
-}
-
-if (conferenceButton != null) {
-    conferenceButton.addEventListener('click', function () {
-        var season = document.querySelector('#season-dropdown-button').textContent;
-    
-        if (isConferenceSeason(season)) {
-            $.ajax({
-                type: 'POST',
-                url: '/get-conference-standings',
-                data: JSON.stringify({
-                    season: season
-                }),
-                contentType: 'application/json',
-                success: function(response) {
-                    sortedByStat = null;
-                    multiplier = -1;
-                    resetStatsScreen();
-                    displayConferenceStandings(response, season);
-                 
-                    var statSortingButtons = document.querySelectorAll('.stat-sorting-button');
-    
-                    statSortingButtons.forEach(function(button) {
-                        button.addEventListener('click', function() {
-                            var stat = getStatNameFromAbbreviation(button.textContent);
-                            multiplier *= -1; // toggles between 1 and -1
-                            getConferenceStandingsByStat(season, stat, multiplier);
-                        });
-                    });
-                }
-            });
-        }
-        else {
-            alert('Divisional standings are not valid for this season');
-        }
-    });
-}
-
-if (leagueButton != null) {
-    leagueButton.addEventListener('click', function () {
-        var season = document.querySelector('#season-dropdown-button').textContent;
-    
-        $.ajax({
-            type: 'POST',
-            url: '/get-league-standings',
-            data: JSON.stringify({
-                type: 'Regular Season',
-                season: season
-            }),
-            contentType: 'application/json',
-            success: function(response) {
-                sortedByStat = null;
-                multiplier = -1;
-                resetStatsScreen();
-                displayLeagueStandings(response, season);
-                
-                var statSortingButtons = document.querySelectorAll('.stat-sorting-button');
-    
-                statSortingButtons.forEach(function(button) {
-                    button.addEventListener('click', function() {
-                        var stat = getStatNameFromAbbreviation(button.textContent);
-                        multiplier *= -1; // toggles between 1 and -1
-                        getLeagueStandingsByStat(season, stat, multiplier);
-                    });
-                });
-            }
-        });
-    });
-}
-
-function displayWildcardStandings(response, season) {
-    resetStatsScreen();
-    updateStandingsButtons(season);
-
-    var standings = response.wildcard_standings;
-    
-    var hasHeaders = false;
-    var teamIndex = 0;
-
-    for (var i = 0; i < standings.length; i++) {                    
-        if (typeof standings[i] == 'string' && standings[i].includes('Conference')) {
-            hasHeaders = false;
-
-            var conference = standings[i].split('Conference:')[1].trim();
-
-            var conferenceHeader = document.createElement('h2');
-            conferenceHeader.textContent = conference;
-            conferenceHeader.classList.add('header');
-
-            statViewingContainer.appendChild(conferenceHeader);
-        }
-        else if (typeof standings[i] == 'string' && standings[i].includes('Division')) {
-            hasHeaders = false;
-            
-            var division = standings[i].split('Division:')[1].trim();
-
-            var divisionHeader = document.createElement('h3');
-            divisionHeader.textContent = division;
-            divisionHeader.classList.add('header');
-
-            statViewingContainer.appendChild(divisionHeader);
-        }
-        else if (typeof standings[i] == 'string' && standings[i].includes('Wildcard')) {
-            hasHeaders = false;
-            
-            var wildcardHeader = document.createElement('h3');
-            wildcardHeader.textContent = 'Wildcard';
-            wildcardHeader.classList.add('header');
-
-            statViewingContainer.appendChild(wildcardHeader);
-        }
-        else {
-            if (!hasHeaders) {
-                var rank  = 1;
-
-                hasHeaders = true;
-        
-                var fields = [];
-        
-                // Add the fields to the table
-                fields.push('rank-and-team');
-                for (var key in standings[i]) {
-                    if (standings[i].hasOwnProperty(key) && standings[i][key] !== null) {
-                        if (key !== 'city' && key !== 'name') {
-                            fields.push(key);
-                        }
-                    }
-                }
-        
-                var table = document.createElement('table');
-                table.classList.add('standings-table');
-                var thead = document.createElement('thead');
-        
-                var headerRow = document.createElement('tr');
-                fields.forEach(function(field) {
-                    var th = document.createElement('th');
-                
-                    if (field === 'rank-and-team') {
-                        th.classList.add('name-field');
-                        th.textContent = getFieldAbbreviation(field);
-                    } 
-                    else {
-                        var button = document.createElement('button');
-                        button.textContent = getFieldAbbreviation(field);
-                        button.classList.add('stat-sorting-button');
-                        
-                        th.textContent = '';
-                        th.appendChild(button);
-                    }
-                    
-                    headerRow.appendChild(th);
-                });
-
-                thead.appendChild(headerRow);
-                table.appendChild(thead);
-        
-                statViewingContainer.appendChild(table);                   
-            }
-        
-            var tables = statViewingContainer.querySelectorAll('table');
-            var table = tables[tables.length - 1];
-            var tbody = table.querySelector('tbody');
-            
-            if (!tbody) {
-                tbody = document.createElement('tbody');
-                table.appendChild(tbody);
-            }
-            
-            // add the team to the table
-            var dataRow = document.createElement('tr');
-            fields.forEach(function(field) {
-                var td = document.createElement('td');
-                if (field === 'rank-and-team') {
-                    var fullTeamName = standings[i].city + ' ' + standings[i].name
-
-                    var rankSpan = document.createElement('span');
-                    rankSpan.innerHTML = rank + '. ';
-
-                    var textSpan = document.createElement('span');
-                    textSpan.textContent = fullTeamName;
-                    textSpan.classList.add('standings-rank-and-team');
-
-                    // check if the team has a clinching marker
-                    var clinchingMarker = document.createElement('span');
-                    if (response.clinching_markers[fullTeamName] != null) {
-                        clinchingMarker.textContent = response.clinching_markers[fullTeamName];
-                        clinchingMarker.classList.add('clinching-marker');
-                    }
-                    else {
-                        clinchingMarker.classList.add('clinching-marker-placeholder');
-                    } 
-
-                    var teamLogoContainer = document.createElement('span');
-                    teamLogoContainer.classList.add('standings-table-logo-container');
-
-                    var teamLogo = document.createElement('img');
-                    teamLogo.src = response.logos[teamIndex];
-                    teamLogo.alt = fullTeamName + ' Logo';
-                    teamLogo.classList.add('team-logo');
-                    
-                    teamLogoContainer.appendChild(teamLogo);                                
-
-                    td.appendChild(rankSpan);
-                    td.appendChild(clinchingMarker); // adds the actual marker or a blank placeholder
-                    td.appendChild(teamLogoContainer);
-                    td.appendChild(textSpan);
-
-                    td.classList.add('name-field');
-                }
-                else if (field === 'points-percentage') {
-                    td.textContent = round(parseFloat(standings[i][field]), 3).toFixed(3);
-                }
-                else {
-                    td.textContent = standings[i][field];
-                }
-                dataRow.appendChild(td);
-            });
-            tbody.appendChild(dataRow);
-
-            teamIndex++;
-            rank++;
-        }                 
-    }
-}
-
 function displayDivisionStandings(response, season) {
     resetStatsScreen();
-    updateStandingsButtons(season);
 
     var standings = response.division_standings;
     
@@ -3624,7 +3502,6 @@ function displayDivisionStandings(response, season) {
 
 function displayConferenceStandings(response, season) {
     resetStatsScreen();
-    updateStandingsButtons(season);
 
     var standings = response.conference_standings;
     
@@ -3770,7 +3647,6 @@ function displayConferenceStandings(response, season) {
 
 function displayLeagueStandings(response, season) {
     resetStatsScreen();
-    updateStandingsButtons(season);
 
     var standings = response.league_standings;
     
@@ -3905,30 +3781,6 @@ function displayLeagueStandings(response, season) {
         teamIndex++;
         rank++;
     }                 
-}
-
-function isWildcardSeason(season) {
-    var firstYear = getFirstYear(season);
-    if (firstYear >= 2013 && firstYear != 2019 && firstYear != 2020) {
-        return true
-    }
-    return false;
-}
-
-function isDivisionSeason(season) {
-    var firstYear = getFirstYear(season);
-    if (firstYear >= 1967 || (firstYear <= 1937 && firstYear >= 1926)) {
-        return true;
-    }
-    return false;
-}
-
-function isConferenceSeason(season) {
-    var firstYear = getFirstYear(season);
-    if (firstYear >= 1974 && firstYear != 2020) {
-        return true;
-    }
-    return false;
 }
 
 function getFieldAbbreviation(stat) {
@@ -4462,30 +4314,6 @@ function isTiesSeason(season) {
     }
     return false;
 }
-
-function updateStandingsButtons(season) {
-    if (!isWildcardSeason(season)) {
-        wildcardButton.disabled = true;
-    }
-    else {
-        wildcardButton.disabled = false;
-    }
-
-    if (!isConferenceSeason(season)) {
-        conferenceButton.disabled = true;
-    }
-    else {
-        conferenceButton.disabled = false;
-    }
-
-    if (!isDivisionSeason(season)) {
-        divisionButton.disabled = true;
-    }
-    else {
-        divisionButton.disabled = false;
-    }
-}
-
 
 function editTeam(type) {
     // prompt the user for the team and the season
@@ -6110,6 +5938,47 @@ function didTeamPlayInRange(team, firstSeason, lastSeason) {
                 return true;
             }
             return false;
+    }
+    return false;
+}
+
+function didStandingsTypeExistInSeason(type, season) {
+    switch (type) {
+        case 'Wildcard':
+            return isWildcardSeason(season);
+
+        case 'Division':
+            return isDivisionSeason(season);
+            
+        case 'Conference':
+            return isConferenceSeason(season);
+
+        case 'League':
+            return true;
+    }
+    return false;
+}
+
+function isWildcardSeason(season) {
+    var firstYear = getFirstYear(season);
+    if (firstYear >= 2013 && firstYear != 2019 && firstYear != 2020) {
+        return true
+    }
+    return false;
+}
+
+function isDivisionSeason(season) {
+    var firstYear = getFirstYear(season);
+    if (firstYear >= 1967 || (firstYear <= 1937 && firstYear >= 1926)) {
+        return true;
+    }
+    return false;
+}
+
+function isConferenceSeason(season) {
+    var firstYear = getFirstYear(season);
+    if (firstYear >= 1974 && firstYear != 2020) {
+        return true;
     }
     return false;
 }

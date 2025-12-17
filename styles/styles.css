@@ -133,7 +133,7 @@ button:hover {
     width: 15%;
 }
 
-.season-dropdown-option, .team-dropdown-option, .position-dropdown-option {
+.dropdown-option {
     display: none;
     padding: 10px;
     cursor: pointer;
@@ -172,7 +172,7 @@ button:hover {
     margin-right: 5px;
 }
 
-#position-dropdown-button, #team-dropdown-button {
+#position-dropdown-button, #team-dropdown-button, #standings-type-dropdown-button {
     margin-top: 20px;
 }
 
@@ -281,34 +281,6 @@ button:hover {
 
 #edit-season-button {
     top: 170px;
-}
-
-
-#stat-view-button-container {
-    display: flex;
-    justify-content: center;
-    padding-top: 25px;
-}
-
-.stat-view-button {
-    height: 55px;
-    font-size: 24px;
-    min-width: 225px;
-    background-color: white;
-}
-
-#wildcard-button,
-#division-button,
-#conference-button {
-    border-right: 0;
-}
-
-#wildcard-button {
-    border-radius: 32px 0 0 32px;
-}
-
-#league-button {
-    border-radius: 0 32px 32px 0;
 }
 
 .header {
