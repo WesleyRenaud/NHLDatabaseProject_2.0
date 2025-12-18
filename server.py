@@ -588,17 +588,13 @@ class MyHandler( BaseHTTPRequestHandler ):
             data = json.loads( post_data.decode( 'utf-8' ) )
             
             season = data.get( 'season' )
-            
             stat = data.get( 'stat' )
             multiplier = data.get( 'multiplier' )
 
             teams = self.database.get_standings_stats( season )
             logos = []
 
-            if stat and multiplier:
-                conference_standings = self.nhl_util.get_conference_standings( season, teams, stat, multiplier )
-            else:
-                conference_standings = self.nhl_util.get_conference_standings( season, teams )
+            conference_standings = self.nhl_util.get_conference_standings( season, teams, stat, multiplier )
             
             for i in range( len( conference_standings ) ):
                 if isinstance( conference_standings[i], NHL.Team ):
