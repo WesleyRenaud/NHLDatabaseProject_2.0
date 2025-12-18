@@ -1,36 +1,36 @@
-Conference: Eastern
-Division: Atlantic
+Conference: Eastern Conferenc3
+Division: Atlantic Division
 New Jersey Devils
 New York Islanders
 New York Rangers
 Philadelphia Flyers
 Pittsburgh Penguins
-Division: Northeast
+Division: Northeast Division
 Boston Bruins
 Buffalo Sabres
 Montreal Canadiens
 Ottawa Senators
 Toronto Maple Leafs
-Division: Southeast
+Division: Southeast Division
 Atlanta Thrashers
 Carolina Hurricanes
 Florida Panthers
 Tampa Bay Lightning
 Washington Capitals
-Conference: Western
-Division: Central
+Conference: Western Conference
+Division: Central Division
 Chicago Blackhawks
 Columbus Blue Jackets
 Detroit Red Wings
 Nashville Predators
 St. Louis Blues
-Division: Northwest
+Division: Northwest Division
 Calgary Flames
 Colorado Avalanche
 Edmonton Oilers
 Minnesota Wild
 Vancouver Canucks
-Division: Pacific
+Division: Pacific Division
 Anaheim Ducks
 Dallas Stars
 Los Angeles Kings

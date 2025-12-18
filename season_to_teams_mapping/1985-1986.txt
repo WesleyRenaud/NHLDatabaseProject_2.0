@@ -1,24 +1,24 @@
-Conference: Clarence Campbell
-Division: Norris
+Conference: Clarence Campbell Conference
+Division: Norris Division
 Chicago Blackhawks
 Detroit Red Wings
 Minnesota North Stars
 St. Louis Blues
 Toronto Maple Leafs
-Division: Smythe
+Division: Smythe Division
 Calgary Flames
 Edmonton Oilers
 Los Angeles Kings
 Vancouver Canucks
 Winnipeg Jets
-Conference: Prince of Whales
-Division: Adams
+Conference: Prince of Whales Conference
+Division: Adams Division
 Boston Bruins
 Buffalo Sabres
 Hartford Whalers
 Montreal Canadiens
 Quebec Nordiques
-Division: Patrick
+Division: Patrick Division
 New Jersey Devils
 New York Islanders
 New York Rangers

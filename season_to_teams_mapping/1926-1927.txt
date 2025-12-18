@@ -1,10 +1,10 @@
-Division: American
+Division: American Division
 Boston Bruins
 Chicago Blackhawks
 Detroit Cougars
 New York Rangers
 Pittsburgh Pirates
-Division: Canadien
+Division: Canadien Division
 Montreal Canadiens
 Montreal Maroons
 New York Americans

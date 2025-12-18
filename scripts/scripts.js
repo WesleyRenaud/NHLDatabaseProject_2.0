@@ -999,7 +999,7 @@ function displayStandingsTypes() {
             });
 
             standingsTypeDropdownButton.textContent = standingsTypeDropdownItem.textContent;
-            standingsTypeDropdownButton.style.fontSize = '10px';
+            standingsTypeDropdownButton.style.fontSize = '14px';
         });
     });
 }
@@ -1184,7 +1184,6 @@ function displayWildcardStandings(response) {
                 else {
                     td.textContent = standings[i][field];
                 }
-                console.log(standings[i][field]);
                 dataRow.appendChild(td);
             });
             tbody.appendChild(dataRow);
@@ -1200,12 +1199,12 @@ function fetchDivisionStandings(season, stat, multiplier) {
         type: 'POST',
         url: '/get-division-standings',
         data: JSON.stringify({
-            season: season
+            season: season,
+            stat: stat,
+            multiplier: multiplier
         }),
         contentType: 'application/json',
         success: function(response) {
-            stat = null;
-            multiplier = -1;
             resetStatsScreen();
             displayDivisionStandings(response, season);
         
@@ -1214,23 +1213,26 @@ function fetchDivisionStandings(season, stat, multiplier) {
                 var abbreviation = getFieldAbbreviation(stat);
                 var statSortingButtons = document.querySelectorAll('.stat-sorting-button');
 
-                var button = Array.from(statSortingButtons).find(btn =>
+                var buttons = Array.from(statSortingButtons).filter(btn =>
                     btn.textContent.trim() === abbreviation
                 );
-                button.classList.add('sorted-by-stat');
 
-                // Mark all of the successive stats in the column
-                var th = button.parentElement;
+                buttons.forEach(button => {
+                    button.classList.add('sorted-by-stat');
 
-                var table = document.querySelector('table');
-                var headerRow = table.querySelector('thead tr');
+                    // Mark all of the successive stats in the column
+                    var th = button.parentElement;
 
-                var thIndex = [...headerRow.children].indexOf(th);
+                    var table = button.closest('table');
+                    var headerRow = table.querySelector('thead tr');
 
-                var tds = table.querySelectorAll(`tbody tr td:nth-child(${thIndex + 1})`);
+                    var thIndex = [...headerRow.children].indexOf(th);
 
-                tds.forEach(td => {
-                    td.classList.add('sorted-by-stat');
+                    var tds = table.querySelectorAll(`tbody tr td:nth-child(${thIndex + 1})`);
+
+                    tds.forEach(td => {
+                        td.classList.add('sorted-by-stat');
+                    });
                 });
             }
             
@@ -1248,11 +1250,168 @@ function fetchDivisionStandings(season, stat, multiplier) {
                     }
 
                     var stat = getStatNameFromAbbreviation(button.textContent);                    
-                    fetchGoalieStats(stat, multiplier);
+                    fetchDivisionStandings(season, stat, multiplier);
                 });
             });
         }
     });
+}
+
+function displayDivisionStandings(response) {
+    resetStatsScreen();
+
+    var standings = response.division_standings;
+    var statViewingContainer = document.querySelector('#stat-viewing-container');
+    
+    var hasHeaders = false;
+    var teamIndex = 0;
+
+    for (var i = 0; i < standings.length; i++) {                    
+        if (typeof standings[i] == 'string' && standings[i].includes('Conference')) {
+            hasHeaders = false;
+
+            var conference = standings[i].split('Conference:')[1].trim();
+
+            var conferenceHeader = document.createElement('h2');
+            conferenceHeader.textContent = conference;
+            conferenceHeader.classList.add('header');
+
+            statViewingContainer.appendChild(conferenceHeader);
+        }
+        else if (typeof standings[i] == 'string' && standings[i].includes('Division')) {
+            hasHeaders = false;
+            
+            var division = standings[i].split('Division:')[1].trim();
+
+            var divisionHeader = document.createElement('h3');
+            divisionHeader.textContent = division;
+            divisionHeader.classList.add('header');
+
+            statViewingContainer.appendChild(divisionHeader);
+        }
+        else {
+            if (!hasHeaders) {
+                var rank  = 1;
+
+                hasHeaders = true;
+        
+                var fields = [];
+        
+                // Add the fields to the table
+                fields.push('rank-and-team');
+                for (var key in standings[i]) {
+                    if (standings[i].hasOwnProperty(key) && standings[i][key] !== null) {
+                        if (key !== 'city' && key !== 'name') {
+                            fields.push(key);
+                        }
+                        
+                    }
+                }
+        
+                var table = document.createElement('table');
+                table.classList.add('standings-table');
+
+                var thead = document.createElement('thead');
+        
+                var headerRow = document.createElement('tr');
+                fields.forEach(function(field) {
+                    var th = document.createElement('th');
+                
+                    if (sortedByStat != null && field === sortedByStat) {
+                        th.classList.add('sorted-by-stat-button');
+                    }
+
+                    if (field === 'rank-and-team') {
+                        th.classList.add('name-field');
+                        th.textContent = getFieldAbbreviation(field);
+                    } 
+                    else {
+                        var button = document.createElement('button');
+                        button.textContent = getFieldAbbreviation(field);
+                        button.classList.add('stat-sorting-button');
+                        
+                        th.textContent = '';
+                        th.appendChild(button);
+                    }
+                    
+                    headerRow.appendChild(th);
+                });
+
+                thead.appendChild(headerRow);
+                table.appendChild(thead);
+        
+                statViewingContainer.appendChild(table);                   
+            }
+        
+            var tables = statViewingContainer.querySelectorAll('table');
+            var table = tables[tables.length - 1];
+            var tbody = table.querySelector('tbody');
+            
+            if (!tbody) {
+                tbody = document.createElement('tbody');
+                table.appendChild(tbody);
+            }
+            
+            // add the team to the table
+            var dataRow = document.createElement('tr');
+            fields.forEach(function(field) {
+                var td = document.createElement('td');
+
+                if (sortedByStat != null && field === sortedByStat) {
+                    td.classList.add('sorted-by-stat-button');
+                }
+
+                if (field === 'rank-and-team') {
+                    var fullTeamName = standings[i].city + ' ' + standings[i].name
+
+                    var rankSpan = document.createElement('span');
+                    rankSpan.innerHTML = rank + '. ';
+
+                    var textSpan = document.createElement('span');
+                    textSpan.textContent = fullTeamName;
+                    textSpan.classList.add('standings-rank-and-team');
+
+                    // check if the team has a clinching marker
+                    var clinchingMarker = document.createElement('span');
+                    if (response.clinching_markers[fullTeamName] != null) {
+                        clinchingMarker.textContent = response.clinching_markers[fullTeamName];
+                        clinchingMarker.classList.add('clinching-marker');
+                    }
+                    else {
+                        clinchingMarker.classList.add('clinching-marker-placeholder');
+                    } 
+
+                    var teamLogoContainer = document.createElement('span');
+                    teamLogoContainer.classList.add('standings-table-logo-container');
+
+                    var teamLogo = document.createElement('img');
+                    teamLogo.src = response.logos[teamIndex];
+                    teamLogo.alt = fullTeamName + ' Logo';
+                    teamLogo.classList.add('team-logo');
+                    
+                    teamLogoContainer.appendChild(teamLogo);                                
+
+                    td.appendChild(rankSpan);
+                    td.appendChild(clinchingMarker); // adds the actual marker or a blank placeholder
+                    td.appendChild(teamLogoContainer);
+                    td.appendChild(textSpan);
+
+                    td.classList.add('name-field');
+                }
+                else if (field === 'points-percentage') {
+                    td.textContent = round(parseFloat(standings[i][field]), 3).toFixed(3);
+                }
+                else {
+                    td.textContent = standings[i][field] !== null ? standings[i][field] : '';
+                }
+                dataRow.appendChild(td);
+            });
+            tbody.appendChild(dataRow);
+
+            teamIndex++;
+            rank++;
+        }                 
+    }
 }
 
 function fetchConferenceStandings(season, stat, multiplier) {
@@ -3341,162 +3500,6 @@ function displayStandings(season) {
                 alert('Error - data entry is not complete yet');
             }
         });
-    }
-}
-
-function displayDivisionStandings(response, season) {
-    resetStatsScreen();
-
-    var standings = response.division_standings;
-    
-    var hasHeaders = false;
-    var teamIndex = 0;
-
-    for (var i = 0; i < standings.length; i++) {                    
-        if (typeof standings[i] == 'string' && standings[i].includes('Conference')) {
-            hasHeaders = false;
-
-            var conference = standings[i].split('Conference:')[1].trim();
-
-            var conferenceHeader = document.createElement('h2');
-            conferenceHeader.textContent = conference;
-            conferenceHeader.classList.add('header');
-
-            statViewingContainer.appendChild(conferenceHeader);
-        }
-        else if (typeof standings[i] == 'string' && standings[i].includes('Division')) {
-            hasHeaders = false;
-            
-            var division = standings[i].split('Division:')[1].trim();
-
-            var divisionHeader = document.createElement('h3');
-            divisionHeader.textContent = division;
-            divisionHeader.classList.add('header');
-
-            statViewingContainer.appendChild(divisionHeader);
-        }
-        else {
-            if (!hasHeaders) {
-                var rank  = 1;
-
-                hasHeaders = true;
-        
-                var fields = [];
-        
-                // Add the fields to the table
-                fields.push('rank-and-team');
-                for (var key in standings[i]) {
-                    if (standings[i].hasOwnProperty(key) && standings[i][key] !== null) {
-                        if (key !== 'city' && key !== 'name') {
-                            fields.push(key);
-                        }
-                        
-                    }
-                }
-        
-                var table = document.createElement('table');
-                table.classList.add('standings-table');
-
-                var thead = document.createElement('thead');
-        
-                var headerRow = document.createElement('tr');
-                fields.forEach(function(field) {
-                    var th = document.createElement('th');
-                
-                    if (sortedByStat != null && field === sortedByStat) {
-                        th.classList.add('sorted-by-stat-button');
-                    }
-
-                    if (field === 'rank-and-team') {
-                        th.classList.add('name-field');
-                        th.textContent = getFieldAbbreviation(field);
-                    } 
-                    else {
-                        var button = document.createElement('button');
-                        button.textContent = getFieldAbbreviation(field);
-                        button.classList.add('stat-sorting-button');
-                        
-                        th.textContent = '';
-                        th.appendChild(button);
-                    }
-                    
-                    headerRow.appendChild(th);
-                });
-
-                thead.appendChild(headerRow);
-                table.appendChild(thead);
-        
-                statViewingContainer.appendChild(table);                   
-            }
-        
-            var tables = statViewingContainer.querySelectorAll('table');
-            var table = tables[tables.length - 1];
-            var tbody = table.querySelector('tbody');
-            
-            if (!tbody) {
-                tbody = document.createElement('tbody');
-                table.appendChild(tbody);
-            }
-            
-            // add the team to the table
-            var dataRow = document.createElement('tr');
-            fields.forEach(function(field) {
-                var td = document.createElement('td');
-
-                if (sortedByStat != null && field === sortedByStat) {
-                    td.classList.add('sorted-by-stat-button');
-                }
-
-                if (field === 'rank-and-team') {
-                    var fullTeamName = standings[i].city + ' ' + standings[i].name
-
-                    var rankSpan = document.createElement('span');
-                    rankSpan.innerHTML = rank + '. ';
-
-                    var textSpan = document.createElement('span');
-                    textSpan.textContent = fullTeamName;
-                    textSpan.classList.add('standings-rank-and-team');
-
-                    // check if the team has a clinching marker
-                    var clinchingMarker = document.createElement('span');
-                    if (response.clinching_markers[fullTeamName] != null) {
-                        clinchingMarker.textContent = response.clinching_markers[fullTeamName];
-                        clinchingMarker.classList.add('clinching-marker');
-                    }
-                    else {
-                        clinchingMarker.classList.add('clinching-marker-placeholder');
-                    } 
-
-                    var teamLogoContainer = document.createElement('span');
-                    teamLogoContainer.classList.add('standings-table-logo-container');
-
-                    var teamLogo = document.createElement('img');
-                    teamLogo.src = response.logos[teamIndex];
-                    teamLogo.alt = fullTeamName + ' Logo';
-                    teamLogo.classList.add('team-logo');
-                    
-                    teamLogoContainer.appendChild(teamLogo);                                
-
-                    td.appendChild(rankSpan);
-                    td.appendChild(clinchingMarker); // adds the actual marker or a blank placeholder
-                    td.appendChild(teamLogoContainer);
-                    td.appendChild(textSpan);
-
-                    td.classList.add('name-field');
-                }
-                else if (field === 'points-percentage') {
-                    td.textContent = round(parseFloat(standings[i][field]), 3).toFixed(3);
-                }
-                else {
-                    td.textContent = standings[i][field] !== null ? standings[i][field] : '';
-                }
-                dataRow.appendChild(td);
-            });
-            tbody.appendChild(dataRow);
-
-            teamIndex++;
-            rank++;
-        }                 
     }
 }
 

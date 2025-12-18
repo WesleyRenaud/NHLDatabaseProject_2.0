@@ -1,4 +1,4 @@
-Division: Central
+Division: Central Division
 Carolina Hurricanes
 Chicago Blackhawks
 Columbus Blue Jackets
@@ -7,7 +7,7 @@ Detroit Red Wings
 Florida Panthers
 Nashville Predators
 Tampa Bay Lightning
-Division: West
+Division: West Division
 Anaheim Ducks
 Arizona Coyotes
 Colorado Avalanche
@@ -16,7 +16,7 @@ Minnesota Wild
 San Jose Sharks
 St. Louis Blues
 Vegas Golden Knights
-Division: East
+Division: East Division
 Boston Bruins
 Buffalo Sabres
 New Jersey Devils
@@ -25,7 +25,7 @@ New York Rangers
 Philadelphia Flyers
 Pittsburgh Penguins
 Washington Capitals
-Division: North
+Division: North Division
 Calgary Flames
 Edmonton Oilers
 Montreal Canadiens

@@ -1,10 +1,10 @@
-Division: American
+Division: American Division
 Boston Bruins
 Chicago Blackhawks
 Detroit Falcons
 New York Rangers
 Philadelphia Quakers
-Division: Canadien
+Division: Canadien Division
 Montreal Canadiens
 Montreal Maroons
 New York Americans

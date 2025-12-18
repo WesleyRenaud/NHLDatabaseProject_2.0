@@ -1,4 +1,4 @@
-Division: East
+Division: East Division
 Boston Bruins
 Buffalo Sabres
 Detroit Red Wings
@@ -6,7 +6,7 @@ Montreal Canadiens
 New York Rangers
 Toronto Maple Leafs
 Vancouver Canucks
-Division: West
+Division: West Division
 California Golden Seals
 Chicago Blackhawks
 Los Angeles Kings

@@ -1060,8 +1060,6 @@ class Database():
     def get_standings_stats( self, season ):
         cur = self.conn.cursor()
         teams = []
-
-        self.conn.commit()
         
         data = cur.execute(
             """ SELECT 

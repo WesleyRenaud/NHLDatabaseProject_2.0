@@ -709,6 +709,8 @@ class NHLUtil():
     
 
     def team_stat_compare( self, team1, team2, stat, multiplier ):
+        stat = stat.replace( '-', '_' )
+
         if multiplier == -1:
             dummy_team = team1
             team1 = team2

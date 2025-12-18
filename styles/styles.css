@@ -300,8 +300,15 @@ table {
     table-layout: fixed;
 }
 
-
 /* Standings table */
+.standings-table {
+    font-size: 15px;
+}
+
+.standings-table tr {
+    height: 45px;
+}
+
 .standings-table th:nth-child(1),
 .standings-table td:nth-child(1) {
     width: 23%;
@@ -315,42 +322,66 @@ table {
 .standings-table td:nth-child(4),
 .standings-table th:nth-child(5),
 .standings-table td:nth-child(5) {
-    width: 4%;
+    width: 3.75%;
 }
 
 .standings-table th:nth-child(6),
-.standings-table td:nth-child(6),
+.standings-table td:nth-child(6) {
+    width: 4%;
+}
+
 .standings-table th:nth-child(7),
 .standings-table td:nth-child(7) {
-    width: 4.5%;
+    width: 4.25%;
 }
 
 .standings-table th:nth-child(8),
 .standings-table td:nth-child(8) {
-    width: 5.5%;
+    width: 5%;
 }
 
 .standings-table th:nth-child(9),
-.standings-table td:nth-child(9),
+.standings-table td:nth-child(9) {
+    width: 4%;
+}
+
 .standings-table th:nth-child(10),
-.standings-table td:nth-child(10),
+.standings-table td:nth-child(10) {
+    width: 4.5%;
+}
+
 .standings-table th:nth-child(11),
-.standings-table td:nth-child(11) {
-    width: 5.5%;
-}
-
+.standings-table td:nth-child(11),
 .standings-table th:nth-child(12),
-.standings-table td:nth-child(12),
-.standings-table th:nth-child(13),
-.standings-table td:nth-child(13),
-.standings-table th:nth-child(14),
-.standings-table td:nth-child(14) {
-    width: 8%;
+.standings-table td:nth-child(12) {
+    width: 4%;
 }
 
+.standings-table th:nth-child(13),
+.standings-table td:nth-child(13) {
+    width: 4.75%;
+}
+
+.standings-table th:nth-child(14),
+.standings-table td:nth-child(14),
 .standings-table th:nth-child(15),
 .standings-table td:nth-child(15) {
     width: 6.5%;
+}
+
+.standings-table th:nth-child(16),
+.standings-table td:nth-child(16) {
+    width: 3.75%;
+}
+
+.standings-table th:nth-child(17),
+.standings-table td:nth-child(17) {
+    width: 4.5%;
+}
+
+.standings-table th:nth-child(18),
+.standings-table td:nth-child(18) {
+    width: 4.75%;
 }
 
 
@@ -484,7 +515,6 @@ th.name-field, td.name-field, th.team-field, td.team-field {
     height: 20px;
     line-height: 15px;
     position: absolute;
-    top: 7px;
     left: 35px;
 }
 
@@ -504,7 +534,6 @@ th.name-field, td.name-field, th.team-field, td.team-field {
 .standings-table-logo-container {
     width: 20px;
     height: 20px;
-    top: 6px;
     left: 65px;
 }
 
@@ -674,7 +703,6 @@ th.name-field, td.name-field, th.team-field, td.team-field {
 
 .standings-rank-and-team, .team-stats-rank-and-team, .team-playoff-stats-rank-and-team {
     position: absolute;
-    top: 6px;
 }
 
 .standings-rank-and-team {

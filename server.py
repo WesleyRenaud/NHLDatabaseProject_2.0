@@ -547,7 +547,6 @@ class MyHandler( BaseHTTPRequestHandler ):
             data = json.loads( post_data.decode( 'utf-8' ) )
             
             season = data.get( 'season' )
-            
             stat = data.get( 'stat' )
             multiplier = data.get( 'multiplier' )
 
@@ -555,10 +554,7 @@ class MyHandler( BaseHTTPRequestHandler ):
 
             logos = []
 
-            if stat and multiplier:
-                division_standings = self.nhl_util.get_division_standings( season, teams, stat, multiplier )
-            else:
-                division_standings = self.nhl_util.get_division_standings( season, teams )
+            division_standings = self.nhl_util.get_division_standings( season, teams, stat, multiplier )
             
             for i in range( len( division_standings ) ):
                 if isinstance( division_standings[i], NHL.Team ):
