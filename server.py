@@ -675,16 +675,23 @@ class MyHandler( BaseHTTPRequestHandler ):
             type = data.get( 'type' )
             first_season = data.get( 'first_season' )
             last_season = data.get( 'last_season' )
+            sum_results_between_seasons = data.get( 'sum_results_between_seasons' )
             stat = data.get( 'stat' )
             multiplier = data.get( 'multiplier' )
 
-            team_stats = self.database.get_team_stats( type, first_season, last_season, stat, multiplier )
+            team_stats = self.database.get_team_stats( type, first_season, last_season, sum_results_between_seasons, stat, multiplier )
 
             logos = []
             for i in range( len( team_stats ) ):
                 # get the image for each team based on the season
                 team_name = team_stats[i].get_full_name()
-                team_logo_path = self.nhl_util.get_team_logo_path( team_name, team_stats[i].season )
+                
+                if first_season != last_season:
+                    season = team_stats[i].season
+                else:
+                    season = first_season
+                team_logo_path = self.nhl_util.get_team_logo_path( team_name, season )
+                
                 logos.append( team_logo_path )                
 
             if isinstance( team_stats, list ):

@@ -1918,7 +1918,7 @@ function fetchTeamStats(stat, multiplier) {
                     }
 
                     var stat = getStatNameFromAbbreviation(button.textContent);                    
-                    fetchSkaterStats(stat, multiplier);
+                    fetchTeamStats(stat, multiplier);
                 });
             });
         },
@@ -1949,7 +1949,15 @@ function displayTeamStats(response) {
     }
 
     var table = document.createElement('table');
-    table.classList.add('team-stats-table');            
+    if (response.first_season == response.last_season) {
+        table.classList.add('team-stats-table');   
+    }
+    else if (response.team == null) {
+        table.classList.add('team-stats-table-with-seasons');   
+    }
+    else if (response.team == null) {
+        table.classList.add('team-stats-table-without-names');   
+    }      
 
     var thead = document.createElement('thead');
 
@@ -2031,11 +2039,12 @@ function displayTeamStats(response) {
                     td.classList.add('name-field');
                 }
                 else {
-                    if ((field === 'powerplay-percentage' || field === 'penalty-kill-percentage' || field === 'net-powerplay-percentage' ||
-                            field === 'net-penalty-kill-percentage' || field === 'faceoff-win-percentage') && teamStats[i][field] != '--') {
+                    if ((field === 'powerplay_percentage' || field === 'penalty_kill_percentage' ||
+                        field === 'net_powerplay_percentage' || field === 'net_penalty_kill_percentage'
+                        || field === 'faceoff_win_percentage') && teamStats[i][field] != '--') {
                         td.textContent = round(parseFloat(teamStats[i][field]), 2).toFixed(1);
                     }
-                    else if (field === 'goals-for-per-game' || field === 'goals-against-per-game') {
+                    else if (field === 'goals_for_per_game' || field === 'goals_against_per_game') {
                         td.textContent = round(parseFloat(teamStats[i][field]), 2).toFixed(2);
                     }
                     else if (field === 'points_percentage') {
@@ -3938,9 +3947,9 @@ function emptyFields() {
 function getFieldAbbreviation(stat) {
     switch (stat) {
         case 'rank-and-team':
-            return '\u00A0\u00A0Rank\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0Team';
+            return 'Team';
         case 'rank_and_team':
-            return '\u00A0\u00A0Rank\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0Team';
+            return 'Team';
 
         case 'season':
             return 'Season';
