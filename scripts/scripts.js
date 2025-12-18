@@ -23,6 +23,8 @@ function enableSingleSeasonSelect() {
     if (teamDropdownButton != null) {
         teamDropdownButton.textContent = 'Select Team';
     }
+
+    document.querySelector('#checkbox-sum-results-between-seasons').disabled = true;
 }
 
 function enableMultipleSeasonSelect() {
@@ -44,7 +46,11 @@ function enableMultipleSeasonSelect() {
     endingSeasonTextField.disabled = false;
 
     var teamDropdownButton = document.querySelector('#team-dropdown-button');
-    teamDropdownButton.textContent = 'Select Team';
+    if (teamDropdownButton != null) {
+        teamDropdownButton.textContent = 'Select Team';
+    }
+
+    document.querySelector('#checkbox-sum-results-between-seasons').disabled = false;
 }
 
 function displaySeasons() {
@@ -1865,13 +1871,22 @@ function fetchTeamStats(stat, multiplier) {
         }
     }
 
+    if (firstSeason == lastSeason) {
+        fetchTeamStatsForOneSeason(type, season);
+    }
+    else {
+        var sumResultsBetweenSeasons = document.querySelector('#checkbox-sum-results-between-seasons').checked;
+        fetchTeamStatsForMultipleSeasons(type, firstSeason, lastSeason, sumResultsBetweenSeasons);
+    }
+}
+
+function fetchTeamStatsForOneSeason(type, season, stat, multiplier) {
     $.ajax({
         type: 'POST',
-        url: '/get-team-stats',
+        url: '/get-team-stats-for-one-season',
         data: JSON.stringify({
             type: type,
-            first_season: firstSeason,
-            last_season: lastSeason,
+            season: season,
             stat: stat,
             multiplier: multiplier
         }),
@@ -1918,7 +1933,72 @@ function fetchTeamStats(stat, multiplier) {
                     }
 
                     var stat = getStatNameFromAbbreviation(button.textContent);                    
-                    fetchTeamStats(stat, multiplier);
+                    fetchTeamStatsForOneSeason(type, season, stat, multiplier);
+                });
+            });
+        },
+        error: function() {
+            alert('Error - data entry is not complete yet');
+        }
+    });
+}
+
+function fetchTeamStatsForMultipleSeasons(type, firstSeason, lastSeason, sumResultsBetweenSeasons, stat, multiplier) {
+    $.ajax({
+        type: 'POST',
+        url: '/get-team-stats-for-multiple-seasons',
+        data: JSON.stringify({
+            type: type,
+            first_season: firstSeason,
+            last_season: lastSeason,
+            sum_results_between_seasons: sumResultsBetweenSeasons,
+            stat: stat,
+            multiplier: multiplier
+        }),
+        contentType: 'application/json',
+        success: function(response) {            
+            displayTeamStats(response);
+
+            // Mark the stat we are sorting by as such
+            if (stat != null) {
+                var abbreviation = getFieldAbbreviation(stat);
+                var statSortingButtons = document.querySelectorAll('.stat-sorting-button');
+
+                var button = Array.from(statSortingButtons).find(btn =>
+                    btn.textContent.trim() === abbreviation
+                );
+                button.classList.add('sorted-by-stat');
+
+                // Mark all of the successive stats in the column
+                var th = button.parentElement;
+
+                var table = document.querySelector('table');
+                var headerRow = table.querySelector('thead tr');
+
+                var thIndex = [...headerRow.children].indexOf(th);
+
+                var tds = table.querySelectorAll(`tbody tr td:nth-child(${thIndex + 1})`);
+
+                tds.forEach(td => {
+                    td.classList.add('sorted-by-stat');
+                });
+            }
+            
+            var statSortingButtons = document.querySelectorAll('.stat-sorting-button');
+
+            statSortingButtons.forEach(function(button) {                
+                button.addEventListener('click', function() {
+                    var sortedByStatButton = document.querySelector('button.sorted-by-stat');
+
+                    if (sortedByStatButton == button) {
+                        multiplier *= -1;
+                    }
+                    else {
+                        multiplier = 1;
+                    }
+
+                    var stat = getStatNameFromAbbreviation(button.textContent);                    
+                    fetchTeamStatsForMultipleSeasons(type, firstSeason, lastSeason, sumResultsBetweenSeasons, stat, multiplier);
                 });
             });
         },
@@ -4732,43 +4812,6 @@ function isPeriodWithTeamStat(stat, firstSeason, lastSeason, type) {
         default:
             return true;
     }
-}
-
-function getTeamStatsByStat(type, team, firstSeason, lastSeason, stat, multiplier) {
-    $.ajax({
-        type: 'POST',
-        url: '/get-team-stats',
-        data: JSON.stringify({
-            type: type,
-            team: team,
-            first_season: firstSeason,
-            last_season: lastSeason,
-            stat: stat,
-            multiplier: multiplier
-        }),
-        contentType: 'application/json',
-        success: function(response) {
-            sortedByStat = stat;
-
-            displayTeamStats(response, type);
-            
-            var statSortingButtons = document.querySelectorAll('.stat-sorting-button');
-
-            statSortingButtons.forEach(function(button) {
-                button.addEventListener('click', function() {
-                    var newStat = getStatNameFromAbbreviation(button.textContent);
-                    if (newStat == sortedByStat) {
-                        multiplier *= -1;
-                    }
-                    else {
-                        sortedByStat = newStat;
-                        multiplier = 1;
-                    }
-                    getTeamStatsByStat(type, team, firstSeason, lastSeason, sortedByStat, multiplier);
-                });
-            });
-        }
-    });
 }
 
 function seasonsFallInShootoutPeriod(lastSeason) {

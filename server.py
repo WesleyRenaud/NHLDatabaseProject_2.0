@@ -667,7 +667,51 @@ class MyHandler( BaseHTTPRequestHandler ):
             self.wfile.write( json.dumps( response ).encode( 'utf-8' ) )
 
 
-        elif self.path == '/get-team-stats':
+        elif self.path == '/get-team-stats-for-one-season':
+            content_length = int( self.headers[ 'Content-Length'] )
+            post_data = self.rfile.read( content_length )
+            data = json.loads( post_data.decode( 'utf-8' ) )
+
+            type = data.get( 'type' )
+            season = data.get( 'season' )
+            team_stats = self.database.get_team_stats_for_one_season( type, season )
+
+            stat = data.get( 'stat' )
+            multiplier = data.get( 'multiplier' )
+            if stat and multiplier:
+                self.nhl_util.sort_teams( team_stats, stat, multiplier )
+
+            logos = []
+            for i in range( len( team_stats ) ):
+                # get the image for each team based on the season
+                team_name = team_stats[i].get_full_name()
+
+                team_logo_path = self.nhl_util.get_team_logo_path( team_name, season )
+                
+                logos.append( team_logo_path )                
+
+            if isinstance( team_stats, list ):
+                for i in range( len( team_stats ) ):
+                    team_stats[i] = team_stats[i].to_dict()
+            else:
+                team_stats = team_stats.to_dict()
+
+            self.send_response( 200 )
+            self.send_header('Content-type', 'application/json')
+            self.end_headers()
+        
+            response = {
+                'status': 'success',
+                'first_season': season,
+                'last_season': season,
+                'team_stats': team_stats,
+                'logos': logos
+            }
+            
+            self.wfile.write( json.dumps( response ).encode( 'utf-8' ) )
+
+
+        elif self.path == '/get-team-stats-for-multiple-seasons':
             content_length = int( self.headers[ 'Content-Length'] )
             post_data = self.rfile.read( content_length )
             data = json.loads( post_data.decode( 'utf-8' ) )
@@ -679,18 +723,18 @@ class MyHandler( BaseHTTPRequestHandler ):
             stat = data.get( 'stat' )
             multiplier = data.get( 'multiplier' )
 
-            team_stats = self.database.get_team_stats( type, first_season, last_season, sum_results_between_seasons, stat, multiplier )
+            team_stats = self.database.get_team_stats_for_multiple_seasons( type, first_season, last_season, sum_results_between_seasons,
+                                                                            stat, multiplier )
 
             logos = []
             for i in range( len( team_stats ) ):
                 # get the image for each team based on the season
                 team_name = team_stats[i].get_full_name()
                 
-                if first_season != last_season:
-                    season = team_stats[i].season
+                if team_stats[i].season == 'N/A':
+                    team_logo_path = self.nhl_util.get_team_last_logo_path( team_name )
                 else:
-                    season = first_season
-                team_logo_path = self.nhl_util.get_team_logo_path( team_name, season )
+                    team_logo_path = self.nhl_util.get_team_logo_path( team_name, team_stats[i].season )
                 
                 logos.append( team_logo_path )                
 

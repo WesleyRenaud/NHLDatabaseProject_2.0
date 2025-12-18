@@ -497,6 +497,20 @@ class NHLUtil():
                                     
                                     if self.is_in_between_seasons( season, first_season, second_season ):
                                         return folder + '/' + file_name
+                                    
+
+    def get_team_last_logo_path( self, team_name ):
+        folder = 'images/team_logos'
+
+        if os.path.exists( folder ):
+                for file_name in os.listdir( folder ):
+                    if team_name in file_name:
+                        folder += '/' + file_name
+
+                        if os.path.exists( folder ):
+                            if '.DS_Store' not in folder:
+                                files = sorted( os.listdir( folder ) )
+                                return folder + '/' + files[len( files ) - 1]
 
 
     def get_first_season( self, file_name ):
@@ -708,6 +722,10 @@ class NHLUtil():
         return league_standings
     
 
+    def sort_teams( self, teams, stat, multiplier ):
+        teams.sort( key=cmp_to_key( lambda team1, team2: self.team_stat_compare( team1, team2, stat, multiplier ) ) )
+
+
     def team_stat_compare( self, team1, team2, stat, multiplier ):
         stat = stat.replace( '-', '_' )
 
@@ -825,7 +843,10 @@ class NHLUtil():
                 win_percentage2 = wins2 / games_played2
 
                 if win_percentage1 == win_percentage2:
-                    return wins2 - wins1
+                    if wins1 == wins2:
+                        return losses1 - losses2
+                    else:
+                        return wins2 - wins1
                 
                 else:
                     return win_percentage2 - win_percentage1
@@ -1355,10 +1376,6 @@ class NHLUtil():
             return True
         
         return False
-
-
-    def sort_teams_by_points( self, teams ):
-        teams.sort( key=lambda team: ( team.points_percentage, team.points , team.regulation_wins, team.regulation_and_overtime_wins, team.goals_for), reverse=True )
 
 
     def seasons_fall_in_ties_period( self, first_season ): 

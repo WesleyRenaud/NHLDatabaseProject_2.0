@@ -594,20 +594,15 @@ class Database():
                           'time_on_ice_per_game', 'shots', 'shooting_percentage', 'faceoff_percentage']
         
         if stat == 'time_on_ice_per_game':
-            if combine_seasons_on_different_teams or sum_results_between_seasons:
-                toi_name = 'AVG_TOI_PER_GAME'
-            else:
-                toi_name = 'TIME_ON_ICE_PER_GAME'
-
             order_clause = \
                 f"""
-                    {toi_name} IS NULL,
+                    TIME_ON_ICE_PER_GAME IS NULL,
                     (
-                        CAST(SUBSTR({toi_name}, 1,
-                            INSTR({toi_name}, ':') - 1) AS INTEGER) * 60
+                        CAST(SUBSTR(TIME_ON_ICE_PER_GAME, 1,
+                            INSTR(TIME_ON_ICE_PER_GAME, ':') - 1) AS INTEGER) * 60
                         +
-                        CAST(SUBSTR({toi_name},
-                            INSTR({toi_name}, ':') + 1) AS INTEGER)
+                        CAST(SUBSTR(TIME_ON_ICE_PER_GAME,
+                            INSTR(TIME_ON_ICE_PER_GAME, ':') + 1) AS INTEGER)
                     ) {order_direction}
                 """
         elif stat in nullable_stats:
@@ -669,7 +664,7 @@ class Database():
                         CAST(AVG_TOI_SECONDS / 60 AS INTEGER)
                             || ':' ||
                         printf('%02d', CAST(AVG_TOI_SECONDS % 60 AS INTEGER))
-                            AS AVG_TOI_PER_GAME,
+                            AS TIME_ON_ICE_PER_GAME,
 
                         GAME_WINNING_GOALS,
                         OVERTIME_GOALS,
@@ -899,18 +894,14 @@ class Database():
         nullable_stats = ['ties', 'overtime_losses', 'shots_against', 'save_percentage', 'time_on_ice']
 
         if stat == 'time_on_ice':
-            if combine_seasons_on_different_teams or sum_results_between_seasons:
-                toi_name = 'TOTAL_TOI'
-            else:
-                toi_name = 'TIME_ON_ICE'
             order_clause = f"""
-                {toi_name} IS NULL,
+                TIME_ON_ICE IS NULL,
                 (
-                    CAST(SUBSTR({toi_name}, 1,
-                        INSTR({toi_name}, ':') - 1) AS INTEGER) * 60
+                    CAST(SUBSTR(TIME_ON_ICE, 1,
+                        INSTR(TIME_ON_ICE, ':') - 1) AS INTEGER) * 60
                     +
-                    CAST(SUBSTR({toi_name},
-                        INSTR({toi_name}, ':') + 1) AS INTEGER)
+                    CAST(SUBSTR(TIME_ON_ICE,
+                        INSTR(TIME_ON_ICE, ':') + 1) AS INTEGER)
                 ) {order_direction}
             """
         elif stat in nullable_stats:
@@ -971,7 +962,7 @@ class Database():
                         CAST(AVG_TOI_SECONDS / 60 AS INTEGER)
                             || ':' ||
                         printf('%02d', CAST(AVG_TOI_SECONDS % 60 AS INTEGER))
-                            AS TOTAL_TOI
+                            AS TIME_ON_ICE
 
                     FROM (
                         SELECT
@@ -1116,254 +1107,337 @@ class Database():
         return teams
     
 
-    def get_team_stats( self, type, first_season, last_season, sum_results_between_seasons, stat, multiplier ): 
+    def get_team_stats_for_one_season( self, type, season ): 
         cur = self.conn.cursor()
 
-        if stat == None:
-            stat = 'points'
-        stat = stat.replace( '-', '_' )
-
-        if multiplier == 1 or multiplier == None:
-            order_direction = 'DESC'
-        else:
-            order_direction = 'ASC'
-
-        nullable_stats = ['ties', 'overtime_losses', 'home', 'away', 'shootout', 'last_10', 'streak', 'shootout_wins',
-                          'powerplay_percentage', 'penalty_kill_percentage', 'net_powerplay_percentage',
-                          'net_penalty_kill_percentage', 'faceoff_win_percentage']
+        data = cur.execute(
+            f""" SELECT
+                    CITY,
+                    NAME,
+                    GAMES_PLAYED,
+                    WINS,
+                    LOSSES,
+                    TIES, 
+                    OVERTIME_LOSSES,
+                    POINTS,
+                    POINTS_PERCENTAGE, 
+                    REGULATION_WINS,
+                    REGULATION_AND_OVERTIME_WINS, 
+                    GOALS_FOR,
+                    GOALS_AGAINST,
+                    GOAL_DIFFERENTIAL, 
+                    HOME,
+                    AWAY,
+                    SHOOTOUT,
+                    LAST_10,
+                    STREAK, 
+                    SHOOTOUT_WINS,
+                    GOALS_FOR_PER_GAME, 
+                    GOALS_AGAINST_PER_GAME,
+                    POWERPLAY_PERCENTAGE, 
+                    PENALTY_KILL_PERCENTAGE,
+                    NET_POWERPLAY_PERCENTAGE, 
+                    NET_PENALTY_KILL_PERCENTAGE,
+                    FACEOFF_WIN_PERCENTAGE
+                FROM
+                    Team 
+                WHERE
+                    TYPE = ?
+                    AND SEASON = ?
+                ORDER BY
+                    POINTS, WINS, REGULATION_WINS DESC; """
+                ,( 
+                    type,
+                    season ) 
+                )
         
-        if stat == 'home':
-            order_clause = f"""
-            HOME is NULL,
-                (
-                    -- Wins
-                    2 * CAST(
-                        SUBSTR(HOME, 1, INSTR(HOME, '-') - 1)
-                        AS INTEGER
-                    )
+        team_data = data.fetchall()
+        teams = []
 
-                    +
+        for curr_team in team_data:
+            team = NHL.Team(
+                type=None,
+                season=None,
+                city=curr_team[0],
+                name=curr_team[1],
+                games_played=curr_team[2],
+                wins=curr_team[3],
+                losses=curr_team[4],
+                ties=curr_team[5] if curr_team[5]!=None else '--',
+                overtime_losses=curr_team[6] if curr_team[6]!=None else '--',
+                points=curr_team[7],
+                points_percentage=curr_team[8], 
+                regulation_wins=curr_team[9],
+                regulation_and_overtime_wins=curr_team[10],
+                goals_for=curr_team[11], 
+                goals_against=curr_team[12],
+                goal_differential=curr_team[13],
+                home=curr_team[14] if curr_team[14] != None else '--', 
+                away=curr_team[15] if curr_team[15] != None else '--',
+                shootout=curr_team[16] if curr_team[16]!=None else '--',
+                last_10=curr_team[17] if curr_team[17] != None else '--',
+                streak=curr_team[18] if curr_team[18] != None else '--', 
+                shootout_wins=curr_team[19] if curr_team[19]!=None else '--',
+                goals_for_per_game=curr_team[20],
+                goals_against_per_game=curr_team[21],
+                powerplay_percentage=curr_team[22] if curr_team[22]!=None else '--',
+                penalty_kill_percentage=curr_team[23] if curr_team[23]!=None else '--', 
+                net_powerplay_percentage=curr_team[24] if curr_team[24]!=None else '--',
+                net_penalty_kill_percentage=curr_team[25] if curr_team[25]!=None else '--', 
+                faceoff_win_percentage=curr_team[26] if curr_team[26]!=None else '--' )
 
-                    -- OTL (always after second dash)
-                    CAST(
-                        SUBSTR(
-                            SUBSTR(HOME, INSTR(HOME, '-') + 1),
-                            INSTR(SUBSTR(HOME, INSTR(HOME, '-') + 1), '-') + 1,
-                            CASE
-                                WHEN LENGTH(HOME) - LENGTH(REPLACE(HOME, '-', '')) = 2
-                                THEN LENGTH(HOME)
-                                ELSE
-                                    INSTR(
-                                        SUBSTR(
-                                            SUBSTR(HOME, INSTR(HOME, '-') + 1),
-                                            INSTR(SUBSTR(HOME, INSTR(HOME, '-') + 1), '-') + 1
-                                        ),
-                                        '-'
-                                    ) - 1
-                            END
-                        )
-                        AS INTEGER
-                    )
+            teams.append( team )    
+                
+        return teams
+    
 
-                    +
-
-                    -- Ties (only if present)
-                    CASE
-                        WHEN LENGTH(HOME) - LENGTH(REPLACE(HOME, '-', '')) = 3
-                        THEN CAST(
-                            SUBSTR(
-                                HOME,
-                                INSTR(HOME, '-') 
-                                + INSTR(SUBSTR(HOME, INSTR(HOME, '-') + 1), '-')
-                                + INSTR(
-                                    SUBSTR(
-                                        SUBSTR(HOME, INSTR(HOME, '-') + 1),
-                                        INSTR(SUBSTR(HOME, INSTR(HOME, '-') + 1), '-') + 1
-                                    ),
-                                    '-'
-                                )
-                                + 1
-                            )
-                            AS INTEGER
-                        )
-                        ELSE 0
-                    END
-                ) {order_direction}
-            """
-        elif stat == 'away':
-            order_clause = f"""
-                AWAY is NULL,
-                (
-                    -- Wins
-                    2 * CAST(
-                        SUBSTR(AWAY, 1, INSTR(AWAY, '-') - 1)
-                        AS INTEGER
-                    )
-
-                    +
-
-                    -- OTL (always after second dash)
-                    CAST(
-                        SUBSTR(
-                            SUBSTR(AWAY, INSTR(AWAY, '-') + 1),
-                            INSTR(SUBSTR(AWAY, INSTR(AWAY, '-') + 1), '-') + 1,
-                            CASE
-                                WHEN LENGTH(AWAY) - LENGTH(REPLACE(AWAY, '-', '')) = 2
-                                THEN LENGTH(AWAY)
-                                ELSE
-                                    INSTR(
-                                        SUBSTR(
-                                            SUBSTR(AWAY, INSTR(AWAY, '-') + 1),
-                                            INSTR(SUBSTR(AWAY, INSTR(AWAY, '-') + 1), '-') + 1
-                                        ),
-                                        '-'
-                                    ) - 1
-                            END
-                        )
-                        AS INTEGER
-                    )
-
-                    +
-
-                    -- Ties (only if present)
-                    CASE
-                        WHEN LENGTH(AWAY) - LENGTH(REPLACE(AWAY, '-', '')) = 3
-                        THEN CAST(
-                            SUBSTR(
-                                AWAY,
-                                INSTR(AWAY, '-') 
-                                + INSTR(SUBSTR(AWAY, INSTR(AWAY, '-') + 1), '-')
-                                + INSTR(
-                                    SUBSTR(
-                                        SUBSTR(AWAY, INSTR(AWAY, '-') + 1),
-                                        INSTR(SUBSTR(AWAY, INSTR(AWAY, '-') + 1), '-') + 1
-                                    ),
-                                    '-'
-                                )
-                                + 1
-                            )
-                            AS INTEGER
-                        )
-                        ELSE 0
-                    END
-                ) {order_direction}
-            """
-        elif stat == 'shootout':
-            loss_sort_dir = 'ASC' if order_direction == 'DESC' else 'DESC'
-
-            order_clause = f"""
-                SHOOTOUT IS NULL,
-
-                CASE
-                    WHEN
-                        CAST(SUBSTR(SHOOTOUT, 1, INSTR(SHOOTOUT, '-') - 1) AS INTEGER)
-                        +
-                        CAST(SUBSTR(SHOOTOUT, INSTR(SHOOTOUT, '-') + 1) AS INTEGER)
-                        = 0
-                    THEN 0
-                    ELSE
-                        CAST(SUBSTR(SHOOTOUT, 1, INSTR(SHOOTOUT, '-') - 1) AS REAL)
-                        /
-                        (
-                            CAST(SUBSTR(SHOOTOUT, 1, INSTR(SHOOTOUT, '-') - 1) AS REAL)
-                            +
-                            CAST(SUBSTR(SHOOTOUT, INSTR(SHOOTOUT, '-') + 1) AS REAL)
-                        )
-                END {order_direction},
-
-                CAST(SUBSTR(SHOOTOUT, 1, INSTR(SHOOTOUT, '-') - 1) AS INTEGER) {order_direction},
-
-                CAST(SUBSTR(SHOOTOUT, INSTR(SHOOTOUT, '-') + 1) AS INTEGER) {loss_sort_dir}
-            """
-        if stat == 'last_10':
-            order_clause = f"""
-            LAST_10 is NULL,
-                (
-                    -- Wins
-                    2 * CAST(
-                        SUBSTR(LAST_10, 1, INSTR(LAST_10, '-') - 1)
-                        AS INTEGER
-                    )
-
-                    +
-
-                    -- OTL (always after second dash)
-                    CAST(
-                        SUBSTR(
-                            SUBSTR(LAST_10, INSTR(LAST_10, '-') + 1),
-                            INSTR(SUBSTR(LAST_10, INSTR(LAST_10, '-') + 1), '-') + 1,
-                            CASE
-                                WHEN LENGTH(LAST_10) - LENGTH(REPLACE(LAST_10, '-', '')) = 2
-                                THEN LENGTH(LAST_10)
-                                ELSE
-                                    INSTR(
-                                        SUBSTR(
-                                            SUBSTR(LAST_10, INSTR(LAST_10, '-') + 1),
-                                            INSTR(SUBSTR(LAST_10, INSTR(LAST_10, '-') + 1), '-') + 1
-                                        ),
-                                        '-'
-                                    ) - 1
-                            END
-                        )
-                        AS INTEGER
-                    )
-
-                    +
-
-                    -- Ties (only if present)
-                    CASE
-                        WHEN LENGTH(LAST_10) - LENGTH(REPLACE(LAST_10, '-', '')) = 3
-                        THEN CAST(
-                            SUBSTR(
-                                LAST_10,
-                                INSTR(LAST_10, '-') 
-                                + INSTR(SUBSTR(LAST_10, INSTR(LAST_10, '-') + 1), '-')
-                                + INSTR(
-                                    SUBSTR(
-                                        SUBSTR(LAST_10, INSTR(LAST_10, '-') + 1),
-                                        INSTR(SUBSTR(LAST_10, INSTR(LAST_10, '-') + 1), '-') + 1
-                                    ),
-                                    '-'
-                                )
-                                + 1
-                            )
-                            AS INTEGER
-                        )
-                        ELSE 0
-                    END
-                ) {order_direction}
-            """
-        elif stat == 'streak':
-            order_clause = f"""
-                STREAK IS NULL,
-
-                -- Letter rank: W > T > OT > L
-                CASE 
-                    WHEN SUBSTR(STREAK, 1, 2) = 'OT' THEN 2
-                    WHEN SUBSTR(STREAK, 1, 1) = 'W' THEN 4
-                    WHEN SUBSTR(STREAK, 1, 1) = 'T' THEN 3
-                    WHEN SUBSTR(STREAK, 1, 1) = 'L' THEN 1
-                    ELSE 0
-                END {order_direction},
-
-                -- Numeric part: higher N better only for W, lower N better for T/OT/L
-                CASE
-                    WHEN SUBSTR(STREAK, 1, 1) = 'W' THEN CAST(SUBSTR(STREAK, 2) AS INTEGER)
-                    WHEN SUBSTR(STREAK, 1, 1) = 'T' THEN -CAST(SUBSTR(STREAK, 2) AS INTEGER)
-                    WHEN SUBSTR(STREAK, 1, 2) = 'OT' THEN -CAST(SUBSTR(STREAK, 3) AS INTEGER)
-                    WHEN SUBSTR(STREAK, 1, 1) = 'L' THEN -CAST(SUBSTR(STREAK, 2) AS INTEGER)
-                    ELSE 0
-                END {order_direction}
-            """
-        elif stat in nullable_stats:
-            order_clause = f"""
-                {stat} IS NULL,
-                {stat} {order_direction}
-            """
-        else:
-            order_clause = f"{stat} {order_direction}"
+    def get_team_stats_for_multiple_seasons( self, type, first_season, last_season, sum_results_between_seasons, stat, multiplier ): 
+        cur = self.conn.cursor()
 
         if not sum_results_between_seasons:
+            if stat == None:
+                stat = 'points'
+            stat = stat.replace( '-', '_' )
+
+            if multiplier == 1 or multiplier == None:
+                order_direction = 'DESC'
+            else:
+                order_direction = 'ASC'
+
+            nullable_stats = ['ties', 'overtime_losses', 'home', 'away', 'shootout', 'last_10', 'streak', 'shootout_wins',
+                                'powerplay_percentage', 'penalty_kill_percentage', 'net_powerplay_percentage',
+                                'net_penalty_kill_percentage', 'faceoff_win_percentage']
+            
+            if stat == 'home':
+                order_clause = f"""
+                    HOME is NULL,
+                        (
+                            -- Wins
+                            2 * CAST(
+                                SUBSTR(HOME, 1, INSTR(HOME, '-') - 1)
+                                AS INTEGER
+                            )
+
+                            +
+
+                            -- OTL (always after second dash)
+                            CAST(
+                                SUBSTR(
+                                    SUBSTR(HOME, INSTR(HOME, '-') + 1),
+                                    INSTR(SUBSTR(HOME, INSTR(HOME, '-') + 1), '-') + 1,
+                                    CASE
+                                        WHEN LENGTH(HOME) - LENGTH(REPLACE(HOME, '-', '')) = 2
+                                        THEN LENGTH(HOME)
+                                        ELSE
+                                            INSTR(
+                                                SUBSTR(
+                                                    SUBSTR(HOME, INSTR(HOME, '-') + 1),
+                                                    INSTR(SUBSTR(HOME, INSTR(HOME, '-') + 1), '-') + 1
+                                                ),
+                                                '-'
+                                            ) - 1
+                                    END
+                                )
+                                AS INTEGER
+                            )
+
+                            +
+
+                            -- Ties (only if present)
+                            CASE
+                                WHEN LENGTH(HOME) - LENGTH(REPLACE(HOME, '-', '')) = 3
+                                THEN CAST(
+                                    SUBSTR(
+                                        HOME,
+                                        INSTR(HOME, '-') 
+                                        + INSTR(SUBSTR(HOME, INSTR(HOME, '-') + 1), '-')
+                                        + INSTR(
+                                            SUBSTR(
+                                                SUBSTR(HOME, INSTR(HOME, '-') + 1),
+                                                INSTR(SUBSTR(HOME, INSTR(HOME, '-') + 1), '-') + 1
+                                            ),
+                                            '-'
+                                        )
+                                        + 1
+                                    )
+                                    AS INTEGER
+                                )
+                                ELSE 0
+                            END
+                        ) {order_direction}
+                    """
+            elif stat == 'away':
+                order_clause = f"""
+                    AWAY is NULL,
+                        (
+                            -- Wins
+                            2 * CAST(
+                                SUBSTR(AWAY, 1, INSTR(AWAY, '-') - 1)
+                                AS INTEGER
+                            )
+
+                            +
+
+                            -- OTL (always after second dash)
+                            CAST(
+                                SUBSTR(
+                                    SUBSTR(AWAY, INSTR(AWAY, '-') + 1),
+                                    INSTR(SUBSTR(AWAY, INSTR(AWAY, '-') + 1), '-') + 1,
+                                    CASE
+                                        WHEN LENGTH(AWAY) - LENGTH(REPLACE(AWAY, '-', '')) = 2
+                                        THEN LENGTH(AWAY)
+                                        ELSE
+                                            INSTR(
+                                                SUBSTR(
+                                                    SUBSTR(AWAY, INSTR(AWAY, '-') + 1),
+                                                    INSTR(SUBSTR(AWAY, INSTR(AWAY, '-') + 1), '-') + 1
+                                                ),
+                                                '-'
+                                            ) - 1
+                                    END
+                                )
+                                AS INTEGER
+                            )
+
+                            +
+
+                            -- Ties (only if present)
+                            CASE
+                                WHEN LENGTH(AWAY) - LENGTH(REPLACE(AWAY, '-', '')) = 3
+                                THEN CAST(
+                                    SUBSTR(
+                                        AWAY,
+                                        INSTR(AWAY, '-') 
+                                        + INSTR(SUBSTR(AWAY, INSTR(AWAY, '-') + 1), '-')
+                                        + INSTR(
+                                            SUBSTR(
+                                                SUBSTR(AWAY, INSTR(AWAY, '-') + 1),
+                                                INSTR(SUBSTR(AWAY, INSTR(AWAY, '-') + 1), '-') + 1
+                                            ),
+                                            '-'
+                                        )
+                                        + 1
+                                    )
+                                    AS INTEGER
+                                )
+                                ELSE 0
+                            END
+                        ) {order_direction}
+                    """
+            elif stat == 'shootout':
+                loss_sort_dir = 'ASC' if order_direction == 'DESC' else 'DESC'
+
+                order_clause = f"""
+                    SHOOTOUT IS NULL,
+                        CASE
+                            WHEN
+                                CAST(SUBSTR(SHOOTOUT, 1, INSTR(SHOOTOUT, '-') - 1) AS INTEGER)
+                                +
+                                CAST(SUBSTR(SHOOTOUT, INSTR(SHOOTOUT, '-') + 1) AS INTEGER)
+                                = 0
+                            THEN 0
+                            ELSE
+                                CAST(SUBSTR(SHOOTOUT, 1, INSTR(SHOOTOUT, '-') - 1) AS REAL)
+                                /
+                                (
+                                    CAST(SUBSTR(SHOOTOUT, 1, INSTR(SHOOTOUT, '-') - 1) AS REAL)
+                                    +
+                                    CAST(SUBSTR(SHOOTOUT, INSTR(SHOOTOUT, '-') + 1) AS REAL)
+                                )
+                        END {order_direction},
+
+                        CAST(SUBSTR(SHOOTOUT, 1, INSTR(SHOOTOUT, '-') - 1) AS INTEGER) {order_direction},
+
+                        CAST(SUBSTR(SHOOTOUT, INSTR(SHOOTOUT, '-') + 1) AS INTEGER) {loss_sort_dir}
+                    """
+            elif stat == 'last_10':
+                order_clause = f"""
+                    LAST_10 is NULL,
+                        (
+                            -- Wins
+                            2 * CAST(
+                                SUBSTR(LAST_10, 1, INSTR(LAST_10, '-') - 1)
+                                AS INTEGER
+                            )
+
+                            +
+
+                            -- OTL (always after second dash)
+                            CAST(
+                                SUBSTR(
+                                    SUBSTR(LAST_10, INSTR(LAST_10, '-') + 1),
+                                    INSTR(SUBSTR(LAST_10, INSTR(LAST_10, '-') + 1), '-') + 1,
+                                    CASE
+                                        WHEN LENGTH(LAST_10) - LENGTH(REPLACE(LAST_10, '-', '')) = 2
+                                        THEN LENGTH(LAST_10)
+                                        ELSE
+                                            INSTR(
+                                                SUBSTR(
+                                                    SUBSTR(LAST_10, INSTR(LAST_10, '-') + 1),
+                                                    INSTR(SUBSTR(LAST_10, INSTR(LAST_10, '-') + 1), '-') + 1
+                                                ),
+                                                '-'
+                                            ) - 1
+                                    END
+                                )
+                                AS INTEGER
+                            )
+
+                            +
+
+                            -- Ties (only if present)
+                            CASE
+                                WHEN LENGTH(LAST_10) - LENGTH(REPLACE(LAST_10, '-', '')) = 3
+                                THEN CAST(
+                                    SUBSTR(
+                                        LAST_10,
+                                        INSTR(LAST_10, '-') 
+                                        + INSTR(SUBSTR(LAST_10, INSTR(LAST_10, '-') + 1), '-')
+                                        + INSTR(
+                                            SUBSTR(
+                                                SUBSTR(LAST_10, INSTR(LAST_10, '-') + 1),
+                                                INSTR(SUBSTR(LAST_10, INSTR(LAST_10, '-') + 1), '-') + 1
+                                            ),
+                                            '-'
+                                        )
+                                        + 1
+                                    )
+                                    AS INTEGER
+                                )
+                                ELSE 0
+                            END
+                        ) {order_direction}
+                    """
+            elif stat == 'streak':
+                order_clause = f"""
+                    STREAK IS NULL,
+
+                    -- Letter rank: W > T > OT > L
+                    CASE 
+                        WHEN SUBSTR(STREAK, 1, 2) = 'OT' THEN 2
+                        WHEN SUBSTR(STREAK, 1, 1) = 'W' THEN 4
+                        WHEN SUBSTR(STREAK, 1, 1) = 'T' THEN 3
+                        WHEN SUBSTR(STREAK, 1, 1) = 'L' THEN 1
+                        ELSE 0
+                    END {order_direction},
+
+                    -- Numeric part: higher N better only for W, lower N better for T/OT/L
+                    CASE
+                        WHEN SUBSTR(STREAK, 1, 1) = 'W' THEN CAST(SUBSTR(STREAK, 2) AS INTEGER)
+                        WHEN SUBSTR(STREAK, 1, 1) = 'T' THEN -CAST(SUBSTR(STREAK, 2) AS INTEGER)
+                        WHEN SUBSTR(STREAK, 1, 2) = 'OT' THEN -CAST(SUBSTR(STREAK, 3) AS INTEGER)
+                        WHEN SUBSTR(STREAK, 1, 1) = 'L' THEN -CAST(SUBSTR(STREAK, 2) AS INTEGER)
+                        ELSE 0
+                    END {order_direction}
+                """
+            elif stat in nullable_stats:
+                order_clause = f"""
+                    {stat} IS NULL,
+                    {stat} {order_direction}
+                """
+            else:
+                order_clause = f"{stat} {order_direction}"
+
             data = cur.execute(
                 f""" SELECT
                         SEASON,
@@ -1399,120 +1473,14 @@ class Database():
                     WHERE
                         TYPE = ?
                         AND SEASON >= ? AND SEASON <= ?
-                    ORDER BY {order_clause}
+                    ORDER BY
+                        {order_clause}
                     LIMIT ?; """
                     ,( 
                         type,
                         first_season, last_season,
                         self.max_num_results ) 
                     )
-        else:
-            cur.execute(
-                f"""
-                SELECT
-                    SEASON,
-                    CITY,
-                    NAME,
-                    GAMES_PLAYED,
-                    WINS,
-                    LOSSES,
-                    TIES,
-                    OVERTIME_LOSSES,
-                    POINTS,
-                    POINTS_PERCENTAGE,
-                    REGULATION_WINS,
-                    REGULATION_AND_OVERTIME_WINS,
-                    GOALS_FOR,
-                    GOALS_AGAINST,
-                    GOAL_DIFFERENTIAL,
-                    HOME,
-                    AWAY,
-                    SHOOTOUT,
-                    LAST_10,
-                    STREAK,
-                    SHOOTOUT_WINS,
-                    GOALS_FOR_PER_GAME,
-                    GOALS_AGAINST_PER_GAME,
-                    POWERPLAY_PERCENTAGE,
-                    PENALTY_KILL_PERCENTAGE,
-                    NET_POWERPLAY_PERCENTAGE,
-                    NET_PENALTY_KILL_PERCENTAGE,
-                    FACEOFF_WIN_PERCENTAGE
-                FROM (
-                    SELECT
-                        CASE
-                            WHEN COUNT(DISTINCT SEASON) > 1 THEN 'N/A'
-                            ELSE MIN(SEASON)
-                        END AS SEASON,
-
-                        CITY,
-                        NAME,
-
-                        SUM(GAMES_PLAYED) AS GAMES_PLAYED,
-                        SUM(WINS) AS WINS,
-                        SUM(LOSSES) AS LOSSES,
-                        SUM(TIES) AS TIES,
-                        SUM(OVERTIME_LOSSES) AS OVERTIME_LOSSES,
-                        SUM(POINTS) AS POINTS,
-
-                        -- Percentages & derived stats
-                        ROUND(
-                            CAST(SUM(POINTS) AS REAL) / (SUM(GAMES_PLAYED) * 2),
-                            3
-                        ) AS POINTS_PERCENTAGE,
-
-                        SUM(REGULATION_WINS) AS REGULATION_WINS,
-                        SUM(REGULATION_AND_OVERTIME_WINS) AS REGULATION_AND_OVERTIME_WINS,
-
-                        SUM(GOALS_FOR) AS GOALS_FOR,
-                        SUM(GOALS_AGAINST) AS GOALS_AGAINST,
-
-                        SUM(GOALS_FOR) - SUM(GOALS_AGAINST) AS GOAL_DIFFERENTIAL,
-
-                        SUM(HOME) AS HOME,
-                        SUM(AWAY) AS AWAY,
-                        SUM(SHOOTOUT) AS SHOOTOUT,
-                        SUM(LAST_10) AS LAST_10,
-                        MIN(STREAK) AS STREAK,
-                        SUM(SHOOTOUT_WINS) AS SHOOTOUT_WINS,
-
-                        ROUND(
-                            CAST(SUM(GOALS_FOR) AS REAL) / SUM(GAMES_PLAYED),
-                            2
-                        ) AS GOALS_FOR_PER_GAME,
-
-                        ROUND(
-                            CAST(SUM(GOALS_AGAINST) AS REAL) / SUM(GAMES_PLAYED),
-                            2
-                        ) AS GOALS_AGAINST_PER_GAME,
-
-                        AVG(POWERPLAY_PERCENTAGE) AS POWERPLAY_PERCENTAGE,
-                        AVG(PENALTY_KILL_PERCENTAGE) AS PENALTY_KILL_PERCENTAGE,
-
-                        AVG(NET_POWERPLAY_PERCENTAGE) AS NET_POWERPLAY_PERCENTAGE,
-                        AVG(NET_PENALTY_KILL_PERCENTAGE) AS NET_PENALTY_KILL_PERCENTAGE,
-
-                        AVG(FACEOFF_WIN_PERCENTAGE) AS FACEOFF_WIN_PERCENTAGE
-
-                    FROM Team
-                    WHERE
-                        TYPE = ?
-                        AND SEASON >= ? AND SEASON <= ?
-                    GROUP BY
-                        CITY,
-                        NAME
-                )
-                ORDER BY
-                    {order_clause}
-                LIMIT ?;
-                """,
-                (
-                    type,
-                    first_season, last_season,
-                    self.max_num_results
-                )
-            )
-
 
         team_data = data.fetchall()
         teams = []
