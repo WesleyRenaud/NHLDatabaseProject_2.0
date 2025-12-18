@@ -725,6 +725,13 @@ class MyHandler( BaseHTTPRequestHandler ):
 
             team_stats = self.database.get_team_stats_for_multiple_seasons( type, first_season, last_season, sum_results_between_seasons,
                                                                             stat, multiplier )
+            if sum_results_between_seasons:
+                team_stats = self.nhl_util.get_aggregate_team_stats_by_team( type, team_stats )
+
+                if stat == None:
+                    stat = 'points'
+                    multiplier = 1
+                self.nhl_util.sort_teams( team_stats, stat, multiplier )
 
             logos = []
             for i in range( len( team_stats ) ):

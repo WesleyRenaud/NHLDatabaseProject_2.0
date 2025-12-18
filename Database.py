@@ -1481,7 +1481,48 @@ class Database():
                         first_season, last_season,
                         self.max_num_results ) 
                     )
+        else:
+                data = cur.execute(
+                f""" SELECT
+                        SEASON,
+                        CITY,
+                        NAME,
+                        GAMES_PLAYED,
+                        WINS,
+                        LOSSES,
+                        TIES, 
+                        OVERTIME_LOSSES,
+                        POINTS,
+                        POINTS_PERCENTAGE, 
+                        REGULATION_WINS,
+                        REGULATION_AND_OVERTIME_WINS, 
+                        GOALS_FOR,
+                        GOALS_AGAINST,
+                        GOAL_DIFFERENTIAL, 
+                        HOME,
+                        AWAY,
+                        SHOOTOUT,
+                        LAST_10,
+                        STREAK, 
+                        SHOOTOUT_WINS,
+                        GOALS_FOR_PER_GAME, 
+                        GOALS_AGAINST_PER_GAME,
+                        POWERPLAY_PERCENTAGE, 
+                        PENALTY_KILL_PERCENTAGE,
+                        NET_POWERPLAY_PERCENTAGE, 
+                        NET_PENALTY_KILL_PERCENTAGE,
+                        FACEOFF_WIN_PERCENTAGE
+                    FROM
+                        Team 
+                    WHERE
+                        TYPE = ?
+                        AND SEASON >= ? AND SEASON <= ?; """
+                    ,( 
+                        type,
+                        first_season, last_season, ) 
+                    )
 
+        
         team_data = data.fetchall()
         teams = []
 

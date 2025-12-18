@@ -1,6 +1,6 @@
 import os
 from functools import cmp_to_key
-
+from collections import defaultdict
 
 ################################################################################
 
@@ -724,6 +724,132 @@ class NHLUtil():
 
     def sort_teams( self, teams, stat, multiplier ):
         teams.sort( key=cmp_to_key( lambda team1, team2: self.team_stat_compare( team1, team2, stat, multiplier ) ) )
+
+
+    def get_aggregate_team_stats_by_team( self, type, teams ):
+        teams_by_city_name = defaultdict( list )
+
+        for team in teams:
+            key = (team.city, team.name)
+            teams_by_city_name[key].append( team )
+
+        aggregate_teams = []
+        for key in teams_by_city_name:
+            aggregate_team = Team(
+                type=None,
+                season='N/A',
+                city=key[0],
+                name=key[1],
+                games_played=0,
+                wins=0,
+                losses=0,
+                ties=0,
+                overtime_losses=0,
+                points=0,
+                points_percentage=0, 
+                regulation_wins=0,
+                regulation_and_overtime_wins=0,
+                goals_for=0, 
+                goals_against=0,
+                goal_differential=0,
+                home='--', 
+                away='--',
+                shootout='--',
+                last_10='--',
+                streak='--', 
+                shootout_wins='--',
+                goals_for_per_game=0.0,
+                goals_against_per_game=0.0,
+                powerplay_percentage='--',
+                penalty_kill_percentage='--', 
+                net_powerplay_percentage='--',
+                net_penalty_kill_percentage='--', 
+                faceoff_win_percentage='--' )
+            
+            total_home_wins = 0
+            total_home_losses = 0
+            total_home_overtime_losses = 0
+            total_home_ties = 0
+
+            total_away_wins = 0
+            total_away_losses = 0
+            total_away_overtime_losses = 0
+            total_away_ties = 0
+
+            total_shootout_wins = 0
+            total_shootout_losses = 0
+
+            for team in teams_by_city_name[key]:
+                # Sum the appropriate stats
+                aggregate_team.games_played += team.games_played
+                aggregate_team.wins += team.wins
+                aggregate_team.losses += team.losses
+
+                # Make sure the appropriate values are not null
+                if team.ties != '--':
+                    aggregate_team.ties += team.ties
+                if team.overtime_losses != '--':
+                    aggregate_team.overtime_losses += team.overtime_losses
+
+                aggregate_team.points += team.points
+                aggregate_team.regulation_wins += team.regulation_wins
+                aggregate_team.regulation_and_overtime_wins += team.regulation_and_overtime_wins
+                aggregate_team.goals_for += team.goals_for
+                aggregate_team.goals_against += team.goals_against
+
+                if team.home != '--':
+                    home = list( map( int, team.home.split( '-' ) ) )
+
+                    total_home_wins += home[0]
+                    total_home_losses += home[1]
+
+                    if len( home ) == 3:
+                        if self.is_overtime_losses_season( type, team.season ):
+                            total_home_overtime_losses += home[2]
+                        else:
+                            total_home_ties += home[2]
+                    else:
+                        total_home_overtime_losses += home[2]
+                        total_home_ties += home[3]
+
+                if team.away != '--':
+                    away = list( map( int, team.away.split( '-' ) ) )
+
+                    total_away_wins += away[0]
+                    total_away_losses += away[1]
+
+                    if len( away ) == 3:
+                        if self.is_overtime_losses_season( type, team.season ):
+                            total_away_overtime_losses += away[2]
+                        else:
+                            total_away_ties += away[2]
+                    else:
+                        total_away_overtime_losses += away[2]
+                        total_away_ties += away[3]
+
+                if team.shootout != '--':
+                    shootout = list( map( int, team.shootout.split( '-' ) ) )
+
+                    total_shootout_wins += shootout[0]
+                    total_shootout_losses += shootout[1]
+
+            # Calculate the relative stats
+            aggregate_team.points_percentage = aggregate_team.points / (2 * aggregate_team.games_played)
+            aggregate_team.goal_differential = aggregate_team.goals_for - aggregate_team.goals_against
+
+            # Combine complicated stats--home, away, ...
+            if type == 'Regular Season':
+                aggregate_team.home = f"{total_home_wins}-{total_home_losses}-{total_home_overtime_losses}-{total_home_ties}"
+                aggregate_team.away = f"{total_away_wins}-{total_away_losses}-{total_away_overtime_losses}-{total_away_ties}"
+                aggregate_team.shootout = f"{total_shootout_wins}-{total_shootout_losses}"
+                aggregate_team.shootout_wins = total_shootout_wins
+
+            aggregate_team.goals_for_per_game = aggregate_team.goals_for / aggregate_team.games_played
+            aggregate_team.goals_against_per_game = aggregate_team.goals_against / aggregate_team.games_played
+
+            aggregate_teams.append( aggregate_team )
+
+        return aggregate_teams
 
 
     def team_stat_compare( self, team1, team2, stat, multiplier ):
