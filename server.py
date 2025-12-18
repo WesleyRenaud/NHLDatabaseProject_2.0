@@ -673,7 +673,6 @@ class MyHandler( BaseHTTPRequestHandler ):
             data = json.loads( post_data.decode( 'utf-8' ) )
 
             type = data.get( 'type' )
-            team = data.get( 'team' )
             first_season = data.get( 'first_season' )
             last_season = data.get( 'last_season' )
             stat = data.get( 'stat' )
@@ -681,13 +680,12 @@ class MyHandler( BaseHTTPRequestHandler ):
 
             team_stats = self.database.get_team_stats( type, first_season, last_season, stat, multiplier )
 
-            if team == 'all':
-                logos = []
-                for i in range( len( team_stats ) ):
-                    # get the image for each team based on the season
-                    team_name = team_stats[i].get_full_name()
-                    team_logo_path = self.nhl_util.get_team_logo_path( team_name, team_stats[i].season )
-                    logos.append( team_logo_path )                
+            logos = []
+            for i in range( len( team_stats ) ):
+                # get the image for each team based on the season
+                team_name = team_stats[i].get_full_name()
+                team_logo_path = self.nhl_util.get_team_logo_path( team_name, team_stats[i].season )
+                logos.append( team_logo_path )                
 
             if isinstance( team_stats, list ):
                 for i in range( len( team_stats ) ):
@@ -699,19 +697,13 @@ class MyHandler( BaseHTTPRequestHandler ):
             self.send_header('Content-type', 'application/json')
             self.end_headers()
         
-            if team == 'all':
-                response = {
-                    'status': 'success',
-                    'first_season': first_season,
-                    'last_season': last_season,
-                    'team_stats': team_stats,
-                    'logos': logos
-                }
-            else:
-                response = {
-                    'status': 'success',
-                    'team_stats': team_stats
-                }
+            response = {
+                'status': 'success',
+                'first_season': first_season,
+                'last_season': last_season,
+                'team_stats': team_stats,
+                'logos': logos
+            }
             
             self.wfile.write( json.dumps( response ).encode( 'utf-8' ) )
 

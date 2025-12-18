@@ -524,7 +524,7 @@ th.name-field, td.name-field, th.team-field, td.team-field {
     text-align: center;
 }
 
-.standings-table-logo-container, .team-stats-table-logo-container, .team-playoff-stats-table-logo-container {
+.standings-table-logo-container, .team-stats-table-logo-container {
     display: inline-flex;
     position: absolute;
     justify-content: center;
@@ -538,9 +538,8 @@ th.name-field, td.name-field, th.team-field, td.team-field {
 }
 
 .team-stats-table-logo-container {
-    width: 16px;
-    height: 16px;
-    top: 6px;
+    width: 14px;
+    height: 14px;
     left: 40px;
 }
 
@@ -634,133 +633,20 @@ th.name-field, td.name-field, th.team-field, td.team-field {
 }
 
 .team-stats-table .team-logo {
-    max-width: 16px;
-    max-height: 16px;  
+    max-width: 14px;
+    max-height: 14px;  
 }
 
-.team-stats-table-ties-season .team-logo {
-    max-width: 18px;
-    max-height: 18px;  
-}
-
-.team-stats-table-with-seasons .team-logo {
-    max-width: 15px;
-    max-height: 15px;  
-}
-
-.team-stats-table-ties-and-overtime-losses-season-with-seasons .team-logo {
-    max-width: 13px;
-    max-height: 13px;
-}
-
-.team-stats-table-ties-and-shootout-season-with-seasons .team-logo {
-    max-width: 12px;
-    max-height: 12px;
-}
-
-.team-playoff-stats-table .team-logo {
-    max-width: 18px;
-    max-height: 18px; 
-}
-
-.team-playoff-stats-table-special-teams-season .team-logo {
-    max-width: 19px;
-    max-height: 19px; 
-}
-
-.team-playoff-stats-ties-in-playoffs-season .team-logo,
-.team-playoff-stats-table-ties-season .team-logo {
-    max-width: 25px;
-    max-height: 25px; 
-}
-
-.team-playoff-stats-table-overtime-losses-and-ties-season-with-seasons .team-logo {
-    max-width: 18px;
-    max-height: 18px; 
-}
-
-.team-playoff-stats-overtime-losses-season-with-seasons .team-logo,
-.team-playoff-stats-table-faceoff-win-percentage-season-with-seasons .team-logo,
-.team-playoff-stats-table-special-teams-stats-and-ties-season-with-seasons .team-logo {
-    max-width: 20px;
-    max-height: 20px; 
-}
-
-.team-playoff-stats-table-special-teams-stats-season-with-seasons .team-logo {
-    max-width: 22px;
-    max-height: 22px; 
-}
-
-.team-playoff-stats-ties-season-with-seasons .team-logo {
-    max-width: 27px;
-    max-height: 27px; 
-}
-
-.team-playoff-stats-season-with-seasons .team-logo {
-    max-width: 27px;
-    max-height: 27px; 
-}
-
-.standings-rank-and-team, .team-stats-rank-and-team, .team-playoff-stats-rank-and-team {
+.standings-team, .team-stats-team {
     position: absolute;
 }
 
-.standings-rank-and-team {
+.standings-team {
     left: 95px;
 }
 
-.team-stats-rank-and-team {
+.team-stats-team {
     left: 65px;
-}
-
-.team-stats-table-ties-season .team-stats-rank-and-team {
-    left: 70px;
-}
-
-.team-stats-table-with-seasons .team-stats-rank-and-team {
-    left: 60px;
-}
-
-.team-stats-table-ties-and-overtime-losses-season-with-seasons .team-stats-rank-and-team {
-    left: 60px;
-}
-
-.team-stats-table-ties-and-shootout-season-with-seasons .team-stats-rank-and-team {
-    left: 55px;
-}
-
-.team-playoff-stats-rank-and-team {
-    left: 82px;
-}
-
-.team-playoff-stats-table-special-teams-season .team-playoff-stats-rank-and-team {
-    left: 87px;
-}
-
-.team-playoff-stats-ties-in-playoffs-season .team-playoff-stats-rank-and-team, 
-.team-playoff-stats-table-ties-season .team-playoff-stats-rank-and-team {
-    left: 110px;
-}
-
-.team-playoff-stats-table-overtime-losses-and-ties-season-with-seasons .team-playoff-stats-rank-and-team {
-    left: 77px;
-}
-
-.team-playoff-stats-table-faceoff-win-percentage-season-with-seasons .team-playoff-stats-rank-and-team,
-.team-playoff-stats-table-special-teams-stats-and-ties-season-with-seasons .team-playoff-stats-rank-and-team {
-    left: 85px;
-}
-
-.team-playoff-stats-table-special-teams-stats-season-with-seasons .team-playoff-stats-rank-and-team {
-    left: 88px;
-}
-
-.team-playoff-stats-ties-season-with-seasons .team-playoff-stats-rank-and-team {
-    left: 105px;
-}
-
-.team-playoff-stats-season-with-seasons .team-playoff-stats-rank-and-team {
-    left: 110px;
 }
 
 .stat-sorting-button {
@@ -775,7 +661,7 @@ th.name-field, td.name-field, th.team-field, td.team-field {
     background-color: #FFFF66;
 }
 
-#season-dropdown-button:disabled {
+.dropdown-button:disabled {
     border: 1px solid #999;
     background-color: #e0e0e0;
     color: #666;

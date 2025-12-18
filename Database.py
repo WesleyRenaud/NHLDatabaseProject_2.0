@@ -1116,14 +1116,8 @@ class Database():
         return teams
     
 
-    def get_team_stats( self, type, first_season, last_season, team, stat, multiplier ): 
+    def get_team_stats( self, type, first_season, last_season, stat, multiplier ): 
         cur = self.conn.cursor()
-        if team != None:
-            city = self.nhl_util.get_city( team )
-            name = self.nhl_util.get_name( team )
-        else:
-            city = None
-            name = None
 
         if stat == None:
             stat = 'points'
@@ -1141,7 +1135,8 @@ class Database():
                     NAME,
                     GAMES_PLAYED,
                     WINS,
-                    LOSSES, 
+                    LOSSES,
+                    TIES, 
                     OVERTIME_LOSSES,
                     POINTS,
                     POINTS_PERCENTAGE, 
@@ -1167,13 +1162,11 @@ class Database():
                     Team 
                 WHERE
                     TYPE = ?
-                    AND (? IS NULL OR (CITY = ? AND NAME = ?))
                     AND SEASON >= ? AND SEASON <= ?
-                ORDERY BY {stat} {order_direction}
+                ORDER BY {stat} {order_direction}
                 LIMIT ?; """
                 ,( 
                     type,
-                    team, city, name,
                     first_season, last_season,
                     self.max_num_results ) 
                 )
