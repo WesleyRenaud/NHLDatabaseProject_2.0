@@ -13,8 +13,8 @@ class MyHandler( BaseHTTPRequestHandler ):
     def do_GET( self ):
         parsed = urlparse( self.path )
 
-        if parsed.path in ['/view-stats.html']:
-            fp = open( './pages/view-stats.html' )
+        if parsed.path in ['/home.html']:
+            fp = open( './pages/home.html' )
             content = fp.read()
 
             self.send_response( 200 )
@@ -125,105 +125,6 @@ class MyHandler( BaseHTTPRequestHandler ):
 
         elif parsed.path in ['/team-lookup.html']:
             fp = open( './pages/team-lookup.html' )
-            content = fp.read()
-
-            self.send_response( 200 )
-            self.send_header( 'Content-type', 'text/html' )
-            self.send_header( 'Content-length', len( content ) )
-            self.end_headers()
-            self.wfile.write( bytes( content, 'utf-8' ) )
-
-
-        elif parsed.path in ['/add-stats.html']:
-            fp = open( './pages/add-stats.html' )
-            content = fp.read()
-
-            self.send_response( 200 )
-            self.send_header( 'Content-type', 'text/html' )
-            self.send_header( 'Content-length', len( content ) )
-            self.end_headers()
-            self.wfile.write( bytes( content, 'utf-8' ) )
-
-
-        elif parsed.path in ['/add-skater.html']:
-            fp = open( './pages/add-skater.html' )
-            content = fp.read()
-
-            self.send_response( 200 )
-            self.send_header( 'Content-type', 'text/html' )
-            self.send_header( 'Content-length', len( content ) )
-            self.end_headers()
-            self.wfile.write( bytes( content, 'utf-8' ) )
-
-
-        elif parsed.path in ['/add-skater-regular-season.html']:
-            fp = open( './pages/add-skater-regular-season.html' )
-            content = fp.read()
-
-            self.send_response( 200 )
-            self.send_header( 'Content-type', 'text/html' )
-            self.send_header( 'Content-length', len( content ) )
-            self.end_headers()
-            self.wfile.write( bytes( content, 'utf-8' ) )
-
-
-        elif parsed.path in ['/add-skater-playoffs.html']:
-            fp = open( './pages/add-skater-playoffs.html' )
-            content = fp.read()
-
-            self.send_response( 200 )
-            self.send_header( 'Content-type', 'text/html' )
-            self.send_header( 'Content-length', len( content ) )
-            self.end_headers()
-            self.wfile.write( bytes( content, 'utf-8' ) )
-
-
-        elif parsed.path in ['/add-goalie.html']:
-            fp = open( './pages/add-goalie.html' )
-            content = fp.read()
-
-            self.send_response( 200 )
-            self.send_header( 'Content-type', 'text/html' )
-            self.send_header( 'Content-length', len( content ) )
-            self.end_headers()
-            self.wfile.write( bytes( content, 'utf-8' ) )
-
-
-        elif parsed.path in ['/add-goalie-regular-season.html']:
-            fp = open( './pages/add-goalie-regular-season.html' )
-            content = fp.read()
-
-            self.send_response( 200 )
-            self.send_header( 'Content-type', 'text/html' )
-            self.send_header( 'Content-length', len( content ) )
-            self.end_headers()
-            self.wfile.write( bytes( content, 'utf-8' ) )
-
-
-        elif parsed.path in ['/add-goalie-playoffs.html']:
-            fp = open( './pages/add-goalie-playoffs.html' )
-            content = fp.read()
-
-            self.send_response( 200 )
-            self.send_header( 'Content-type', 'text/html' )
-            self.send_header( 'Content-length', len( content ) )
-            self.end_headers()
-            self.wfile.write( bytes( content, 'utf-8' ) )
-
-
-        elif parsed.path in ['/add-team-regular-season.html']:
-            fp = open( './pages/add-team-regular-season.html' )
-            content = fp.read()
-
-            self.send_response( 200 )
-            self.send_header( 'Content-type', 'text/html' )
-            self.send_header( 'Content-length', len( content ) )
-            self.end_headers()
-            self.wfile.write( bytes( content, 'utf-8' ) )
-
-
-        elif parsed.path in ['/add-team-playoffs.html']:
-            fp = open( './pages/add-team-playoffs.html' )
             content = fp.read()
 
             self.send_response( 200 )

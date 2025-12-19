@@ -1651,6 +1651,18 @@ class Database():
         return teams
 
 
+    def clear_database( self ):
+        cur = self.conn.cursor()
+
+        cur.execute( "DELETE * FROM Skater;" )
+        cur.execute( "DELETE * FROM SkaterSeason;" )
+        cur.execute( "DELETE * FROM Goalie;" )
+        cur.execute( "DELETE * FROM GoalieSeason;" )
+        cur.execute( "DELETE * FROM Team;" )
+
+        self.conn.commit()
+
+
     def close( self ):
         self.conn.commit()
         self.conn.close()
