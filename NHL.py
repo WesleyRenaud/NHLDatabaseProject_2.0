@@ -855,6 +855,11 @@ class NHLUtil():
     def team_stat_compare( self, team1, team2, stat, multiplier ):
         stat = stat.replace( '-', '_' )
 
+        if getattr( team1, stat ) == '--':
+            return 1
+        elif getattr( team2, stat ) == '--':
+            return -1
+
         if multiplier == -1:
             dummy_team = team1
             team1 = team2
@@ -862,11 +867,6 @@ class NHLUtil():
 
         value1 = getattr( team1, stat )
         value2 = getattr( team2, stat )
-
-        if value1 == '--' or value1 == 'null' or value1 == 'None' or value1 == None:
-                return 1
-        elif value2 == '--' or value2 == 'null' or value2 == 'None' or value2 == None:
-            return -1
 
         if stat == 'season':
             season1_first_year = self.get_first_year( value1 )

@@ -765,6 +765,46 @@ class MyHandler( BaseHTTPRequestHandler ):
             
             self.wfile.write( json.dumps( response ).encode( 'utf-8' ) )
 
+        
+        elif self.path == '/get-team-stats-for-one-team':
+            content_length = int( self.headers[ 'Content-Length'] )
+            post_data = self.rfile.read( content_length )
+            data = json.loads( post_data.decode( 'utf-8' ) )
+
+            type = data.get( 'type' )
+            team = data.get( 'team' )
+            team_stats = self.database.get_team_stats_for_one_team( type, team )
+
+            stat = data.get( 'stat' )
+            multiplier = data.get( 'multiplier' )
+            if stat and multiplier:
+                self.nhl_util.sort_teams( team_stats, stat, multiplier )
+
+            logos = []
+            for i in range( len( team_stats ) ):
+                team_logo_path = self.nhl_util.get_team_logo_path( team, team_stats[i].season )
+                
+                logos.append( team_logo_path )                
+
+            if isinstance( team_stats, list ):
+                for i in range( len( team_stats ) ):
+                    team_stats[i] = team_stats[i].to_dict()
+            else:
+                team_stats = team_stats.to_dict()
+
+            self.send_response( 200 )
+            self.send_header('Content-type', 'application/json')
+            self.end_headers()
+        
+            response = {
+                'status': 'success',
+                'team': team,
+                'team_stats': team_stats,
+                'logos': logos
+            }
+            
+            self.wfile.write( json.dumps( response ).encode( 'utf-8' ) )
+
 
 if __name__ == '__main__':
     httpd = HTTPServer( ( 'localhost', int(sys.argv[1]) ), MyHandler )

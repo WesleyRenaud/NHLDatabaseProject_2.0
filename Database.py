@@ -1561,6 +1561,94 @@ class Database():
             teams.append( team )    
                 
         return teams
+    
+
+    def get_team_stats_for_one_team( self, type, team ): 
+        cur = self.conn.cursor()
+
+        city = self.nhl_util.get_city( team )
+        name = self.nhl_util.get_name( team )
+
+        data = cur.execute(
+            f""" SELECT
+                    SEASON,
+                    GAMES_PLAYED,
+                    WINS,
+                    LOSSES,
+                    TIES, 
+                    OVERTIME_LOSSES,
+                    POINTS,
+                    POINTS_PERCENTAGE, 
+                    REGULATION_WINS,
+                    REGULATION_AND_OVERTIME_WINS, 
+                    GOALS_FOR,
+                    GOALS_AGAINST,
+                    GOAL_DIFFERENTIAL, 
+                    HOME,
+                    AWAY,
+                    SHOOTOUT,
+                    LAST_10,
+                    STREAK, 
+                    SHOOTOUT_WINS,
+                    GOALS_FOR_PER_GAME, 
+                    GOALS_AGAINST_PER_GAME,
+                    POWERPLAY_PERCENTAGE, 
+                    PENALTY_KILL_PERCENTAGE,
+                    NET_POWERPLAY_PERCENTAGE, 
+                    NET_PENALTY_KILL_PERCENTAGE,
+                    FACEOFF_WIN_PERCENTAGE
+                FROM
+                    Team 
+                WHERE
+                    TYPE = ?
+                    AND CITY = ?
+                    AND NAME = ?
+                ORDER BY
+                    POINTS, WINS, REGULATION_WINS DESC; """
+                ,( 
+                    type,
+                    city,
+                    name ) 
+                )
+        
+        team_data = data.fetchall()
+        teams = []
+
+        for curr_team in team_data:
+            team = NHL.Team(
+                type=None,
+                season=curr_team[0],
+                city=None,
+                name=None,
+                games_played=curr_team[1],
+                wins=curr_team[2],
+                losses=curr_team[3],
+                ties=curr_team[4] if curr_team[4]!=None else '--',
+                overtime_losses=curr_team[5] if curr_team[5]!=None else '--',
+                points=curr_team[6],
+                points_percentage=curr_team[7], 
+                regulation_wins=curr_team[8],
+                regulation_and_overtime_wins=curr_team[9],
+                goals_for=curr_team[10], 
+                goals_against=curr_team[11],
+                goal_differential=curr_team[12],
+                home=curr_team[13] if curr_team[13] != None else '--', 
+                away=curr_team[14] if curr_team[14] != None else '--',
+                shootout=curr_team[15] if curr_team[15]!=None else '--',
+                last_10=curr_team[16] if curr_team[16] != None else '--',
+                streak=curr_team[17] if curr_team[17] != None else '--', 
+                shootout_wins=curr_team[18] if curr_team[18]!=None else '--',
+                goals_for_per_game=curr_team[19],
+                goals_against_per_game=curr_team[20],
+                powerplay_percentage=curr_team[21] if curr_team[21]!=None else '--',
+                penalty_kill_percentage=curr_team[22] if curr_team[22]!=None else '--', 
+                net_powerplay_percentage=curr_team[23] if curr_team[23]!=None else '--',
+                net_penalty_kill_percentage=curr_team[24] if curr_team[24]!=None else '--', 
+                faceoff_win_percentage=curr_team[25] if curr_team[25]!=None else '--' )
+
+            teams.append( team )    
+                
+        return teams
 
 
     def close( self ):

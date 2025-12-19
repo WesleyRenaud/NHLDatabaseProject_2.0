@@ -1271,6 +1271,118 @@ td.name-field, td.team-field {
     width: 3.5%;
 }
 
+/* team stats table without names */
+.team-stats-table-without-names {
+    font-size: 12px;
+}
+
+.team-stats-table-without-names tr {
+    height: 35px;
+}
+
+.team-stats-table-without-names th:nth-child(1),
+.team-stats-table-without-names td:nth-child(1) {
+    width: 6.5%;
+}
+
+.team-stats-table-without-names th:nth-child(2),
+.team-stats-table-without-names td:nth-child(2) {
+    width: 2.75%;
+}
+
+.team-stats-table-without-names th:nth-child(3),
+.team-stats-table-without-names td:nth-child(3),
+.team-stats-table-without-names th:nth-child(4),
+.team-stats-table-without-names td:nth-child(4),
+.team-stats-table-without-names th:nth-child(5),
+.team-stats-table-without-names td:nth-child(5) {
+    width: 2.5%;
+}
+
+.team-stats-table-without-names th:nth-child(6),
+.team-stats-table-without-names td:nth-child(6),
+.team-stats-table-without-names th:nth-child(7),
+.team-stats-table-without-names td:nth-child(7) {
+    width: 3%;
+}
+
+.team-stats-table-without-names th:nth-child(8),
+.team-stats-table-without-names td:nth-child(8) {
+    width: 4%;
+}
+
+.team-stats-table-without-names th:nth-child(9),
+.team-stats-table-without-names td:nth-child(9) {
+    width: 3%;
+}
+
+.team-stats-table-without-names th:nth-child(10),
+.team-stats-table-without-names td:nth-child(10) {
+    width: 3.75%;
+}
+
+.team-stats-table-without-names th:nth-child(11),
+.team-stats-table-without-names td:nth-child(11),
+.team-stats-table-without-names th:nth-child(12),
+.team-stats-table-without-names td:nth-child(12) {
+    width: 3.25%;
+}
+
+.team-stats-table-without-names th:nth-child(13),
+.team-stats-table-without-names td:nth-child(13) {
+    width: 3.5%;
+}
+
+.team-stats-table-without-names th:nth-child(14),
+.team-stats-table-without-names td:nth-child(14),
+.team-stats-table-without-names th:nth-child(15),
+.team-stats-table-without-names td:nth-child(15) {
+    width: 6%;
+}
+
+.team-stats-table-without-names th:nth-child(16),
+.team-stats-table-without-names td:nth-child(16) {
+    width: 3.25%;
+}
+
+.team-stats-table-without-names th:nth-child(17),
+.team-stats-table-without-names td:nth-child(17) {
+    width: 5%;
+}
+
+.team-stats-table-without-names th:nth-child(18),
+.team-stats-table-without-names td:nth-child(18) {
+    width: 4%;
+}
+
+.team-stats-table-without-names th:nth-child(19),
+.team-stats-table-without-names td:nth-child(19) {
+    width: 3.5%;
+}
+
+.team-stats-table-without-names th:nth-child(20),
+.team-stats-table-without-names td:nth-child(20),
+.team-stats-table-without-names th:nth-child(21),
+.team-stats-table-without-names td:nth-child(21) {
+    width: 4.5%;
+}
+
+.team-stats-table-without-names th:nth-child(22),
+.team-stats-table-without-names td:nth-child(22),
+.team-stats-table-without-names th:nth-child(23),
+.team-stats-table-without-names td:nth-child(23) {
+    width: 3.5%;
+}
+
+.team-stats-table-without-names th:nth-child(24),
+.team-stats-table-without-names td:nth-child(24),
+.team-stats-table-without-names th:nth-child(25),
+.team-stats-table-without-names td:nth-child(25),
+.team-stats-table-without-names th:nth-child(26),
+.team-stats-table-without-names td:nth-child(26) {
+    width: 4.25%;
+}
+
 #season-type-field-container {
     display: flex;
     margin-bottom: 20px;
