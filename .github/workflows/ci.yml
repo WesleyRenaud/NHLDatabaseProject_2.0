@@ -26,6 +26,10 @@ jobs:
           pip install $(grep -v 'nhlpy' requirements.txt)
           # nhlpy is now included in the repository so CI can import NHLClient
 
+      - name: Install local nhlpy package
+        run: |
+          pip install ./nhlpy
+
       - name: Inspect nhlpy package
         run: |
           python3 -c "import nhlpy; import os; print('nhlpy installed at:', os.path.dirname(nhlpy.__file__)); print('Contents:', os.listdir(os.path.dirname(nhlpy.__file__)))"
