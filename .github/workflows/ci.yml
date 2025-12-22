@@ -24,8 +24,8 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
 
-      - name: Install nhlpy from GitHub
-        run: pip install git+https://github.com/0xalexdelgado/nhlpy.git@master
+      - name: Install nhlpy from fork
+        run: pip install git+https://github.com/<your-username>/nhlpy.git@<branch-name>
 
       - name: Debug NHLClient
         run: python3 -c "from nhlpy import NHLClient; print(NHLClient)"
