@@ -24,11 +24,8 @@ jobs:
         run: |
           # Install all requirements except nhlpy
           pip install $(grep -v 'nhlpy' requirements.txt)
-          # nhlpy is now included in the repository so CI can import NHLClient
-
-      - name: Install local nhlpy package
-        run: |
-          pip install ./nhlpy
+          # Install nhlpy version 0.3.0 from PyPI so NHLClient is available
+          pip install nhlpy==0.3.0
 
       - name: Inspect nhlpy package
         run: |
