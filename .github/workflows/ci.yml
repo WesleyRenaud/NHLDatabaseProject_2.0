@@ -18,11 +18,15 @@ jobs:
         with:
           python-version: 3.11
 
-      - name: Install dependencies
-        run: |
-            python3 -m pip install --upgrade pip
-            pip install -r requirements.txt
+      - name: Upgrade pip
+        run: python3 -m pip install --upgrade pip
+
+      - name: Install dependencies safely
+        run: pip install --require-hashes -r requirements.txt
+
+      - name: Check nhlpy version
+        run: python3 -c "import nhlpy; print(nhlpy.__version__)"
 
       - name: Run Ingestor (dry run)
-        run: |
-          python3 Ingestor.py
+        if: success()
+        run: python3 Ingestor.py
