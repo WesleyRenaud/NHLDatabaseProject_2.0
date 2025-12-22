@@ -27,11 +27,6 @@ jobs:
       - name: Install nhlpy from GitHub
         run: pip install git+https://github.com/0xalexdelgado/nhlpy.git@master
 
-      - name: Patch nhlpy __init__.py to expose NHLClient
-        run: |
-          NHLPY_PATH=$(python3 -c "import nhlpy; print(nhlpy.__path__[0])")
-          echo "from nhlpy.nhl_client import NHLClient" >> $NHLPY_PATH/__init__.py
-
       - name: Debug NHLClient
         run: python3 -c "from nhlpy import NHLClient; print(NHLClient)"
 
