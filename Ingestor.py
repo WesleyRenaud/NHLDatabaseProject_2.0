@@ -1,5 +1,5 @@
 import requests, time
-from nhlpy import NHLClient
+from nhlpy.nhl_client import NHLClient
 
 import Database, NHL
 
