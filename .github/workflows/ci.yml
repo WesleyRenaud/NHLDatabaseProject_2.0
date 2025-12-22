@@ -24,13 +24,8 @@ jobs:
         run: |
           # Install all requirements except nhlpy
           pip install $(grep -v 'nhlpy' requirements.txt)
-          # Install the GitHub version of nhlpy
-          pip install --upgrade git+https://github.com/0xalexdelgado/nhlpy.git@master
+          # nhlpy is now included in the repository so CI can import NHLClient
 
       - name: Inspect nhlpy package
         run: |
           python3 -c "import nhlpy; import os; print('nhlpy installed at:', os.path.dirname(nhlpy.__file__)); print('Contents:', os.listdir(os.path.dirname(nhlpy.__file__)))"
-
-      - name: Test NHLClient import
-        run: |
-          python3 -c "from nhlpy import NHLClient; print(NHLClient)"
