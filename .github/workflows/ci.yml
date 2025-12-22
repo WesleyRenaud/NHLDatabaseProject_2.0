@@ -25,4 +25,4 @@ jobs:
 
       - name: Run Ingestor (dry run)
         run: |
-          python3 ingestor.py
+          python3 Ingestor.py
