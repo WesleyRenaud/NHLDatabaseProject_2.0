@@ -18,7 +18,7 @@ goalie_stats = ('goalie_games_played', 'games_started', 'wins', 'losses', 'ties'
 
 class Player():
 
-    def __init__( self, name, team, number, position, height, weight, birthday, handedness, draft_position ):
+    def __init__( self, name, team, number, position, height, weight, birthday, handedness, draft_position, id=None ):
         self.name = name
         self.team = team
         self.number = number
@@ -28,14 +28,15 @@ class Player():
         self.birthday = birthday
         self.handedness = handedness
         self.draft_position = draft_position
+        self.id = id
 
 
 ################################################################################
 
 class Skater( Player ):
 
-    def __init__( self, name, team, number, position, height, weight, birthday, handedness, draft_position ):
-        super().__init__( name, team, number, position, height, weight, birthday, handedness, draft_position)
+    def __init__( self, name, team, number, position, height, weight, birthday, handedness, draft_position, id ):
+        super().__init__( name, team, number, position, height, weight, birthday, handedness, draft_position, id )
         self.seasons = []
         self.playoffs = []
 
@@ -62,6 +63,7 @@ class Skater( Player ):
 
     def to_dict( self ):
         return {
+            'id': self.id,
             'name': self.name,
             'team': self.team,
             'number': self.number,
@@ -80,9 +82,8 @@ class Skater( Player ):
 
 class Goalie( Player ):
 
-    def __init__( self, name, team, number, height, weight, birthday, handedness, draft_position ):
-        super().__init__( name, team, number, 'goaltender', height, weight, birthday, handedness,
-                          draft_position )
+    def __init__( self, name, team, number, height, weight, birthday, handedness, draft_position, id ):
+        super().__init__( name, team, number, 'goaltender', height, weight, birthday, handedness, draft_position, id )
         self.seasons = []
         self.playoffs = []
 
@@ -107,6 +108,7 @@ class Goalie( Player ):
     
     def to_dict( self ):
         return {
+            'id': self.id,
             'name': self.name,
             'team': self.team,
             'number': self.number,
@@ -279,7 +281,7 @@ class Team():
                   points_percentage, regulation_wins, regulation_and_overtime_wins, goals_for, goals_against, 
                   goal_differential, home, away, shootout, last_10, streak, shootout_wins, goals_for_per_game, 
                   goals_against_per_game, powerplay_percentage, penalty_kill_percentage, net_powerplay_percentage, 
-                  net_penalty_kill_percentage, faceoff_win_percentage ):
+                  net_penalty_kill_percentage, faceoff_win_percentage, id=None ):
         self.type = type
         self.season = season
         self.city = city
@@ -309,6 +311,7 @@ class Team():
         self.net_powerplay_percentage = net_powerplay_percentage
         self.net_penalty_kill_percentage = net_penalty_kill_percentage
         self.faceoff_win_percentage = faceoff_win_percentage
+        self.id = id
 
 
     def to_dict( self ):
@@ -1167,6 +1170,9 @@ class NHLUtil():
         elif full_name == 'Hartford Whalers':
             return 'Hartford'
         
+        elif full_name == 'Kansas City Scouts':
+            return 'Kansas City'
+        
         elif full_name == 'Los Angeles Kings':
             return 'Los Angeles'
         
@@ -1177,6 +1183,9 @@ class NHLUtil():
             return 'Minnesota'
         
         elif full_name == 'Montreal Canadiens':
+            return 'Montreal'
+        
+        elif full_name == 'Montréal Canadiens':
             return 'Montreal'
         
         elif full_name == 'Montreal Maroons':
@@ -1203,8 +1212,14 @@ class NHLUtil():
         elif full_name == 'Quebec Athletics':
             return 'Quebec'
         
+        elif full_name == 'Quebec Bulldogs':
+            return 'Quebec'
+        
         elif full_name == 'Quebec Nordiques':
             return 'Quebec'
+        
+        elif full_name == 'Oakland Seals':
+            return 'Oakland'
 
         elif full_name == 'Ottawa Senators':
             return 'Ottawa'
@@ -1214,6 +1229,9 @@ class NHLUtil():
         
         elif full_name == 'Philadelphia Quakers':
             return 'Philadelphia'
+        
+        elif full_name == 'Phoenix Coyotes':
+            return 'Phoenix'
         
         elif full_name == 'Pittsburgh Penguins':
             return 'Pittsburgh'
@@ -1230,15 +1248,27 @@ class NHLUtil():
         elif full_name == 'St. Louis Blues':
             return 'St. Louis'
         
-        elif full_name == 'St. Louis Eagle':
+        elif full_name == 'St. Louis Eagles':
             return 'St. Louis'
         
         elif full_name == 'Tampa Bay Lightning':
             return 'Tampa Bay'
         
+        elif full_name == 'Toronto Arenas':
+            return 'Toronto'
+        
         elif full_name == 'Toronto Maple Leafs':
             return 'Toronto'
         
+        elif full_name == 'Toronto St. Patricks':
+            return 'Toronto'
+        
+        elif full_name == 'Utah Hockey Club':
+            return 'Utah'
+        
+        elif full_name == 'Utah Mammoth':
+            return 'Utah'
+
         elif full_name == 'Vancouver Canucks':
             return 'Vancouver'
         
@@ -1322,6 +1352,9 @@ class NHLUtil():
         elif full_name == 'Hartford Whalers':
             return 'Whalers'
         
+        elif full_name == 'Kansas City Scouts':
+            return 'Scouts'
+        
         elif full_name == 'Los Angeles Kings':
             return 'Kings'
         
@@ -1334,6 +1367,9 @@ class NHLUtil():
         elif full_name == 'Montreal Canadiens':
             return 'Canadiens'
         
+        elif full_name == 'Montréal Canadiens':
+            return 'Canadiens'
+
         elif full_name == 'Montreal Maroons':
             return 'Maroons'
         
@@ -1358,8 +1394,14 @@ class NHLUtil():
         elif full_name == 'Quebec Athletics':
             return 'Athletics'
         
+        elif full_name == 'Quebec Bulldogs':
+            return 'Bulldogs'
+        
         elif full_name == 'Quebec Nordiques':
             return 'Nordiques'
+        
+        elif full_name == 'Oakland Seals':
+            return 'Seals'
         
         elif full_name == 'Ottawa Senators':
             return 'Senators'
@@ -1369,6 +1411,9 @@ class NHLUtil():
         
         elif full_name == 'Philadelphia Quakers':
             return 'Quakers'
+        
+        elif full_name == 'Phoenix Coyotes':
+            return 'Coyotes'
         
         elif full_name == 'Pittsburgh Penguins':
             return 'Penguins'
@@ -1391,8 +1436,20 @@ class NHLUtil():
         elif full_name == 'Tampa Bay Lightning':
             return 'Lightning'
         
+        elif full_name == 'Toronto Arenas':
+            return 'Arenas'
+
         elif full_name == 'Toronto Maple Leafs':
             return 'Maple Leafs'
+        
+        elif full_name == 'Toronto St. Patricks':
+            return 'St. Patricks'
+        
+        elif full_name == 'Utah Hockey Club':
+            return 'Hockey Club'
+        
+        elif full_name == 'Utah Mammoth':
+            return 'Mammoth'
         
         elif full_name == 'Vancouver Canucks':
             return 'Canucks'
@@ -1584,4 +1641,196 @@ class NHLUtil():
                 return True
         
         return False
+    
+
+    # Function to add ordinal suffix (1 → 1st, 2 → 2nd, 3 → 3rd, etc.)
+    def ordinal( self, n ):
+        if 10 <= n % 100 <= 20:
+            return f"{n}th"
+        else:
+            return f"{n}{['th','st','nd','rd','th','th','th','th','th','th'][n % 10]}"
+        
+
+    def get_full_team_name_from_abbreviation( self, abbrv ):
+        if ',' in abbrv:
+            return 'Multiple'
+
+        elif abbrv == 'ANA':
+            return 'Anaheim Ducks'
+        
+        elif abbrv == 'ARI':
+            return 'Arizona Coyotes'
+        
+        elif abbrv == 'AFM':
+            return 'Atlanta Flames'
+        
+        elif abbrv == 'ATL':
+            return 'Atlanta Thrashers'
+        
+        elif abbrv == 'BOS':
+            return 'Boston Bruins'
+        
+        elif abbrv == 'BRK':
+            return 'Brooklyn Americans'
+        
+        elif abbrv == 'BUF':
+            return 'Buffalo Sabres'
+        
+        elif abbrv == 'CGY':
+            return 'Calgary Flames'
+        
+        elif abbrv == 'CGS':
+            return 'California Golden Seals'
+        
+        elif abbrv == 'CAR':
+            return 'Carolina Hurricanes'
+        
+        elif abbrv == 'CLE':
+            return 'Cleveland Barons'
+        
+        elif abbrv == 'CHI':
+            return 'Chicago Blackhawks'
+        
+        elif abbrv == 'COL':
+            return 'Colorado Avalanche'
+        
+        elif abbrv == 'CLR':
+            return 'Colorado Rockies'
+        
+        elif abbrv == 'CBJ':
+            return 'Columbus Blue Jackets'
+        
+        elif abbrv == 'DAL':
+            return 'Dallas Stars'
+        
+        elif abbrv == 'DCG':
+            return 'Detroit Cougars'
+        
+        elif abbrv == 'DFL':
+            return 'Detroit Falcons'
+        
+        elif abbrv == 'DET':
+            return 'Detroit Red Wings'
+        
+        elif abbrv == 'EDM':
+            return 'Edmonton Oilers'
+        
+        elif abbrv == 'FLA':
+            return 'Florida Panthers'
+        
+        elif abbrv == 'HAM':
+            return 'Hamilton Tigers'
+        
+        elif abbrv == 'HFD':
+            return 'Hartford Whalers'
+        
+        elif abbrv == 'KCS':
+            return 'Kansas City Scouts'
+        
+        elif abbrv == 'LAK':
+            return 'Los Angeles Kings'
+        
+        elif abbrv == 'MNS':
+            return 'Minnesota North Stars'
+        
+        elif abbrv == 'MIN':
+            return 'Minnesota Wild'
+        
+        elif abbrv == 'MTL':
+            return 'Montreal Canadiens'
+        
+        elif abbrv == 'MMR':
+            return 'Montreal Maroons'
+        
+        elif abbrv == 'MWN':
+            return 'Montreal Wanderers'
+        
+        elif abbrv == 'NSH':
+            return 'Nashville Predators'
+        
+        elif abbrv == 'NJD':
+            return 'New Jersey Devils'
+        
+        elif abbrv == 'NYA':
+            return 'New York Americans'
+        
+        elif abbrv == 'NYI':
+            return 'New York Islanders'
+        
+        elif abbrv == 'NYR':
+            return 'New York Rangers'
+        
+        elif abbrv == 'OAK':
+            return 'Oakland Seals'
+        
+        elif abbrv == 'SEN':
+            return 'Ottawa Senators'
+        
+        elif abbrv == 'OTT':
+            return 'Ottawa Senators'
+        
+        elif abbrv == 'QBD':
+            return 'Quebec Bulldogs'
+        
+        elif abbrv == 'QUE':
+            return 'Quebec Nordiques'
+        
+        elif abbrv == 'PHI':
+            return 'Philadelphia Flyers'
+        
+        elif abbrv == 'QUA':
+            return 'Philadelphia Quakers'
+        
+        elif abbrv == 'PHX':
+            return 'Phoenix Coyotes'
+        
+        elif abbrv == 'PIT':
+            return 'Pittsburgh Penguins'
+        
+        elif abbrv == 'PIR':
+            return 'Pittsburgh Pirates'
+        
+        elif abbrv == 'SJS':
+            return 'San Jose Sharks'
+        
+        elif abbrv == 'SEA':
+            return 'Seattle Kraken'
+        
+        elif abbrv == 'STL':
+            return 'St. Louis Blues'
+        
+        elif abbrv == 'SLE':
+            return 'St. Louis Eagles'
+        
+        elif abbrv == 'TBL':
+            return 'Tampa Bay Lightning'
+        
+        elif abbrv == 'TAN':
+            return 'Toronto Arenas'
+        
+        elif abbrv == 'TOR':
+            return 'Toronto Maple Leafs'
+        
+        elif abbrv == 'TSP':
+            return 'Toronto St. Patricks'
+        
+        elif abbrv == 'UTA':
+            return 'Utah Mammoth'
+        
+        elif abbrv == 'VAN':
+            return 'Vancouver Canucks'
+        
+        elif abbrv == 'VGK':
+            return 'Vegas Golden Knights'
+        
+        elif abbrv == 'WSH':
+            return 'Washington Capitals'
+        
+        elif abbrv == 'WIN':
+            return 'Winnipeg Jets'
+        
+        elif abbrv == 'WPG':
+            return 'Winnipeg Jets'
+
+        return None
     

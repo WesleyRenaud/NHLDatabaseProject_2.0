@@ -111,7 +111,7 @@ class Database():
                                     WHERE NAME = 'Team'; """ ).fetchall()
         if table == []:
             cur.execute( """ CREATE TABLE Team
-                              ( TEAMID                          INTEGER     PRIMARY KEY     NOT NULL,
+                              ( TEAMID                          VARCHAR(11) PRIMARY KEY     NOT NULL,
                                 TYPE                            VARCHAR(64) NOT NULL,
                                 SEASON                          VARCHAR(64) NOT NULL,
                                 CITY                            VARCHAR(64) NOT NULL,
@@ -148,127 +148,140 @@ class Database():
 
     def add_skater( self, skater ):
         cur = self.conn.cursor()
-
-        # remove any previous stats from the skater
-        data = cur.execute( """ SELECT SKATERID FROM Skater
-                                    WHERE NAME = '? AND BIRTHDAY = ?; """, 
-                                    ( skater.name, skater.birthday, ) )
-        if data != None:
-            rows = data.fetchall()
-            for i in range( len( rows ) ):
-                skater_id = rows[i][0]
-                cur.execute( """ DELETE FROM SkaterSeason WHERE SKATERID = ?; """, ( skater_id, ) )
         
-
-        cur.execute( """ DELETE FROM Skater WHERE NAME = ? AND BIRTHDAY = ?; """ ,
-                    ( skater.name, skater.birthday, ) )
-        
-        # put the details into the Skater table
-        cur.execute( """ INSERT
-                                INTO Skater ( NAME, TEAM, NUMBER, POSITION, HEIGHT, WEIGHT, BIRTHDAY, 
-                                              HANDEDNESS, DRAFT_POSITION )
-                                     VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, '? ); """, 
-                                            ( skater.name, skater.team, skater.number, skater.position,
-                                              skater.height.replace("'", "''"), skater.weight, skater.birthday, 
-                                              skater.handedness, skater.draft_position, ) )
-        skater_id = cur.lastrowid
-
-        # Put the regular season stats in the  table and connect each entry to the skater 
-        # via the s table.
-        for i in range( len( skater.seasons ) ):
-            cur.execute( 
-                """ INSERT 
-                        INTO SkaterSeason (
-                            SKATERID,
-                            TYPE,
-                            SEASON,
-                            TEAM,
-                            GAMES_PLAYED, 
-                            GOALS,
-                            ASSISTS,
-                            POINTS,
-                            PLUS_MINUS,
-                            PENALTY_MINUTES, 
-                            POWERPLAY_GOALS,
-                            POWERPLAY_POINTS,
-                            SHORTHANDED_GOALS, 
-                            SHORTHANDED_POINTS,
-                            TIME_ON_ICE_PER_GAME, 
-                            GAME_WINNING_GOALS,
-                            OVERTIME_GOALS,
-                            SHOTS, 
-                            SHOOTING_PERCENTAGE,
-                            FACEOFF_PERCENTAGE )
-                        VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? ); """, ( 
-                            skater_id,
-                            'Regular Season',
-                            skater.seasons[i].season, 
-                            skater.seasons[i].team,
-                            skater.seasons[i].games_played, 
-                            skater.seasons[i].goals,
-                            skater.seasons[i].assists, 
-                            skater.seasons[i].points,
-                            skater.seasons[i].plus_minus, 
-                            skater.seasons[i].penalty_minutes,
-                            skater.seasons[i].powerplay_goals, 
-                            skater.seasons[i].powerplay_points,
-                            skater.seasons[i].shorthanded_goals, 
-                            skater.seasons[i].shorthanded_points, 
-                            skater.seasons[i].time_on_ice_per_game, 
-                            skater.seasons[i].game_winning_goals, 
-                            skater.seasons[i].overtime_goals, 
-                            skater.seasons[i].shots,
-                            skater.seasons[i].shooting_percentage, 
-                            skater.seasons[i].faceoff_percentage, ) )
-            
-        # do the same thing for the playoffs
-        for i in range( len( skater.playoffs ) ):
+        try:
+            # put the details into the Skater table
             cur.execute(
-                """ INSERT 
-                        INTO SkaterSeason (
-                            SKATERID,
-                            TYPE,
-                            SEASON,
-                            TEAM,
-                            GAMES_PLAYED, 
-                            GOALS,
-                            ASSISTS,
-                            POINTS,
-                            PLUS_MINUS,
-                            PENALTY_MINUTES, 
-                            POWERPLAY_GOALS,
-                            POWERPLAY_POINTS,
-                            SHORTHANDED_GOALS, 
-                            SHORTHANDED_POINTS,
-                            TIME_ON_ICE_PER_GAME, 
-                            GAME_WINNING_GOALS,
-                            OVERTIME_GOALS, SHOTS, 
-                            SHOOTING_PERCENTAGE,
-                            FACEOFF_PERCENTAGE )
-                        VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? ); """, (
-                            skater_id,
-                            'Playoffs',
-                            skater.playoffs[i].season,
-                            skater.playoffs[i].team,
-                            skater.playoffs[i].games_played, 
-                            skater.playoffs[i].goals,
-                            skater.playoffs[i].assists, 
-                            skater.playoffs[i].points,
-                            skater.playoffs [i].plus_minus, 
-                            skater.playoffs[i].penalty_minutes,
-                            skater.playoffs[i].powerplay_goals, 
-                            skater.playoffs[i].powerplay_points,
-                            skater.playoffs[i].shorthanded_goals, 
-                            skater.playoffs[i].shorthanded_points,
-                            skater.playoffs[i].time_on_ice_per_game, 
-                            skater.playoffs[i].game_winning_goals,
-                            skater.playoffs[i].overtime_goals, 
-                            skater.playoffs[i].shots,
-                            skater.playoffs[i].shooting_percentage, 
-                            skater.playoffs[i].faceoff_percentage, ) )
+                """ INSERT INTO
+                        Skater
+                            (
+                                SKATERID,
+                                NAME,
+                                TEAM,
+                                NUMBER,
+                                POSITION,
+                                HEIGHT,
+                                WEIGHT,
+                                BIRTHDAY, 
+                                HANDEDNESS,
+                                DRAFT_POSITION
+                            )
+                            VALUES
+                            ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ? ); 
+                        """, 
+                            (
+                                skater.id,
+                                skater.name,
+                                skater.team,
+                                skater.number,
+                                skater.position,
+                                skater.height,
+                                skater.weight,
+                                skater.birthday, 
+                                skater.handedness,
+                                skater.draft_position,
+                            )
+                        )
 
-        cur.close()
-        self.conn.commit()
+            # Put the regular season stats in the  table and connect each entry to the skater 
+            # via the s table.
+            for i in range( len( skater.seasons ) ):
+                cur.execute( 
+                    """ INSERT 
+                            INTO SkaterSeason (
+                                SKATERID,
+                                TYPE,
+                                SEASON,
+                                TEAM,
+                                GAMES_PLAYED, 
+                                GOALS,
+                                ASSISTS,
+                                POINTS,
+                                PLUS_MINUS,
+                                PENALTY_MINUTES, 
+                                POWERPLAY_GOALS,
+                                POWERPLAY_POINTS,
+                                SHORTHANDED_GOALS, 
+                                SHORTHANDED_POINTS,
+                                TIME_ON_ICE_PER_GAME, 
+                                GAME_WINNING_GOALS,
+                                OVERTIME_GOALS,
+                                SHOTS, 
+                                SHOOTING_PERCENTAGE,
+                                FACEOFF_PERCENTAGE )
+                            VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? ); """, ( 
+                                skater.id,
+                                'Regular Season',
+                                skater.seasons[i].season, 
+                                skater.seasons[i].team,
+                                skater.seasons[i].games_played, 
+                                skater.seasons[i].goals,
+                                skater.seasons[i].assists, 
+                                skater.seasons[i].points,
+                                skater.seasons[i].plus_minus, 
+                                skater.seasons[i].penalty_minutes,
+                                skater.seasons[i].powerplay_goals, 
+                                skater.seasons[i].powerplay_points,
+                                skater.seasons[i].shorthanded_goals, 
+                                skater.seasons[i].shorthanded_points, 
+                                skater.seasons[i].time_on_ice_per_game, 
+                                skater.seasons[i].game_winning_goals, 
+                                skater.seasons[i].overtime_goals, 
+                                skater.seasons[i].shots,
+                                skater.seasons[i].shooting_percentage, 
+                                skater.seasons[i].faceoff_percentage, ) )
+                
+            # do the same thing for the playoffs
+            for i in range( len( skater.playoffs ) ):
+                cur.execute(
+                    """ INSERT 
+                            INTO SkaterSeason (
+                                SKATERID,
+                                TYPE,
+                                SEASON,
+                                TEAM,
+                                GAMES_PLAYED, 
+                                GOALS,
+                                ASSISTS,
+                                POINTS,
+                                PLUS_MINUS,
+                                PENALTY_MINUTES, 
+                                POWERPLAY_GOALS,
+                                POWERPLAY_POINTS,
+                                SHORTHANDED_GOALS, 
+                                SHORTHANDED_POINTS,
+                                TIME_ON_ICE_PER_GAME, 
+                                GAME_WINNING_GOALS,
+                                OVERTIME_GOALS, SHOTS, 
+                                SHOOTING_PERCENTAGE,
+                                FACEOFF_PERCENTAGE )
+                            VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? ); """, (
+                                skater.id,
+                                'Playoffs',
+                                skater.playoffs[i].season,
+                                skater.playoffs[i].team,
+                                skater.playoffs[i].games_played, 
+                                skater.playoffs[i].goals,
+                                skater.playoffs[i].assists, 
+                                skater.playoffs[i].points,
+                                skater.playoffs [i].plus_minus, 
+                                skater.playoffs[i].penalty_minutes,
+                                skater.playoffs[i].powerplay_goals, 
+                                skater.playoffs[i].powerplay_points,
+                                skater.playoffs[i].shorthanded_goals, 
+                                skater.playoffs[i].shorthanded_points,
+                                skater.playoffs[i].time_on_ice_per_game, 
+                                skater.playoffs[i].game_winning_goals,
+                                skater.playoffs[i].overtime_goals, 
+                                skater.playoffs[i].shots,
+                                skater.playoffs[i].shooting_percentage, 
+                                skater.playoffs[i].faceoff_percentage, ) )
+        except Exception as ex:
+            print( ex )
+            pass # if the skater has already been inserted
+        finally:
+            cur.close()
+            self.conn.commit()
                 
 
     def add_goalie( self, goalie ):
@@ -1654,11 +1667,11 @@ class Database():
     def clear_database( self ):
         cur = self.conn.cursor()
 
-        cur.execute( "DELETE * FROM Skater;" )
-        cur.execute( "DELETE * FROM SkaterSeason;" )
-        cur.execute( "DELETE * FROM Goalie;" )
-        cur.execute( "DELETE * FROM GoalieSeason;" )
-        cur.execute( "DELETE * FROM Team;" )
+        cur.execute( "DELETE FROM Skater;" )
+        cur.execute( "DELETE FROM SkaterSeason;" )
+        cur.execute( "DELETE FROM Goalie;" )
+        cur.execute( "DELETE FROM GoalieSeason;" )
+        cur.execute( "DELETE FROM Team;" )
 
         self.conn.commit()
 

@@ -3,11 +3,10 @@ import json
 import sys
 from urllib.parse import urlparse
 
-import Database, NHL
+import Database, NHL, Ingestor
 
 class MyHandler( BaseHTTPRequestHandler ):    
     database = Database.Database()
-    database.createDB()
     nhl_util = NHL.NHLUtil()
 
     def do_GET( self ):
