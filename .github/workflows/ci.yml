@@ -25,7 +25,7 @@ jobs:
         run: pip install -r requirements.txt
 
       - name: Install nhlpy from GitHub
-        run: pip install git+https://github.com/0xalexdelgado/nhlpy.git@main
+        run: pip install git+https://github.com/0xalexdelgado/nhlpy.git@master
 
       - name: Patch nhlpy __init__.py to expose NHLClient
         run: |
