@@ -3,7 +3,7 @@ import json
 import sys
 from urllib.parse import urlparse
 
-import Database, NHL, Ingestor
+import Database, NHL
 
 class MyHandler( BaseHTTPRequestHandler ):    
     database = Database.Database()
@@ -329,6 +329,7 @@ class MyHandler( BaseHTTPRequestHandler ):
                 'status': 'success',
                 'skaters': skaters
             }
+            print( response )
 
             self.wfile.write( json.dumps( response ).encode( 'utf-8' ) )
 
@@ -418,7 +419,7 @@ class MyHandler( BaseHTTPRequestHandler ):
             for i in range( len( wildcard_standings ) ):
                 if isinstance( wildcard_standings[i], NHL.Team ):
                     # get the image for each team based on the season
-                    team_name = wildcard_standings[i].get_full_name()
+                    team_name = wildcard_standings[i].team_name
                     team_logo_path = self.nhl_util.get_team_logo_path( team_name, season )
                     logos.append( team_logo_path )
 
@@ -459,7 +460,7 @@ class MyHandler( BaseHTTPRequestHandler ):
             for i in range( len( division_standings ) ):
                 if isinstance( division_standings[i], NHL.Team ):
                     # get the image for each team based on the season
-                    team_name = division_standings[i].get_full_name()
+                    team_name = division_standings[i].team_name
                     team_logo_path = self.nhl_util.get_team_logo_path( team_name, season )
                     logos.append( team_logo_path )
 
@@ -499,7 +500,7 @@ class MyHandler( BaseHTTPRequestHandler ):
             for i in range( len( conference_standings ) ):
                 if isinstance( conference_standings[i], NHL.Team ):
                     # get the image for each team based on the season
-                    team_name = conference_standings[i].get_full_name()
+                    team_name = conference_standings[i].team_name
                     team_logo_path = self.nhl_util.get_team_logo_path( team_name, season )
                     logos.append( team_logo_path )
                     
@@ -544,7 +545,7 @@ class MyHandler( BaseHTTPRequestHandler ):
             for i in range( len( league_standings ) ):
                 if isinstance( league_standings[i], NHL.Team ):
                     # get the image for each team based on the season
-                    team_name = league_standings[i].get_full_name()
+                    team_name = league_standings[i].team_name
                     team_logo_path = self.nhl_util.get_team_logo_path( team_name, season )
                     logos.append( team_logo_path )
 
@@ -582,11 +583,9 @@ class MyHandler( BaseHTTPRequestHandler ):
                 self.nhl_util.sort_teams( team_stats, stat, multiplier )
 
             logos = []
-            for i in range( len( team_stats ) ):
+            for team in team_stats:
                 # get the image for each team based on the season
-                team_name = team_stats[i].get_full_name()
-
-                team_logo_path = self.nhl_util.get_team_logo_path( team_name, season )
+                team_logo_path = self.nhl_util.get_team_logo_path( team.team_name, season )
                 
                 logos.append( team_logo_path )                
 
@@ -634,14 +633,12 @@ class MyHandler( BaseHTTPRequestHandler ):
                 self.nhl_util.sort_teams( team_stats, stat, multiplier )
 
             logos = []
-            for i in range( len( team_stats ) ):
-                # get the image for each team based on the season
-                team_name = team_stats[i].get_full_name()
-                
-                if team_stats[i].season == 'N/A':
-                    team_logo_path = self.nhl_util.get_team_last_logo_path( team_name )
+            for team in team_stats:
+                # get the image for each team based on the season                
+                if team.season == 'N/A':
+                    team_logo_path = self.nhl_util.get_team_last_logo_path( team.team_name )
                 else:
-                    team_logo_path = self.nhl_util.get_team_logo_path( team_name, team_stats[i].season )
+                    team_logo_path = self.nhl_util.get_team_logo_path( team.team_name, team.season )
                 
                 logos.append( team_logo_path )                
 
@@ -707,6 +704,6 @@ class MyHandler( BaseHTTPRequestHandler ):
 
 
 if __name__ == '__main__':
-    httpd = HTTPServer( ( 'localhost', int(sys.argv[1]) ), MyHandler )
-    print( 'Server listing in port:  ', int(sys.argv[1]) )
+    httpd = HTTPServer( ( 'localhost', int( sys.argv[1] ) ), MyHandler )
+    print( 'Server listing in port:  ', int( sys.argv[1] ) )
     httpd.serve_forever()

@@ -4,14 +4,13 @@ from collections import defaultdict
 
 ################################################################################
 
-skater_stats = ('skater_games_played', 'skater_goals', 'skater_assists', 'points', 'plus_minus', 'skater_\
-                 penalty_minutes', 'powerplay_goals', 'powerplay_points', 'shorthanded_goals', 'short\
-                 handed_points', 'time_on_ice/game', 'game_winning_goals', 'overtime_goals', 'shots', 'shooting\
-                 _perecentage', 'faceoff_percentage')
+skater_stats = ('skater_games_played', 'skater_goals', 'skater_assists', 'points', 'plus_minus','skater_penalty_minutes',
+                'powerplay_goals', 'powerplay_points', 'shorthanded_goals', 'shorthanded_points', 'time_on_ice/game',
+                'game_winning_goals', 'overtime_goals', 'shots', 'shooting_perecentage', 'faceoff_percentage')
 
-goalie_stats = ('goalie_games_played', 'games_started', 'wins', 'losses', 'ties', 'overtime_losses', 'shots_\
-                 against', 'goals_against_average', 'save_percentage', 'shutouts', 'goalie_goals', 'goalie_\
-                 assists', 'goalie_penalty_minutes', 'time_on_ice')
+goalie_stats = ('goalie_games_played', 'games_started', 'wins', 'losses', 'ties', 'overtime_losses', 'shots_against',
+                'goals_against_average', 'save_percentage', 'shutouts', 'goalie_goals', 'goalie_assists', 'goalie_penalty_minutes',
+                'time_on_ice')
 
 
 ################################################################################
@@ -38,27 +37,16 @@ class Skater( Player ):
     def __init__( self, name, team, number, position, height, weight, birthday, handedness, draft_position, id ):
         super().__init__( name, team, number, position, height, weight, birthday, handedness, draft_position, id )
         self.seasons = []
-        self.playoffs = []
 
 
-    def add_season( self, season, team, games_played, goals, assists, points, plus_minus, penalty_minutes,
+    def add_season( self, type, season, team, games_played, goals, assists, points, plus_minus, penalty_minutes,
                     powerplay_goals, powerplay_points, shorthanded_goals, shorthanded_points, time_on_ice_per_game,
                     game_winning_goals, overtime_goals, shots, shooting_percentage, faceoff_percentage ):
-        self.seasons.append( SkaterSeason( 'Regular Season', season, team, games_played, goals, assists, 
+        self.seasons.append( SkaterSeason( type, season, team, games_played, goals, assists, 
                                            points, plus_minus, penalty_minutes,powerplay_goals, powerplay_points, 
                                            shorthanded_goals, shorthanded_points, time_on_ice_per_game, 
                                            game_winning_goals, overtime_goals, shots, shooting_percentage, 
                                            faceoff_percentage ) )
-
-
-    def add_playoffs( self, season, team, games_played, goals, assists, points, plus_minus, penalty_minutes,
-                      powerplay_goals, powerplay_points, shorthanded_goals, shorthanded_points, time_on_ice_per_game,
-                      game_winning_goals, overtime_goals, shots, shooting_percentage, faceoff_percentage ):
-        self.playoffs.append( SkaterSeason( 'Playoffs', season, team, games_played, goals, assists, points, 
-                                            plus_minus, penalty_minutes,powerplay_goals, powerplay_points, 
-                                            shorthanded_goals, shorthanded_points, time_on_ice_per_game, 
-                                            game_winning_goals, overtime_goals, shots, shooting_percentage, 
-                                            faceoff_percentage ) )
         
 
     def to_dict( self ):
@@ -73,8 +61,7 @@ class Skater( Player ):
             'birthday': self.birthday,
             'handedness': self.handedness,
             'draft_position': self.draft_position,
-            'seasons': [season.to_dict() for season in self.seasons],
-            'playoffs': [playoff.to_dict() for playoff in self.playoffs]
+            'seasons': [season.to_dict() for season in self.seasons]
         }
 
 
@@ -85,25 +72,15 @@ class Goalie( Player ):
     def __init__( self, name, team, number, height, weight, birthday, handedness, draft_position, id ):
         super().__init__( name, team, number, 'goaltender', height, weight, birthday, handedness, draft_position, id )
         self.seasons = []
-        self.playoffs = []
 
 
-    def add_season( self, season, team, games_played, games_started, wins, losses, ties, overtime_losses,
+    def add_season( self, type, season, team, games_played, games_started, wins, losses, ties, overtime_losses,
                     shots_against, goals_against_average, save_percentage, shutouts, goals, assists,
                     penalty_minutes, time_on_ice ):
-        self.seasons.append( GoalieSeason( 'Regular Season', season, team, games_played, games_started, wins, 
+        self.seasons.append( GoalieSeason( type, season, team, games_played, games_started, wins, 
                                            losses, ties, overtime_losses, shots_against, goals_against_average,
                                            save_percentage, shutouts, goals, assists, penalty_minutes,
                                            time_on_ice ) ) 
-
-
-    def add_playoffs( self, season, team, games_played, games_started, wins, losses, ties, overtime_losses,
-                      shots_against, goals_against_average, save_percentage, shutouts, goals, assists,
-                      penalty_minutes, time_on_ice ):
-        self.playoffs.append( GoalieSeason( 'Playoffs', season, team, games_played, games_started, wins, 
-                                           losses, ties, overtime_losses, shots_against, goals_against_average,
-                                           save_percentage, shutouts, goals, assists, penalty_minutes,
-                                           time_on_ice ) )
         
     
     def to_dict( self ):
@@ -117,8 +94,7 @@ class Goalie( Player ):
             'birthday': self.birthday,
             'handedness': self.handedness,
             'draft_positon': self.draft_position,
-            'seasons': [season.to_dict() for season in self.seasons],
-            'playoffs': [playoff.to_dict() for playoff in self.playoffs]
+            'seasons': [season.to_dict() for season in self.seasons]
         }
 
 
@@ -277,15 +253,14 @@ class GoalieSeason():
 
 class Team():
 
-    def __init__( self, type, season, city, name, games_played, wins, losses, ties, overtime_losses, points,
+    def __init__( self, type, season, team_name, games_played, wins, losses, ties, overtime_losses, points,
                   points_percentage, regulation_wins, regulation_and_overtime_wins, goals_for, goals_against, 
                   goal_differential, home, away, shootout, last_10, streak, shootout_wins, goals_for_per_game, 
                   goals_against_per_game, powerplay_percentage, penalty_kill_percentage, net_powerplay_percentage, 
                   net_penalty_kill_percentage, faceoff_win_percentage, id=None ):
         self.type = type
         self.season = season
-        self.city = city
-        self.name = name
+        self.team_name = team_name
         self.games_played = games_played
         self.wins = wins
         self.losses = losses
@@ -318,8 +293,7 @@ class Team():
         return {
             'type': self.type,
             'season': self.season,
-            'city': self.city,
-            'name': self.name,
+            'team_name': self.team_name,
             'games_played': self.games_played,
             'wins': self.wins,
             'losses': self.losses,
@@ -346,11 +320,7 @@ class Team():
             'net_penalty_kill_percentage': self.net_penalty_kill_percentage,
             'faceoff_win_percentage': self.faceoff_win_percentage
         }
-    
 
-    def get_full_name( self ): 
-        return self.city + ' ' + self.name
-    
 
 ################################################################################
 
@@ -394,7 +364,7 @@ class NHLUtil():
 
             elif not 'Conference' in line:
                 for i in range( len( teams ) ):
-                    if line == teams[i].get_full_name():
+                    if line == teams[i].team_name:
                         teams_by_division[current_division_index].append( teams[i] )
 
         for j in range( len( teams_by_division ) ):
@@ -439,7 +409,7 @@ class NHLUtil():
 
             elif not 'Division' in line:
                 for i in range( len( teams ) ):
-                    if line == teams[i].get_full_name():
+                    if line == teams[i].team_name:
                         teams_by_conference[current_conference_index].append( teams[i] )
 
         for j in range( len( teams_by_conference ) ):
@@ -554,21 +524,21 @@ class NHLUtil():
         league_standings = self.get_league_standings( 'Regular Season', season, teams )
 
         # presidents trophy winner ('p')
-        clinching_markers[league_standings[0].get_full_name()] = 'p'
+        clinching_markers[league_standings[0].team_name] = 'p'
 
         # conference winners ('z')
         if self.is_conference_season( season ):
             teams_by_conference = self.sort_teams_into_conferences( season, teams )
             for i in range( len( teams_by_conference ) ):
-                if not teams_by_conference[i][0].get_full_name() in clinching_markers:
-                    clinching_markers[teams_by_conference[i][0].get_full_name()] = 'z'
+                if not teams_by_conference[i][0].team_name in clinching_markers:
+                    clinching_markers[teams_by_conference[i][0].team_name] = 'z'
 
         # divisional winners ('y')
         if self.is_division_season( season ):
             teams_by_division = self.sort_teams_into_divisions( season, teams )
             for i in range( len( teams_by_division ) ):
-                if not teams_by_division[i][0].get_full_name() in clinching_markers:
-                    clinching_markers[teams_by_division[i][0].get_full_name()] = 'y'
+                if not teams_by_division[i][0].team_name in clinching_markers:
+                    clinching_markers[teams_by_division[i][0].team_name] = 'y'
 
         # other playoff teams ('x')
         first_year = int( season[:4] )
@@ -578,52 +548,52 @@ class NHLUtil():
             wildcard_standings = [item for item in wildcard_standings if not isinstance( item, str )]
 
             for i in range( 8 ):
-                if not wildcard_standings[i].get_full_name() in clinching_markers:
-                    clinching_markers[wildcard_standings[i].get_full_name()] = 'x'
+                if not wildcard_standings[i].team_name in clinching_markers:
+                    clinching_markers[wildcard_standings[i].team_name] = 'x'
 
             for i in range( 16, 24 ):
-                if not wildcard_standings[i].get_full_name() in clinching_markers:
-                    clinching_markers[wildcard_standings[i].get_full_name()] = 'x'
+                if not wildcard_standings[i].team_name in clinching_markers:
+                    clinching_markers[wildcard_standings[i].team_name] = 'x'
 
             for i in range( len( teams ) ):
-                if not teams[i].get_full_name() in clinching_markers:
-                    clinching_markers[teams[i].get_full_name()] = None
+                if not teams[i].team_name in clinching_markers:
+                    clinching_markers[teams[i].team_name] = None
 
         elif first_year == 2019:
             for i in range( len( teams_by_conference ) ):
                 for j in range( 12 ):
-                    if not teams_by_conference[i][j].get_full_name() in clinching_markers:
-                        clinching_markers[teams_by_conference[i][j].get_full_name()] = 'x'
+                    if not teams_by_conference[i][j].team_name in clinching_markers:
+                        clinching_markers[teams_by_conference[i][j].team_name] = 'x'
 
         elif first_year == 2020:
             for i in range( len( teams_by_division ) ):
                 for j in range( 4 ):
-                    if not teams_by_division[i][j].get_full_name() in clinching_markers:
-                        clinching_markers[teams_by_division[i][j].get_full_name()] = 'x'
+                    if not teams_by_division[i][j].team_name in clinching_markers:
+                        clinching_markers[teams_by_division[i][j].team_name] = 'x'
 
         elif first_year >= 1992:
             for i in range( len( teams_by_conference ) ):
                 for j in range( 8 ):
-                    if not teams_by_conference[i][j].get_full_name() in clinching_markers:
-                        clinching_markers[teams_by_conference[i][j].get_full_name()] = 'x'
+                    if not teams_by_conference[i][j].team_name in clinching_markers:
+                        clinching_markers[teams_by_conference[i][j].team_name] = 'x'
 
         elif first_year >= 1979:
             for i in range( len( teams_by_division ) ):
                 for j in range( 4 ):
-                    if not teams_by_division[i][j].get_full_name() in clinching_markers:
-                        clinching_markers[teams_by_division[i][j].get_full_name()] = 'x'
+                    if not teams_by_division[i][j].team_name in clinching_markers:
+                        clinching_markers[teams_by_division[i][j].team_name] = 'x'
 
         elif first_year >= 1977:
             for i in range( len( teams_by_division ) ):
                 for j in range( 2 ):
-                    if not teams_by_division[i][j].get_full_name() in clinching_markers:
-                        clinching_markers[teams_by_division[i][j].get_full_name()] = 'x'
+                    if not teams_by_division[i][j].team_name in clinching_markers:
+                        clinching_markers[teams_by_division[i][j].team_name] = 'x'
 
             count = 0
             i = 0
             while count < 4:
-                if not league_standings[i].get_full_name() in clinching_markers:
-                    clinching_markers[league_standings[i].get_full_name()] = 'x'
+                if not league_standings[i].team_name in clinching_markers:
+                    clinching_markers[league_standings[i].team_name] = 'x'
                     count += 1
 
                 i += 1
@@ -631,21 +601,21 @@ class NHLUtil():
         elif first_year >= 1974:
             for i in range( len( teams_by_division ) ):
                 for j in range( 3 ):
-                    if not teams_by_division[i][j].get_full_name() in clinching_markers:
-                        clinching_markers[teams_by_division[i][j].get_full_name()] = 'x'
+                    if not teams_by_division[i][j].team_name in clinching_markers:
+                        clinching_markers[teams_by_division[i][j].team_name] = 'x'
 
         elif first_year >= 1967:
             for i in range( len( teams_by_division ) ):
                 for j in range( 4 ):
-                    if not teams_by_division[i][j].get_full_name() in clinching_markers:
-                        clinching_markers[teams_by_division[i][j].get_full_name()] = 'x'
+                    if not teams_by_division[i][j].team_name in clinching_markers:
+                        clinching_markers[teams_by_division[i][j].team_name] = 'x'
 
         elif first_year >= 1942:
             count = 0
             i = 0
             while count < 3:
-                if not league_standings[i].get_full_name() in clinching_markers:
-                    clinching_markers[league_standings[i].get_full_name()] = 'x'
+                if not league_standings[i].team_name in clinching_markers:
+                    clinching_markers[league_standings[i].team_name] = 'x'
                     count += 1
 
                 i += 1
@@ -654,8 +624,8 @@ class NHLUtil():
             count = 0
             i = 0
             while count < 5:
-                if not league_standings[i].get_full_name() in clinching_markers:
-                    clinching_markers[league_standings[i].get_full_name()] = 'x'
+                if not league_standings[i].team_name in clinching_markers:
+                    clinching_markers[league_standings[i].team_name] = 'x'
                     count += 1
 
                 i += 1
@@ -663,15 +633,15 @@ class NHLUtil():
         elif first_year >= 1926:
             for i in range( len( teams_by_division ) ):
                 for j in range( 3 ):
-                    if not teams_by_division[i][j].get_full_name() in clinching_markers:
-                        clinching_markers[teams_by_division[i][j].get_full_name()] = 'x'
+                    if not teams_by_division[i][j].team_name in clinching_markers:
+                        clinching_markers[teams_by_division[i][j].team_name] = 'x'
 
         elif first_year >= 1924:
             count = 0
             i = 0
             while count < 2:
-                if not league_standings[i].get_full_name() in clinching_markers:
-                    clinching_markers[league_standings[i].get_full_name()] = 'x'
+                if not league_standings[i].team_name in clinching_markers:
+                    clinching_markers[league_standings[i].team_name] = 'x'
                     count += 1
 
                 i += 1
@@ -680,21 +650,21 @@ class NHLUtil():
             count = 0
             i = 0
             while count < 1:
-                if not league_standings[i].get_full_name() in clinching_markers:
-                    clinching_markers[league_standings[i].get_full_name()] = 'x'
+                if not league_standings[i].team_name in clinching_markers:
+                    clinching_markers[league_standings[i].team_name] = 'x'
                     count += 1
 
                 i += 1
 
         elif first_year == 1918:
             for i in range( len( league_standings ) ):
-                if league_standings[i].get_full_name() == 'Montreal Canadiens':
-                    clinching_markers[league_standings[i].get_full_name()] = 'x'
+                if league_standings[i].team_name == 'Montreal Canadiens':
+                    clinching_markers[league_standings[i].team_name] = 'x'
 
         elif first_year == 1917:
             for i in range( len( league_standings ) ):
-                if league_standings[i].get_full_name() == 'Toronto Arenas':
-                    clinching_markers[league_standings[i].get_full_name()] = 'x'
+                if league_standings[i].team_name == 'Toronto Arenas':
+                    clinching_markers[league_standings[i].team_name] = 'x'
 
         return clinching_markers
     
@@ -733,7 +703,7 @@ class NHLUtil():
         teams_by_city_name = defaultdict( list )
 
         for team in teams:
-            key = (team.city, team.name)
+            key = team.team_name
             teams_by_city_name[key].append( team )
 
         aggregate_teams = []
@@ -741,8 +711,7 @@ class NHLUtil():
             aggregate_team = Team(
                 type=None,
                 season='N/A',
-                city=key[0],
-                name=key[1],
+                team_name=key,
                 games_played=0,
                 wins=0,
                 losses=0,
@@ -1099,370 +1068,6 @@ class NHLUtil():
     def get_first_year( self, season ):
         return int( season[:4] )
     
-
-    def get_city( self, full_name ):
-        if full_name == 'Anaheim Ducks':
-           return 'Anaheim'
-       
-        elif full_name == 'Arizona Coyotes':
-           return 'Arizona'
-        
-        elif full_name == 'Atlanta Flames':
-            return 'Atlanta'
-        
-        elif full_name == 'Atlanta Thrashers':
-            return 'Atlanta'
-
-        elif full_name == 'Boston Bruins':
-            return 'Boston'
-        
-        elif full_name == 'Brooklyn Americans':
-            return 'Brooklyn'
-
-        elif full_name == 'Buffalo Sabres':
-            return 'Buffalo'
-        
-        elif full_name == 'Calgary Flames':
-            return 'Calgary'
-        
-        elif full_name == 'California Golden Seals':
-            return 'California'
-        
-        elif full_name == 'Carolina Hurricanes':
-            return 'Carolina'
-        
-        elif full_name == 'Chicago Blackhawks':
-            return 'Chicago'
-        
-        elif full_name == 'Cleveland Barons':
-            return 'Cleveland'
-        
-        elif full_name == 'Colorado Avalanche':
-            return 'Colorado'
-        
-        elif full_name == 'Colorado Rockies':
-            return 'Colorado'
-
-        elif full_name == 'Columbus Blue Jackets':
-            return 'Columbus'
-        
-        elif full_name == 'Dallas Stars':
-            return 'Dallas'
-        
-        elif full_name == 'Detroit Cougars':
-            return 'Detroit'
-        
-        elif full_name == 'Detroit Falcons':
-            return 'Detroit'
-        
-        elif full_name == 'Detroit Red Wings':
-            return 'Detroit'
-        
-        elif full_name == 'Edmonton Oilers':
-            return 'Edmonton'
-        
-        elif full_name == 'Hamilton Tigers':
-            return 'Hamilton'
-        
-        elif full_name == 'Florida Panthers':
-            return 'Florida'
-        
-        elif full_name == 'Hartford Whalers':
-            return 'Hartford'
-        
-        elif full_name == 'Kansas City Scouts':
-            return 'Kansas City'
-        
-        elif full_name == 'Los Angeles Kings':
-            return 'Los Angeles'
-        
-        elif full_name == 'Minnesota North Stars':
-            return 'Minnesota'
-        
-        elif full_name == 'Minnesota Wild':
-            return 'Minnesota'
-        
-        elif full_name == 'Montreal Canadiens':
-            return 'Montreal'
-        
-        elif full_name == 'Montréal Canadiens':
-            return 'Montreal'
-        
-        elif full_name == 'Montreal Maroons':
-            return 'Montreal'
-        
-        elif full_name == 'Montreal Wanderers':
-            return 'Montreals'
-        
-        elif full_name == 'Nashville Predators':
-            return 'Nashville'
-        
-        elif full_name == 'New Jersey Devils':
-            return 'New Jersey'
-        
-        elif full_name == 'New York Americans':
-            return 'New York'
-        
-        elif full_name == 'New York Islanders':
-            return 'New York'
-        
-        elif full_name == 'New York Rangers':
-            return 'New York'
-        
-        elif full_name == 'Quebec Athletics':
-            return 'Quebec'
-        
-        elif full_name == 'Quebec Bulldogs':
-            return 'Quebec'
-        
-        elif full_name == 'Quebec Nordiques':
-            return 'Quebec'
-        
-        elif full_name == 'Oakland Seals':
-            return 'Oakland'
-
-        elif full_name == 'Ottawa Senators':
-            return 'Ottawa'
-        
-        elif full_name == 'Philadelphia Flyers':
-            return 'Philadelphia'
-        
-        elif full_name == 'Philadelphia Quakers':
-            return 'Philadelphia'
-        
-        elif full_name == 'Phoenix Coyotes':
-            return 'Phoenix'
-        
-        elif full_name == 'Pittsburgh Penguins':
-            return 'Pittsburgh'
-        
-        elif full_name == 'Pittsburgh Pirates':
-            return 'Pittsburgh'
-        
-        elif full_name == 'San Jose Sharks':
-            return 'San Jose'
-        
-        elif full_name == 'Seattle Kraken':
-            return 'Seattle'
-        
-        elif full_name == 'St. Louis Blues':
-            return 'St. Louis'
-        
-        elif full_name == 'St. Louis Eagles':
-            return 'St. Louis'
-        
-        elif full_name == 'Tampa Bay Lightning':
-            return 'Tampa Bay'
-        
-        elif full_name == 'Toronto Arenas':
-            return 'Toronto'
-        
-        elif full_name == 'Toronto Maple Leafs':
-            return 'Toronto'
-        
-        elif full_name == 'Toronto St. Patricks':
-            return 'Toronto'
-        
-        elif full_name == 'Utah Hockey Club':
-            return 'Utah'
-        
-        elif full_name == 'Utah Mammoth':
-            return 'Utah'
-
-        elif full_name == 'Vancouver Canucks':
-            return 'Vancouver'
-        
-        elif full_name == 'Vegas Golden Knights':
-            return 'Vegas'
-        
-        elif full_name == 'Washington Capitals':
-            return 'Washington'
-        
-        elif full_name == 'Winnipeg Jets':
-            return 'Winnipeg'
-
-
-    def get_name( self, full_name ):
-        if full_name == 'Anaheim Ducks':
-           return 'Ducks'
-       
-        elif full_name == 'Arizona Coyotes':
-           return 'Coyotes'
-        
-        elif full_name == 'Atlanta Flames':
-            return 'Flames'
-        
-        elif full_name == 'Atlanta Thrashers':
-            return 'Thrashers'
-
-        elif full_name == 'Boston Bruins':
-            return 'Bruins'
-        
-        elif full_name == 'Brooklyn Americans':
-            return 'Americans'
-
-        elif full_name == 'Buffalo Sabres':
-            return 'Sabres'
-        
-        elif full_name == 'Calgary Flames':
-            return 'Flames'
-        
-        elif full_name == 'California Golden Seals':
-            return 'Golden Seals'
-        
-        elif full_name == 'Carolina Hurricanes':
-            return 'Hurricanes'
-        
-        elif full_name == 'Chicago Blackhawks':
-            return 'Blackhawks'
-        
-        elif full_name == 'Cleveland Barons':
-            return 'Barons'
-        
-        elif full_name == 'Colorado Avalanche':
-            return 'Avalanche'
-        
-        elif full_name == 'Colorado Rockies':
-            return 'Rockies'
-
-        elif full_name == 'Columbus Blue Jackets':
-            return 'Blue Jackets'
-        
-        elif full_name == 'Dallas Stars':
-            return 'Stars'
-        
-        elif full_name == 'Detroit Cougars':
-            return 'Cougars'
-        
-        elif full_name == 'Detroit Falcons':
-            return 'Falcons'
-        
-        elif full_name == 'Detroit Red Wings':
-            return 'Red Wings'
-        
-        elif full_name == 'Edmonton Oilers':
-            return 'Oilers'
-        
-        elif full_name == 'Florida Panthers':
-            return 'Panthers'
-        
-        elif full_name == 'Hamilton Tigers':
-            return 'Tigers'
-        
-        elif full_name == 'Hartford Whalers':
-            return 'Whalers'
-        
-        elif full_name == 'Kansas City Scouts':
-            return 'Scouts'
-        
-        elif full_name == 'Los Angeles Kings':
-            return 'Kings'
-        
-        elif full_name == 'Minnesota North Stars':
-            return 'North Stars'
-        
-        elif full_name == 'Minnesota Wild':
-            return 'Wild'
-        
-        elif full_name == 'Montreal Canadiens':
-            return 'Canadiens'
-        
-        elif full_name == 'Montréal Canadiens':
-            return 'Canadiens'
-
-        elif full_name == 'Montreal Maroons':
-            return 'Maroons'
-        
-        elif full_name == 'Montreal Wanderers':
-            return 'Wanderers'
-        
-        elif full_name == 'Nashville Predators':
-            return 'Predators'
-        
-        elif full_name == 'New Jersey Devils':
-            return 'Devils'
-        
-        elif full_name == 'New York Americans':
-            return 'Americans'
-        
-        elif full_name == 'New York Islanders':
-            return 'Islanders'
-        
-        elif full_name == 'New York Rangers':
-            return 'Rangers'
-        
-        elif full_name == 'Quebec Athletics':
-            return 'Athletics'
-        
-        elif full_name == 'Quebec Bulldogs':
-            return 'Bulldogs'
-        
-        elif full_name == 'Quebec Nordiques':
-            return 'Nordiques'
-        
-        elif full_name == 'Oakland Seals':
-            return 'Seals'
-        
-        elif full_name == 'Ottawa Senators':
-            return 'Senators'
-        
-        elif full_name == 'Philadelphia Flyers':
-            return 'Flyers'
-        
-        elif full_name == 'Philadelphia Quakers':
-            return 'Quakers'
-        
-        elif full_name == 'Phoenix Coyotes':
-            return 'Coyotes'
-        
-        elif full_name == 'Pittsburgh Penguins':
-            return 'Penguins'
-        
-        elif full_name == 'Pittsburgh Pirates':
-            return 'Pirates'
-        
-        elif full_name == 'San Jose Sharks':
-            return 'Sharks'
-        
-        elif full_name == 'Seattle Kraken':
-            return 'Kraken'
-        
-        elif full_name == 'St. Louis Blues':
-            return 'Blues'
-        
-        elif full_name == 'St. Louis Eagles':
-            return 'Eagles'
-        
-        elif full_name == 'Tampa Bay Lightning':
-            return 'Lightning'
-        
-        elif full_name == 'Toronto Arenas':
-            return 'Arenas'
-
-        elif full_name == 'Toronto Maple Leafs':
-            return 'Maple Leafs'
-        
-        elif full_name == 'Toronto St. Patricks':
-            return 'St. Patricks'
-        
-        elif full_name == 'Utah Hockey Club':
-            return 'Hockey Club'
-        
-        elif full_name == 'Utah Mammoth':
-            return 'Mammoth'
-        
-        elif full_name == 'Vancouver Canucks':
-            return 'Canucks'
-        
-        elif full_name == 'Vegas Golden Knights':
-            return 'Golden Knights'
-        
-        elif full_name == 'Washington Capitals':
-            return 'Capitals'
-        
-        elif full_name == 'Winnipeg Jets':
-            return 'Jets'
-        
 
     def is_overtime_losses_season( self, type, season ):
         if type == 'Regular Season':
@@ -1834,3 +1439,182 @@ class NHLUtil():
 
         return None
     
+
+    def get_abbrevation( self, team ):
+        if team == 'Anaheim Ducks':
+            return 'ANA'
+        
+        elif team == 'Arizona Coyotes':
+            return 'ARI'
+        
+        elif team == 'Atlanta Flames':
+            return 'AFM'
+        
+        elif team == 'Atlanta Thrashers':
+            return 'ATL'
+        
+        elif team == 'Boston Bruins':
+            return 'BOS'
+        
+        elif team == 'Brooklyn Americans':
+            return 'BRK'
+        
+        elif team == 'Buffalo Sabres':
+            return 'BUF'
+        
+        elif team == 'Calgary Flames':
+            return 'CGY'
+        
+        elif team == 'California Golden Seals':
+            return 'CGS'
+        
+        elif team == 'Carolina Hurricanes':
+            return 'CAR'
+        
+        elif team == 'Cleveland Barons':
+            return 'CLE'
+        
+        elif team == 'Chicago Blackhawks':
+            return 'CHI'
+        
+        elif team == 'Colorado Avalanche':
+            return 'COL'
+        
+        elif team == 'Colorado Rockies':
+            return 'CLR'
+        
+        elif team == 'Columbus Blue Jackets':
+            return 'CBJ'
+        
+        elif team == 'Dallas Stars':
+            return 'DAL'
+        
+        elif team == 'Detroit Cougars':
+            return 'DCG'
+        
+        elif team == 'Detroit Falcons':
+            return 'DFL'
+        
+        elif team == 'Detroit Red Wings':
+            return 'DET'
+        
+        elif team == 'Edmonton Oilers':
+            return 'EDM'
+        
+        elif team == 'Florida Panthers':
+            return 'FLA'
+        
+        elif team == 'Hamilton Tigers':
+            return 'HAM'
+        
+        elif team == 'Hartford Whalers':
+            return 'HFD'
+        
+        elif team == 'Kansas City Scouts':
+            return 'KCS'
+        
+        elif team == 'Los Angeles Kings':
+            return 'LOS'
+        
+        elif team == 'Minnesota North Stars':
+            return 'MNS'
+        
+        elif team == 'Minnesota Wild':
+            return 'MIN'
+        
+        elif team == 'Montreal Canadiens':
+            return 'MTL'
+        
+        elif team == 'Montreal Maroons':
+            return 'MMR'
+        
+        elif team == 'Montreal Wanderers':
+            return 'MWN'
+        
+        elif team == 'Nashville Predators':
+            return 'NSH'
+        
+        elif team == 'New Jersey Devils':
+            return 'NJD'
+        
+        elif team == 'New York Americans':
+            return 'NYA'
+        
+        elif team == 'New York Islanders':
+            return 'NYI'
+        
+        elif team == 'NYR':
+            return 'New York Rangers'
+            return 'NYR'
+        
+        elif team == 'Oakland Seals':
+            return 'OAK'
+        
+        elif team == 'Ottawa Senators':
+            return 'OTT'
+        
+        elif team == 'Quebec Bulldogs':
+            return 'QBD'
+        
+        elif team == 'Quebec Nordiques':
+            return 'QUE'
+        
+        elif team == 'Philadelphia Flyers':
+            return 'PHI'
+        
+        elif team == 'Philadelphia Quakers':
+            return 'QUA'
+        
+        elif team == 'Phoenix Coyotes':
+            return 'PHX'
+        
+        elif team == 'Pittsburgh Penguins':
+            return 'PIT'
+        
+        elif team == 'Pittsburgh Pirates':
+            return 'PIR'
+        
+        elif team == 'San Jose Sharks':
+            return 'SJS'
+        
+        elif team == 'Seattle Kraken':
+            return 'SEA'
+        
+        elif team == 'St. Louis Blues':
+            return 'STL'
+        
+        elif team == 'St. Louis Eagles':
+            return 'SLE'
+        
+        elif team == 'Tampa Bay Lightning':
+            return 'TBL'
+        
+        elif team == 'Toronto Arenas':
+            return 'TAN'
+        
+        elif team == 'Toronto Maple Leafs':
+            return 'TOR'
+        
+        elif team == 'Toronto St. Patricks':
+            return 'TSP'
+        
+        elif team == 'Utah Mammoth':
+            return 'UTA'
+        
+        elif team == 'Vancouver Canucks':
+            return 'VAN'
+        
+        elif team == 'Vegas Golden Knights':
+            return 'VGK'
+        
+        elif team == 'Washington Capitals':
+            return 'WSH'
+        
+        elif team == 'Winnipeg Jets':
+            return 'WPG'
+
+        return None
+    
+
+    def get_current_season( self ):
+        return '2025-2026'

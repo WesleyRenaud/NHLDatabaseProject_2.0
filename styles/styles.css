@@ -578,6 +578,10 @@ td.name-field, td.team-field {
     font-size: 18px;
 }
 
+.skater-stats-table-without-names tr {
+    height: 50px;
+}
+
 .skater-stats-table-without-names th:nth-child(1),
 .skater-stats-table-without-names td:nth-child(1) {
     width: 9%;
@@ -678,7 +682,6 @@ td.name-field, td.team-field {
     top: 2px;
 }
 
-
 /* Goalie stats table */
 .goalie-stats-table tr {
     height: 45px;
@@ -755,7 +758,6 @@ td.name-field, td.team-field {
 .goalie-stats-table td:nth-child(16) {
     width: 5.875%;
 }
-
 
 /* Goalie stats table with seasons */
 .goalie-stats-table-with-seasons tr {
@@ -837,6 +839,66 @@ td.name-field, td.team-field {
 .goalie-stats-table-with-seasons th:nth-child(17),
 .goalie-stats-table-with-seasons td:nth-child(17) {
     width: 6.125%;
+}
+
+/* Goalie stats table without names */
+.goalie-stats-table-without-names tr {
+    height: 45px;
+}
+
+.goalie-stats-table-without-names {
+    font-size: 19.5px;
+}
+
+.goalie-stats-table-without-names th:nth-child(1),
+.goalie-stats-table-without-names td:nth-child(1) {
+    width: 11%;
+}
+
+.goalie-stats-table-without-names th:nth-child(2),
+.goalie-stats-table-without-names td:nth-child(2) {
+    width: 22.5%;
+}
+
+.goalie-stats-table-without-names th:nth-child(3),
+.goalie-stats-table-without-names td:nth-child(3),
+.goalie-stats-table-without-names th:nth-child(4),
+.goalie-stats-table-without-names td:nth-child(4),
+.goalie-stats-table-without-names th:nth-child(5),
+.goalie-stats-table-without-names td:nth-child(5),
+.goalie-stats-table-without-names th:nth-child(6),
+.goalie-stats-table-without-names td:nth-child(6) {
+    width: 4.5%
+}
+
+.goalie-stats-table-without-names th:nth-child(7),
+.goalie-stats-table-without-names td:nth-child(7) {
+    width: 5%;
+}
+
+.goalie-stats-table-without-names th:nth-child(8),
+.goalie-stats-table-without-names td:nth-child(8),
+.goalie-stats-table-without-names th:nth-child(9),
+.goalie-stats-table-without-names td:nth-child(9),
+.goalie-stats-table-without-names th:nth-child(10),
+.goalie-stats-table-without-names td:nth-child(10) {
+    width: 6%;
+}
+
+.goalie-stats-table-without-names th:nth-child(11),
+.goalie-stats-table-without-names td:nth-child(11),
+.goalie-stats-table-without-names th:nth-child(12),
+.goalie-stats-table-without-names td:nth-child(12),
+.goalie-stats-table-without-names th:nth-child(13),
+.goalie-stats-table-without-names td:nth-child(13),
+.goalie-stats-table-without-names th:nth-child(14),
+.goalie-stats-table-without-names td:nth-child(14) {
+    width: 4.5%;
+}
+
+.goalie-stats-table-without-names th:nth-child(15),
+.goalie-stats-table-without-names td:nth-child(15) {
+    width: 7.5%;
 }
 
 .goalie-stats-table .team-logo,

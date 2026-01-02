@@ -437,14 +437,14 @@ function displaySkaterStats(response) {
     }
 
     var table = document.createElement('table');
-    if (response.first_season == response.last_season) {
-        table.classList.add('skater-stats-table');
+    if (response.name != null) {
+        table.classList.add('skater-stats-table-without-names');
     }
-    else if (response.name == null) {
+    else if (response.first_season != response.last_season) {
         table.classList.add('skater-stats-table-with-seasons');
     }
     else {
-        table.classList.add('skater-stats-table-without-names');
+        table.classList.add('skater-stats-table');
     }
 
     var thead = document.createElement('thead');
@@ -568,14 +568,15 @@ function displayGoalieStats(response) {
     }
 
     var table = document.createElement('table');
-    if (response.first_season == response.last_season) {
-        table.classList.add('goalie-stats-table');
-    }
-    else if (response.name == null) {
-        table.classList.add('goalie-stats-table-with-seasons');
-    } else {
+    if (response.name != null) {
         table.classList.add('goalie-stats-table-without-names');
-    }                
+    }
+    else if (response.first_season != response.last_season) {
+        table.classList.add('goalie-stats-table-with-seasons');
+    }
+    else {
+        table.classList.add('goalie-stats-table');
+    }              
 
     var thead = document.createElement('thead');
     var headerRow = document.createElement('tr');
@@ -755,15 +756,8 @@ function searchSkater(skaterName, type, stat, multiplier) {
                     var skater = skaters[0];
                 }
                 
-                if (type == 'Regular Season') {
-                    var skater_stats = skater.seasons;
-                }
-                else {
-                    var skater_stats = skater.playoffs;
-                }
-
                 var response = {
-                    skater_stats: skater_stats,
+                    skater_stats: skater.seasons,
                     name: skaterName
                 }
 
@@ -891,16 +885,9 @@ function searchGoalie(goalieName, type, stat, multiplier) {
                 else {
                     var goalie = goalies[0];
                 }
-                
-                if (type == 'Regular Season') {
-                    var goalie_stats = goalie.seasons;
-                }
-                else {
-                    var goalie_stats = goalie.playoffs;
-                }
 
                 var response = {
-                    goalie_stats: goalie_stats,
+                    goalie_stats: goalie.seasons,
                     name: goalieName
                 }
 
@@ -1082,7 +1069,7 @@ function displayWildcardStandings(response) {
                 fields.push('rank-and-team');
                 for (var key in standings[i]) {
                     if (standings[i].hasOwnProperty(key) && standings[i][key] !== null) {
-                        if (key !== 'city' && key !== 'name') {
+                        if (key !== 'team_name') {
                             fields.push(key);
                         }
                     }
@@ -1132,19 +1119,17 @@ function displayWildcardStandings(response) {
             fields.forEach(function(field) {
                 var td = document.createElement('td');
                 if (field === 'rank-and-team') {
-                    var fullTeamName = standings[i].city + ' ' + standings[i].name
-
                     var rankSpan = document.createElement('span');
                     rankSpan.innerHTML = rank + '. ';
 
                     var textSpan = document.createElement('span');
-                    textSpan.textContent = fullTeamName;
+                    textSpan.textContent = standings[i].team_name;
                     textSpan.classList.add('standings-team');
 
                     // check if the team has a clinching marker
                     var clinchingMarker = document.createElement('span');
-                    if (response.clinching_markers[fullTeamName] != null) {
-                        clinchingMarker.textContent = response.clinching_markers[fullTeamName];
+                    if (response.clinching_markers[standings[i].team_name] != null) {
+                        clinchingMarker.textContent = response.clinching_markers[standings[i].team_name];
                         clinchingMarker.classList.add('clinching-marker');
                     }
                     else {
@@ -1156,7 +1141,7 @@ function displayWildcardStandings(response) {
 
                     var teamLogo = document.createElement('img');
                     teamLogo.src = response.logos[teamIndex];
-                    teamLogo.alt = fullTeamName + ' Logo';
+                    teamLogo.alt = standings[i].team_name + ' Logo';
                     teamLogo.classList.add('team-logo');
                     
                     teamLogoContainer.appendChild(teamLogo);                                
@@ -1291,7 +1276,7 @@ function displayDivisionStandings(response) {
                 fields.push('rank-and-team');
                 for (var key in standings[i]) {
                     if (standings[i].hasOwnProperty(key) && standings[i][key] !== null) {
-                        if (key !== 'city' && key !== 'name') {
+                        if (key !== 'team_name') {
                             fields.push(key);
                         }
                         
@@ -1344,19 +1329,17 @@ function displayDivisionStandings(response) {
                 var td = document.createElement('td');
 
                 if (field === 'rank-and-team') {
-                    var fullTeamName = standings[i].city + ' ' + standings[i].name
-
                     var rankSpan = document.createElement('span');
                     rankSpan.innerHTML = rank + '. ';
 
                     var textSpan = document.createElement('span');
-                    textSpan.textContent = fullTeamName;
+                    textSpan.textContent = standings[i].team_name;
                     textSpan.classList.add('standings-team');
 
                     // check if the team has a clinching marker
                     var clinchingMarker = document.createElement('span');
-                    if (response.clinching_markers[fullTeamName] != null) {
-                        clinchingMarker.textContent = response.clinching_markers[fullTeamName];
+                    if (response.clinching_markers[standings[i].team_name] != null) {
+                        clinchingMarker.textContent = response.clinching_markers[standings[i].team_name];
                         clinchingMarker.classList.add('clinching-marker');
                     }
                     else {
@@ -1368,7 +1351,7 @@ function displayDivisionStandings(response) {
 
                     var teamLogo = document.createElement('img');
                     teamLogo.src = response.logos[teamIndex];
-                    teamLogo.alt = fullTeamName + ' Logo';
+                    teamLogo.alt = standings[i].team_name + ' Logo';
                     teamLogo.classList.add('team-logo');
                     
                     teamLogoContainer.appendChild(teamLogo);                                
@@ -1492,7 +1475,7 @@ function displayConferenceStandings(response) {
                 fields.push('rank-and-team');
                 for (var key in standings[i]) {
                     if (standings[i].hasOwnProperty(key) && standings[i][key] !== null) {
-                        if (key !== 'city' && key !== 'name') {
+                        if (key !== 'team_name') {
                             fields.push(key);
                         }
                         
@@ -1545,19 +1528,17 @@ function displayConferenceStandings(response) {
                 var td = document.createElement('td');
 
                 if (field === 'rank-and-team') {
-                    var fullTeamName = standings[i].city + ' ' + standings[i].name
-
                     var rankSpan = document.createElement('span');
                     rankSpan.innerHTML = rank + '. ';
 
                     var textSpan = document.createElement('span');
-                    textSpan.textContent = fullTeamName;
+                    textSpan.textContent = standings[i].team_name;
                     textSpan.classList.add('standings-team');
 
                     // check if the team has a clinching marker
                     var clinchingMarker = document.createElement('span');
-                    if (response.clinching_markers[fullTeamName] != null) {
-                        clinchingMarker.textContent = response.clinching_markers[fullTeamName];
+                    if (response.clinching_markers[standings[i].team_name] != null) {
+                        clinchingMarker.textContent = response.clinching_markers[standings[i].team_name];
                         clinchingMarker.classList.add('clinching-marker');
                     }
                     else {
@@ -1569,7 +1550,7 @@ function displayConferenceStandings(response) {
 
                     var teamLogo = document.createElement('img');
                     teamLogo.src = response.logos[teamIndex];
-                    teamLogo.alt = fullTeamName + ' Logo';
+                    teamLogo.alt = standings[i].team_name + ' Logo';
                     teamLogo.classList.add('team-logo');
                     
                     teamLogoContainer.appendChild(teamLogo);                                
@@ -1688,7 +1669,7 @@ function displayLeagueStandings(response) {
             fields.push('rank-and-team');
             for (var key in standings[i]) {
                 if (standings[i].hasOwnProperty(key) && standings[i][key] !== null) {
-                    if (key !== 'city' && key !== 'name') {
+                    if (key !== 'team_name') {
                         fields.push(key);
                     }
                     
@@ -1741,19 +1722,17 @@ function displayLeagueStandings(response) {
             var td = document.createElement('td');
 
             if (field === 'rank-and-team') {
-                var fullTeamName = standings[i].city + ' ' + standings[i].name
-
                 var rankSpan = document.createElement('span');
                 rankSpan.innerHTML = rank + '. ';
 
                 var textSpan = document.createElement('span');
-                textSpan.textContent = fullTeamName;
+                textSpan.textContent = standings[i].team_name;
                 textSpan.classList.add('standings-team');
 
                 // check if the team has a clinching marker
                 var clinchingMarker = document.createElement('span');
-                if (response.clinching_markers[fullTeamName] != null) {
-                    clinchingMarker.textContent = response.clinching_markers[fullTeamName];
+                if (response.clinching_markers[standings[i].team_name] != null) {
+                    clinchingMarker.textContent = response.clinching_markers[standings[i].team_name];
                     clinchingMarker.classList.add('clinching-marker');
                 }
                 else {
@@ -1765,7 +1744,7 @@ function displayLeagueStandings(response) {
 
                 var teamLogo = document.createElement('img');
                 teamLogo.src = response.logos[teamIndex];
-                teamLogo.alt = fullTeamName + ' Logo';
+                teamLogo.alt = standings[i].team_name + ' Logo';
                 teamLogo.classList.add('team-logo');
                 
                 teamLogoContainer.appendChild(teamLogo);                                
@@ -1980,7 +1959,7 @@ function displayTeamStats(response) {
     }
     for (var key in teamStats[0]) {
         if (teamStats[0].hasOwnProperty(key) && teamStats[0][key] !== null) {
-            if (key !== 'city' && key !== 'name' && key !== 'type') {
+            if (key !== 'type' && key !== 'team_name') {
                 fields.push(key);
             }
         }
@@ -2040,13 +2019,11 @@ function displayTeamStats(response) {
             var td = document.createElement('td');
 
             if (field === 'rank-and-team') {
-                var fullTeamName = teamStats[i].city + ' ' + teamStats[i].name
-
                 var rankSpan = document.createElement('span');
                 rankSpan.innerHTML = (i + 1) + '. ';
 
                 var textSpan = document.createElement('span');
-                textSpan.textContent = fullTeamName;
+                textSpan.textContent = teamStats[i].team_name;
                 textSpan.classList.add('team-stats-team');
 
                 var teamLogoContainer = document.createElement('span');
@@ -2054,7 +2031,7 @@ function displayTeamStats(response) {
 
                 var teamLogo = document.createElement('img');
                 teamLogo.src = response.logos[i];
-                teamLogo.alt = fullTeamName + ' Logo';
+                teamLogo.alt = teamStats[i].team_name + ' Logo';
                 teamLogo.classList.add('team-logo');
                 
                 teamLogoContainer.appendChild(teamLogo);                                
@@ -2190,7 +2167,7 @@ function isValidSeason(season) {
         var year1 = parseInt(season.split('-')[0]);
         var year2 = parseInt(season.split('-')[1]);
 
-        if (Number.isInteger(year1) && Number.isInteger(year2) && year1 == year2 - 1 && year1 >= 1917 && year2 <= 2025) {
+        if (Number.isInteger(year1) && Number.isInteger(year2) && year1 == year2 - 1 && year1 >= 1917 && year2 <= 2026) {
             return true;
         }
         return false;
